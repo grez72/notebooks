@@ -19,6 +19,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
             libcudnn5=$CUDNN_VERSION-1+cuda8.0 && \
     rm -rf /var/lib/apt/lists/*
 
+RUN ln -f -s /usr/lib/x86_64-linux-gnu/libcuda.so.<yournvidia.version> libcuda.so.1
+
 USER $NB_USER
 
 # Install Python 3 Tensorflow
