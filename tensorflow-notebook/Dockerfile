@@ -1,3 +1,4 @@
+# docker build -t grez72/tensorflow-notebook https://github.com/grez72/notebooks.git#master:tensorflow-notebook
 FROM jupyter/scipy-notebook
 
 MAINTAINER Alvarezlab <alvarez@wjh.harvard.edu.com>
