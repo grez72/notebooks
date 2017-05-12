@@ -8,7 +8,6 @@ FROM jupyter/scipy-notebook
 MAINTAINER George Alvarez <alvarez@wjh.harvard.edu.com>
 
 # CUDA for GPU Support
-RUN chattr -R -i /etc/apt/sources.list.d
 RUN echo "deb http://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1404/x86_64 /" > /etc/apt/sources.list.d/nvidia-ml.list
 
 # ENV CUDNN_VERSION 5.1.10
