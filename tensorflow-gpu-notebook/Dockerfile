@@ -1,9 +1,9 @@
 # https://gitlab.com/nvidia/cuda/blob/ubuntu14.04/8.0/runtime/cudnn5/Dockerfile
 # docker build -t grez72/tensorflow-gpu-notebook https://github.com/grez72/notebooks.git#master:tensorflow-gpu-notebook
 # FROM nvidia/cuda:8.0-runtime-ubuntu14.04
-# FROM jupyter/scipy-notebook
+# FROM jupyterhub/singleuser
 
-FROM jupyterhub/singleuser
+FROM jupyter/scipy-notebook
 
 MAINTAINER George Alvarez <alvarez@wjh.harvard.edu.com>
 
@@ -16,8 +16,7 @@ RUN conda install --quiet --yes 'tensorflow-gpu=1.1.0'
 RUN conda install --quiet --yes -n python2 'tensorflow-gpu=1.1.0'
 
 # CUDA for GPU Support
-RUN chmod +x /etc/apt/sources.list.d
-RUN echo "deb http://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1404/x86_64" > /etc/apt/sources.list.d/nvidia-ml.list
+RUN echo "deb http://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1404/x86_64 /" > /etc/apt/sources.list.d/nvidia-ml.list
 
 # ENV CUDNN_VERSION 5.1.10
 LABEL com.nvidia.cudnn.version="${CUDNN_VERSION}"
