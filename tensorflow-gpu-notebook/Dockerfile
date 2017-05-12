@@ -20,11 +20,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     rm -rf /var/lib/apt/lists/*
 
 # DRIVERS
-RUN apt-get update
-RUN apt-get install software-properties-common python-software-properties python3-software-properties --quiet --yes
+RUN apt-get update && install --quiet --yes software-properties-common python-software-properties python3-software-properties
 RUN add-apt-repository ppa:graphics-drivers/ppa
-RUN apt-get update
-RUN sudo apt install nvidia-375.66
+RUN apt-get update && install nvidia-375.66
 
 USER $NB_USER
 
