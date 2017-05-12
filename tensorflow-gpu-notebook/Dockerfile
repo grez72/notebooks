@@ -12,6 +12,7 @@ RUN conda install --quiet --yes 'tensorflow-gpu=1.1.0'
 RUN conda install --quiet --yes -n python2 'tensorflow-gpu=1.1.0'
 
 # CUDA for GPU Support
+RUN mkdir /etc/apt/sources.list.d
 RUN echo "deb http://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1404/x86_64/" > /etc/apt/sources.list.d/nvidia-ml.list
 # RUN echo 'deb http://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1404/x86_64/' | sudo tee /etc/apt/sources.list.d/nvidia-ml.list > /dev/null
 # RUN sudo bash -c 'echo "deb http://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1404/x86_64/" > /etc/apt/sources.list.d/nvidia-ml.list'
