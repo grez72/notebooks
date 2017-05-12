@@ -1,5 +1,6 @@
+# https://gitlab.com/nvidia/cuda/blob/ubuntu14.04/8.0/runtime/cudnn5/Dockerfile
 # docker build -t grez72/tensorflow-gpu-notebook https://github.com/grez72/notebooks.git#master:tensorflow-gpu-notebook
-FROM jupyter/scipy-notebook
+FROM nvidia/cuda:8.0-runtime-ubuntu14.04
 
 MAINTAINER George Alvarez <alvarez@wjh.harvard.edu.com>
 
