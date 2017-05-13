@@ -10,26 +10,21 @@ MAINTAINER George Alvarez <alvarez@wjh.harvard.edu.com>
 # CUDA for GPU Support
 USER root
 
-ENV CUDA_RUN http://developer.download.nvidia.com/compute/cuda/6_5/rel/installers/cuda_6.5.14_linux_64.run
+RUN apt-get update && apt-get install -y build-essential
+RUN apt-get --purge remove -y nvidia*
 
-RUN apt-get update && apt-get install -q -y \
-  wget \
-  build-essential
-
-RUN cd /opt && \
-  wget $CUDA_RUN && \
-  chmod +x *.run && \
-  mkdir nvidia_installers && \
-  ./cuda_6.5.14_linux_64.run -extract=`pwd`/nvidia_installers && \
-  cd nvidia_installers && \
-  ./NVIDIA-Linux-x86_64-340.29.run -s -N --no-kernel-module
-
-RUN cd /opt/nvidia_installers && \
-  ./cuda-linux64-rel-6.5.14-18749181.run -noprompt
+ADD ./Downloads/nvidia_installers /tmp/nvidia
+RUN /tmp/nvidia/NVIDIA-Linux-x86_64-331.62.run -s -N --no-kernel-module
+RUN rm -rf /tmp/selfgz7
+RUN /tmp/nvidia/cuda-linux64-rel-6.0.37-18176142.run -noprompt
+RUN /tmp/nvidia/cuda-samples-linux-6.0.37-18176142.run -noprompt -cudaprefix=/usr/local/cuda-6.0
+RUN export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda/lib64
+RUN touch /etc/ld.so.conf.d/cuda.conf
+RUN rm -rf /temp/*
 
 # Ensure the CUDA libs and binaries are in the correct environment variables
-ENV LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda-6.5/lib64
-ENV PATH=$PATH:/usr/local/cuda-6.5/bin
+# ENV LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda-6.5/lib64
+# ENV PATH=$PATH:/usr/local/cuda-6.5/bin
 
 # RUN apt-key adv --fetch-keys http://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1404/x86_64/7fa2af80.pub
 # RUN echo "deb http://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1404/x86_64 /" > /etc/apt/sources.list.d/nvidia-ml.list
