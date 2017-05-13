@@ -22,7 +22,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # DRIVERS
 # RUN apt-get update && apt-get install -y software-properties-common python-software-properties python3-software-properties
 # RUN add-apt-repository ppa:graphics-drivers/ppa
-RUN apt-get install -y nvidia-375
+# RUN apt-get install -y nvidia-375
+RUN apt install nvidia-375
 
 USER $NB_USER
 
