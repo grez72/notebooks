@@ -207,6 +207,7 @@ RUN rm -R tensorflow
 # install keras
 # RUN pip install keras==${KERAS_VERSION}
 RUN pip install keras
+RUN pip2 install keras
 COPY keras.json ~/.keras/keras.json
 
 # cleanup
