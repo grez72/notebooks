@@ -202,8 +202,13 @@ RUN ./configure
 RUN bazel build -c opt --config=opt --config=cuda //tensorflow/tools/pip_package:build_pip_package
 RUN bazel-bin/tensorflow/tools/pip_package/build_pip_package /tmp/tensorflow_pkg
 RUN pip2 install /tmp/tensorflow_pkg/*27*
+RUN rm -R tensorflow
+
+# install keras
+# RUN pip install keras==${KERAS_VERSION}
+RUN pip install keras
+COPY keras.json ~/.keras/keras.json
 
 # cleanup
 WORKDIR /home/$NB_USER/work/
-RUN rm -R tensorflow
 USER $NB_USER
