@@ -67,8 +67,8 @@ RUN apt-get install --force-yes -y --no-install-recommends libcudnn5-dev=5.1.10-
 RUN rm -rf /var/lib/apt/lists/*
 
 # make copies of cuDNN so tensorflow can find them when installing from source
-RUN cp /usr/lib/x86_64-linux-gnu/libcudnn* /usr/local/cuda/lib64
-RUN cp /usr/include/cudnn.h /usr/local/cuda/include
+RUN cp -P /usr/lib/x86_64-linux-gnu/libcudnn* /usr/local/cuda/lib64
+RUN cp -P /usr/include/cudnn.h /usr/local/cuda/include
 
 # test devices
 WORKDIR /usr/local/cuda/samples/1_Utilities/deviceQuery
