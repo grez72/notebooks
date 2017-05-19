@@ -60,7 +60,7 @@ RUN echo "INCLUDE_DIRS := \$(PYTHON_INCLUDE) /usr/local/include /usr/include/hdf
 RUN echo "LIBRARY_DIRS := \$(PYTHON_LIB) /usr/local/lib /usr/lib /usr/lib/x86_64-linux-gnu/hdf5/serial" >> Makefile.config
 
 RUN make all -j"$(nproc)"
-RUN make test && make runtest
+# RUN make test && make runtest
 RUN make pycaffe
 RUN apt-get install -y python-skimage python-protobuf
 
