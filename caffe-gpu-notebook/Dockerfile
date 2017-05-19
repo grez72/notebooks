@@ -13,32 +13,32 @@ FROM grez72/cuda-v8.0-gpu-notebook
 USER root
 
 # install caffe dependencies
-RUN pip install --upgrade pip
-RUN apt-get update
-RUN apt-get install -y \
-  git \
-  wget \
-  bc \
-  cmake \
-  libatlas-base-dev \
-  libatlas-dev \
-  libboost-all-dev \
-  libopencv-dev \
-  libprotobuf-dev \
-  libgoogle-glog-dev \
-  libgflags-dev \
-  protobuf-compiler \
-  libhdf5-dev \
-  libhdf5-serial-dev \
-  libleveldb-dev \
-  liblmdb-dev \
-  libsnappy-dev \
-  python-dev \
-  python-pip \
-  python-numpy \
-  python-skimage \
-  python-protobuf \
-  gfortran > /dev/null
+#RUN pip install --upgrade pip
+#RUN apt-get update
+#RUN apt-get install -y \
+#  git \
+#  wget \
+#  bc \
+#  cmake \
+#  libatlas-base-dev \
+#  libatlas-dev \
+#  libboost-all-dev \
+#  libopencv-dev \
+#  libprotobuf-dev \
+#  libgoogle-glog-dev \
+#  libgflags-dev \
+#  protobuf-compiler \
+#  libhdf5-dev \
+#  libhdf5-serial-dev \
+#  libleveldb-dev \
+#  liblmdb-dev \
+#  libsnappy-dev \
+#  python-dev \
+#  python-pip \
+#  python-numpy \
+#  python-skimage \
+#  python-protobuf \
+#  gfortran > /dev/null
 
 # install nccl
 # RUN wget https://github.com/NVIDIA/nccl/releases/download/v1.2.3-1%2Bcuda8.0/libnccl1_1.2.3-1.cuda8.0_amd64.deb && \
