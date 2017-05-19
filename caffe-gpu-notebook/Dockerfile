@@ -15,53 +15,53 @@ USER root
 # install caffe dependencies
 RUN pip install --upgrade pip
 RUN apt-get update
-RUN apt-get install -y \
-  git \
-  wget \
-  bc \
-  cmake \
-  libatlas-base-dev \
-  libatlas-dev \
-  libboost-all-dev \
-  libopencv-dev \
-  libprotobuf-dev \
-  libgoogle-glog-dev \
-  libgflags-dev \
-  protobuf-compiler \
-  libhdf5-dev \
-  libhdf5-serial-dev \
-  libleveldb-dev \
-  liblmdb-dev \
-  libsnappy-dev \
-  python-dev \
-  python-pip \
-  python-numpy \
-  python-skimage \
-  python-protobuf \
-  gfortran > /dev/null
+#RUN apt-get install -y \
+#  git \
+#  wget \
+#  bc \
+#  cmake \
+#  libatlas-base-dev \
+#  libatlas-dev \
+#  libboost-all-dev \
+#  libopencv-dev \
+#  libprotobuf-dev \
+#  libgoogle-glog-dev \
+#  libgflags-dev \
+#  protobuf-compiler \
+#  libhdf5-dev \
+#  libhdf5-serial-dev \
+#  libleveldb-dev \
+#  liblmdb-dev \
+#  libsnappy-dev \
+#  python-dev \
+#  python-pip \
+#  python-numpy \
+#  python-skimage \
+#  python-protobuf \
+#  gfortran > /dev/null
 
 # install nccl
-RUN wget https://github.com/NVIDIA/nccl/releases/download/v1.2.3-1%2Bcuda8.0/libnccl1_1.2.3-1.cuda8.0_amd64.deb && \
-  dpkg -i libnccl1_1.2.3-1.cuda8.0_amd64.deb && \
-  rm libnccl1_1.2.3-1.cuda8.0_amd64.deb && \
-  wget https://github.com/NVIDIA/nccl/releases/download/v1.2.3-1%2Bcuda8.0/libnccl-dev_1.2.3-1.cuda8.0_amd64.deb && \
-  dpkg -i libnccl-dev_1.2.3-1.cuda8.0_amd64.deb && \
-  rm libnccl-dev_1.2.3-1.cuda8.0_amd64.deb
+# RUN wget https://github.com/NVIDIA/nccl/releases/download/v1.2.3-1%2Bcuda8.0/libnccl1_1.2.3-1.cuda8.0_amd64.deb && \
+#  dpkg -i libnccl1_1.2.3-1.cuda8.0_amd64.deb && \
+#  rm libnccl1_1.2.3-1.cuda8.0_amd64.deb && \
+#  wget https://github.com/NVIDIA/nccl/releases/download/v1.2.3-1%2Bcuda8.0/libnccl-dev_1.2.3-1.cuda8.0_amd64.deb && \
+#  dpkg -i libnccl-dev_1.2.3-1.cuda8.0_amd64.deb && \
+#  rm libnccl-dev_1.2.3-1.cuda8.0_amd64.deb
 
 # install caffe
-WORKDIR /opt
-RUN wget https://github.com/NVIDIA/caffe/archive/v0.15.13.tar.gz
-RUN tar -zxf v0.15.13.tar.gz
-RUN mv caffe-0.15.13 caffe
-WORKDIR /opt/caffe
-RUN cat python/requirements.txt | xargs -n1 pip install
-RUN cp Makefile.config.example Makefile.config
-RUN echo "USE_CUDNN := 1" >> Makefile.config
-RUN echo "USE_NCCL := 1" >> Makefile.config
-RUN echo "INCLUDE_DIRS := \$(PYTHON_INCLUDE) /usr/local/include /usr/include/hdf5/serial/" >> Makefile.config
-RUN echo "LIBRARY_DIRS := \$(PYTHON_LIB) /usr/local/lib /usr/lib /usr/lib/x86_64-linux-gnu/hdf5/serial" >> Makefile.config
+# WORKDIR /opt
+# RUN wget https://github.com/NVIDIA/caffe/archive/v0.15.13.tar.gz
+# RUN tar -zxf v0.15.13.tar.gz
+# RUN mv caffe-0.15.13 caffe
+# WORKDIR /opt/caffe
+# RUN cat python/requirements.txt | xargs -n1 pip install
+# RUN cp Makefile.config.example Makefile.config
+# RUN echo "USE_CUDNN := 1" >> Makefile.config
+# RUN echo "USE_NCCL := 1" >> Makefile.config
+# RUN echo "INCLUDE_DIRS := \$(PYTHON_INCLUDE) /usr/local/include /usr/include/hdf5/serial/" >> Makefile.config
+# RUN echo "LIBRARY_DIRS := \$(PYTHON_LIB) /usr/local/lib /usr/lib /usr/lib/x86_64-linux-gnu/hdf5/serial" >> Makefile.config
 
-RUN make all -j"$(nproc)"
+# RUN make all -j"$(nproc)"
 # RUN make test && make runtest
 # RUN make pycaffe
 
