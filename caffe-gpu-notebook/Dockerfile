@@ -13,8 +13,8 @@ FROM grez72/cuda-v8.0-gpu-notebook
 USER root
 
 # install caffe dependencies
-#RUN pip install --upgrade pip
-#RUN apt-get update
+RUN pip install --upgrade pip
+RUN apt-get update
 #RUN apt-get install -y \
 #  git \
 #  wget \
