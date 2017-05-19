@@ -52,7 +52,7 @@ RUN wget https://github.com/NVIDIA/caffe/archive/v0.15.13.tar.gz
 RUN tar -zxf v0.15.13.tar.gz
 RUN mv caffe-0.15.13 caffe
 RUN cd /opt/caffe && \
-      cat python/requirements.txt | xargs -n1 pip install
+      cat python/requirements.txt | xargs -n1 pip2 install
 #RUN cp Makefile.config.example Makefile.config
 #RUN echo "USE_CUDNN := 1" >> Makefile.config
 #RUN echo "USE_NCCL := 1" >> Makefile.config
