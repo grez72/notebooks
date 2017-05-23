@@ -210,6 +210,10 @@ RUN pip install keras
 RUN pip2 install keras
 COPY keras.json ~/.keras/keras.json
 
+# install tflearn
+RUN pip install git+https://github.com/tflearn/tflearn.git
+RUN pip2 install git+https://github.com/tflearn/tflearn.git
+
 # cleanup
 WORKDIR /home/$NB_USER/work/
 USER $NB_USER
