@@ -3,8 +3,8 @@
 # Starting with the ubuntu14.04 cuda8 runtime and development Dockerfiles
 # https://gitlab.com/nvidia/cuda/blob/ubuntu14.04/8.0/runtime/cudnn5/Dockerfile
 # https://gitlab.com/nvidia/cuda/blob/ubuntu14.04/8.0/devel/Dockerfile
-# nvidia-docker build -t grez72/cuda-torch-notebook https://github.com/grez72/notebooks.git#master:torch-gpu-notebook
-# nvidia-docker run -it --rm -p 8888:8888 grez72/cuda-torch-notebook
+# nvidia-docker build -t grez72/torch-gpu-notebook https://github.com/grez72/notebooks.git#master:torch-gpu-notebook
+# nvidia-docker run -it --rm -p 8888:8888 grez72/torch-gpu-notebook
 
 FROM jupyter/scipy-notebook
 MAINTAINER George Alvarez <alvarez@wjh.harvard.edu>
@@ -101,8 +101,8 @@ RUN apt-get update && apt-get install -y \
   libzmq3-dev \
   python-dev \
   python-pip \
-  python-zmq \
-  sudo
+  python-zmq
+  # sudo
 
 # Install Jupyter Notebook for iTorch
 # RUN pip install --upgrade pip
