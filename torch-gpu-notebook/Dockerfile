@@ -7,6 +7,7 @@
 # nvidia-docker run -it --rm -p 8888:8888 grez72/cuda-tensorflow-gpu-notebook
 
 FROM jupyter/scipy-notebook
+MAINTAINER George Alvarez <alvarez@wjh.harvard.edu>
 
 LABEL com.nvidia.volumes.needed="nvidia_driver"
 
@@ -89,130 +90,54 @@ WORKDIR /home/$NB_USER/work
 # RUN conda install --quiet --yes -n python2 'tensorflow-gpu=1.1*'
 
 # ==============================================================
-#  INSTALL TENSORFLOW FROM SOURCE (python3)
+#  INSTALL TORCH!
 # ==============================================================
 
-# install JAVA8
-RUN echo "deb http://ppa.launchpad.net/webupd8team/java/ubuntu trusty main" | tee /etc/apt/sources.list.d/webupd8team-java.list
-RUN echo "deb-src http://ppa.launchpad.net/webupd8team/java/ubuntu trusty main" | tee -a /etc/apt/sources.list.d/webupd8team-java.list
-RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys EEA14886
-RUN apt-get update
-RUN echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | sudo /usr/bin/debconf-set-selections
-RUN apt-get install -y oracle-java8-installer
+# Install git, apt-add-repository and dependencies for iTorch
+RUN apt-get update && apt-get install -y \
+  git \
+  software-properties-common \
+  libssl-dev \
+  libzmq3-dev \
+  python-dev \
+  python-pip \
+  python-zmq \
+  sudo
 
-# install other dependencies
-RUN apt-get update
-RUN apt-get install -y curl git python-dev python3-dev build-essential python-pip python3-pip python-virtualenv swig python-wheel libcurl3-dev
+# Install Jupyter Notebook for iTorch
+# RUN pip install --upgrade pip
+# RUN pip install jupyter
 
-# install BAZEL
-RUN echo "deb [arch=amd64] http://storage.googleapis.com/bazel-apt stable jdk1.8" | sudo tee /etc/apt/sources.list.d/bazel.list
-RUN curl https://storage.googleapis.com/bazel-apt/doc/apt-key.pub.gpg | sudo apt-key add -
-RUN apt-get update
-RUN apt-get install -y bazel
-RUN apt-get upgrade -y bazel
+# Run Torch7 installation scripts (dependencies only)
+RUN git clone https://github.com/torch/distro.git /root/torch --recursive && cd /root/torch && \
+  bash install-deps
 
-# install tensorflow
-RUN git clone https://github.com/tensorflow/tensorflow
-WORKDIR /home/$NB_USER/work/tensorflow
+# Run Torch7 installation scripts
+RUN cd /root/torch && \
+# Run without nvcc to prevent timeouts
+  sed -i 's/path_to_nvcc=$(which nvcc)/path_to_nvcc=$(which no_nvcc)/g' install.sh && \
+  sed -i 's,path_to_nvcc=/usr/local/cuda/bin/nvcc,path_to_nvcc=,g' install.sh && \
+  ./install.sh
 
-# Next we configure the installation
-# Normally we call ./configure, and do an interactive setup
-# The interactive setup sets environment variables used by bazel.
-# Currently, that series of questions is as follows:
+# Export environment variables manually
+ENV LUA_PATH='/root/.luarocks/share/lua/5.1/?.lua;/root/.luarocks/share/lua/5.1/?/init.lua;/root/torch/install/share/lua/5.1/?.lua;/root/torch/install/share/lua/5.1/?/init.lua;./?.lua;/root/torch/install/share/luajit-2.1.0-beta1/?.lua;/usr/local/share/lua/5.1/?.lua;/usr/local/share/lua/5.1/?/init.lua'
+ENV LUA_CPATH='/root/.luarocks/lib/lua/5.1/?.so;/root/torch/install/lib/lua/5.1/?.so;./?.so;/usr/local/lib/lua/5.1/?.so;/usr/local/lib/lua/5.1/loadall.so'
+ENV PATH=/root/torch/install/bin:$PATH
+ENV LD_LIBRARY_PATH=/root/torch/install/lib:$LD_LIBRARY_PATH
+ENV DYLD_LIBRARY_PATH=/root/torch/install/lib:$DYLD_LIBRARY_PATH
+ENV LUA_CPATH='/root/torch/install/lib/?.so;'$LUA_CPATH
 
-# Here we set those configuration variables:
-# https://github.com/tensorflow/tensorflow/blob/master/configure
+# Set ~/torch as working directory
+WORKDIR /root/torch
 
-ENV PYTHON_BIN_PATH=/opt/conda/bin/python
-ENV PYTHON_LIB_PATH=/opt/conda/lib/python3.5/site-packages
-ENV TF_NEED_CUDA=1
-ENV TF_NEED_GCP=0
-ENV TF_NEED_OPENCL=0
-ENV TF_CUDA_CLANG=0
-ENV CUDA_TOOLKIT_PATH=/usr/local/cuda
-ENV CUDNN_INSTALL_PATH=/usr/local/cuda-8.0
-ENV TF_CUDA_VERSION=8.0
-ENV TF_CUDA_COMPUTE_CAPABILITIES=3.5,5.2,6.1
-ENV GCC_HOST_COMPILER_PATH=/usr/bin/gcc
-ENV CC=/usr/bin/gcc
-ENV CXX=/usr/bin/g++
-ENV TF_CUDNN_VERSION=5
-ENV CUDA_TOOLKIT_PATH=/usr/local/cuda
-ENV CUDNN_INSTALL_PATH=$CUDA_TOOLKIT_PATH
-ENV CC_OPT_FLAGS=-march=native
+# Restore Torch7 installation script
+RUN sed -i 's/path_to_nvcc=$(which no_nvcc)/path_to_nvcc=$(which nvcc)/g' install.sh
 
-# Do you wish to build TensorFlow with MKL support? [y/N]
-ENV TF_NEED_MKL=0
-
-# "Do you wish to use jemalloc as the malloc implementation? [Y/n] "
-ENV TF_NEED_JEMALLOC=1
-
-# "Do you wish to build TensorFlow with Hadoop File System support? [y/N] "
-ENV TF_NEED_HDFS=0
-
-# "Do you wish to build TensorFlow with the XLA just-in-time compiler (experimental)? [y/N] "
-ENV TF_ENABLE_XLA=0
-
-# Do you wish to build TensorFlow with VERBS support? [y/N]
-ENV TF_NEED_VERBS=0
-
-# Now when we run ./configure, there should be no unset variables, and so it should just proceed.
-# However, tensorflow is continuously adding new options, and so if RUN ./configure errors,
-# you might comment out everthing from here down, then build and run the image. Then use $docker ps
-# to get your image id, and $ docker exec -it <id> bash to mount it, and run $ ./configure within
-# the container.  Whatever questions you answer will tell you which variables need to be set.
-# You can reference https://github.com/tensorflow/tensorflow/blob/master/configure to determine
-# what the actual variable names should be, which you can then set in this file, and re-build the image,
-# uncommenting everything from here down so tensorflow will be built.
-RUN ./configure
-
-RUN bazel build -c opt --config=opt --config=cuda //tensorflow/tools/pip_package:build_pip_package
-RUN bazel-bin/tensorflow/tools/pip_package/build_pip_package /tmp/tensorflow_pkg
-RUN pip3 install /tmp/tensorflow_pkg/*
-
-# ==============================================================
-#  build tensorflow for python2
-# ==============================================================
-
-# python2 dependencies
-RUN apt-get update && sudo apt-get install -y \
-        build-essential \
-        curl \
-        libcurl3-dev \
-        git \
-        libfreetype6-dev \
-        libpng12-dev \
-        libzmq3-dev \
-        pkg-config \
-        python-dev \
-        python-numpy \
-        python-pip \
-        software-properties-common \
-        swig \
-        zip \
-        zlib1g-dev
-
-# update config
-# /usr/bin/python2
-# /usr/local/lib/python2.7/dist-packages
-ENV PYTHON_BIN_PATH=/usr/bin/python2
-ENV PYTHON_LIB_PATH=/usr/local/lib/python2.7/dist-packages
-RUN ./configure
-
-RUN bazel build -c opt --config=opt --config=cuda //tensorflow/tools/pip_package:build_pip_package
-RUN bazel-bin/tensorflow/tools/pip_package/build_pip_package /tmp/tensorflow_pkg
-RUN pip2 install /tmp/tensorflow_pkg/*27*
-RUN rm -R tensorflow
-
-# install keras
-# RUN pip install keras==${KERAS_VERSION}
-RUN pip install keras
-RUN pip2 install keras
-COPY keras.json ~/.keras/keras.json
-
-# install tflearn
-RUN pip install git+https://github.com/tflearn/tflearn.git
-RUN pip2 install git+https://github.com/tflearn/tflearn.git
+# Install latest CUDA libraries
+RUN luarocks install torch && \
+  luarocks install cutorch && \
+  luarocks install cunn && \
+  luarocks install cudnn
 
 # cleanup
 WORKDIR /home/$NB_USER/work/
