@@ -3,10 +3,12 @@
 # Starting with the ubuntu14.04 cuda8 runtime and development Dockerfiles
 # https://gitlab.com/nvidia/cuda/blob/ubuntu14.04/8.0/runtime/cudnn5/Dockerfile
 # https://gitlab.com/nvidia/cuda/blob/ubuntu14.04/8.0/devel/Dockerfile
-# sudo nvidia-docker build -t grez72/torch-gpu-notebook https://github.com/grez72/notebooks.git#master:torch-gpu-notebook
-# sudo nvidia-docker run -it --rm -p 8888:8888 grez72/torch-gpu-notebook
+# https://github.com/Microsoft/CNTK/blob/master/Tools/docker/CNTK-GPU-Image/Dockerfile
+# sudo nvidia-docker build -t grez72/cntk-gpu-notebook https://github.com/grez72/notebooks.git#master:cntk-gpu-notebook
+# sudo nvidia-docker run -it --rm -p 8888:8888 grez72/cntk-gpu-notebook
 
 FROM jupyter/scipy-notebook
+
 MAINTAINER George Alvarez <alvarez@wjh.harvard.edu>
 
 LABEL com.nvidia.volumes.needed="nvidia_driver"
@@ -83,161 +85,200 @@ RUN make
 
 WORKDIR /home/$NB_USER/work
 
-# Install Python 3 Tensorflow
-# RUN conda install --quiet --yes 'tensorflow-gpu=1.1*'
-
-# Install Python 2 Tensorflow
-# RUN conda install --quiet --yes -n python2 'tensorflow-gpu=1.1*'
-
 # ==============================================================
-#  INSTALL TORCH!
+#  INSTALL MICROSOFT COGNITIVE TOOLKIT
 # ==============================================================
 
-# Install git, apt-add-repository and dependencies for iTorch
-RUN apt-get update && apt-get install -y \
-  git \
-  software-properties-common \
-  libssl-dev \
-  libzmq3-dev \
-  python-dev \
-  python-pip \
-  python-zmq \
-  libprotobuf-dev \
-  protobuf-compiler \
-  sudo
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        autotools-dev \
+        build-essential \
+        cmake \
+        git \
+        gfortran-multilib \
+        libavcodec-dev \
+        libavformat-dev \
+        libjasper-dev \
+        libjpeg-dev \
+        libpng-dev \
+        liblapacke-dev \
+        libswscale-dev \
+        libtiff-dev \
+        pkg-config \
+        wget \
+        zlib1g-dev \
+        # Protobuf
+        ca-certificates \
+        curl \
+        unzip \
+        # For Kaldi
+        python-dev \
+        automake \
+        libtool \
+        autoconf \
+        subversion \
+        # For Kaldi's dependencies
+        libapr1 libaprutil1 libltdl-dev libltdl7 libserf-1-1 libsigsegv2 libsvn1 m4 \
+        # For Java Bindings
+        openjdk-7-jdk \
+        # For SWIG
+        libpcre++-dev && \
+    rm -rf /var/lib/apt/lists/*
 
-# Install OpenBLAS?
-RUN git clone https://github.com/xianyi/OpenBLAS.git && \
-    cd OpenBLAS && \
-    make NO_AFFINITY=1 USE_OPENMP=1 && \
+RUN OPENMPI_VERSION=1.10.3 && \
+    wget -q -O - https://www.open-mpi.org/software/ompi/v1.10/downloads/openmpi-${OPENMPI_VERSION}.tar.gz | tar -xzf - && \
+    cd openmpi-${OPENMPI_VERSION} && \
+    ./configure --prefix=/usr/local/mpi && \
+    make -j"$(nproc)" install && \
+    rm -rf /openmpi-${OPENMPI_VERSION}
+
+ENV PATH /usr/local/mpi/bin:$PATH
+ENV LD_LIBRARY_PATH /usr/local/mpi/lib:$LD_LIBRARY_PATH
+
+RUN LIBZIP_VERSION=1.1.2 && \
+    wget -q -O - http://nih.at/libzip/libzip-${LIBZIP_VERSION}.tar.gz | tar -xzf - && \
+    cd libzip-${LIBZIP_VERSION} && \
+    ./configure && \
+    make -j"$(nproc)" install && \
+    rm -rf /libzip-${LIBZIP_VERSION}
+
+ENV LD_LIBRARY_PATH /usr/local/lib:$LD_LIBRARY_PATH
+
+RUN wget -q -O - https://github.com/NVlabs/cub/archive/1.4.1.tar.gz | tar -C /usr/local -xzf -
+
+RUN OPENCV_VERSION=3.1.0 && \
+    wget -q -O - https://github.com/Itseez/opencv/archive/${OPENCV_VERSION}.tar.gz | tar -xzf - && \
+    cd opencv-${OPENCV_VERSION} && \
+    cmake -DWITH_CUDA=OFF -DCMAKE_BUILD_TYPE=RELEASE -DCMAKE_INSTALL_PREFIX=/usr/local/opencv-${OPENCV_VERSION} . && \
+    make -j"$(nproc)" install && \
+    rm -rf /opencv-${OPENCV_VERSION}
+
+RUN OPENBLAS_VERSION=0.2.18 && \
+    wget -q -O - https://github.com/xianyi/OpenBLAS/archive/v${OPENBLAS_VERSION}.tar.gz | tar -xzf - && \
+    cd OpenBLAS-${OPENBLAS_VERSION} && \
+    make -j"$(nproc)" USE_OPENMP=1 | tee make.log && \
+    grep -qF 'OpenBLAS build complete. (BLAS CBLAS LAPACK LAPACKE)' make.log && \
+    grep -qF 'Use OpenMP in the multithreading.' make.log && \
+    make PREFIX=/usr/local/openblas install && \
+    rm -rf /OpenBLAS-${OPENBLAS_VERSION}
+
+ENV LD_LIBRARY_PATH /usr/local/openblas/lib:$LD_LIBRARY_PATH
+
+# Install Boost
+RUN BOOST_VERSION=1_60_0 && \
+    BOOST_DOTTED_VERSION=$(echo $BOOST_VERSION | tr _ .) && \
+    wget -q -O - https://sourceforge.net/projects/boost/files/boost/${BOOST_DOTTED_VERSION}/boost_${BOOST_VERSION}.tar.gz/download | tar -xzf - && \
+    cd boost_${BOOST_VERSION} && \
+    ./bootstrap.sh --prefix=/usr/local/boost-${BOOST_DOTTED_VERSION} --with-libraries=filesystem,system,test  && \
+    ./b2 -d0 -j"$(nproc)" install  && \
+    rm -rf /boost_${BOOST_VERSION}
+
+# Install Protobuf
+RUN PROTOBUF_VERSION=3.1.0 \
+    PROTOBUF_STRING=protobuf-$PROTOBUF_VERSION && \
+    wget -O - --no-verbose https://github.com/google/protobuf/archive/v${PROTOBUF_VERSION}.tar.gz | tar -xzf - && \
+    cd $PROTOBUF_STRING && \
+    ./autogen.sh && \
+    ./configure CFLAGS=-fPIC CXXFLAGS=-fPIC --disable-shared --prefix=/usr/local/$PROTOBUF_STRING && \
+    make -j $(nproc) install && \
+    cd .. && \
+    rm -rf $PROTOBUF_STRING
+
+# Install CNTK custom MKL
+RUN CNTK_CUSTOM_MKL_VERSION=3 && \
+    mkdir /usr/local/CNTKCustomMKL && \
+    wget --no-verbose -O - https://www.cntk.ai/mkl/CNTKCustomMKL-Linux-$CNTK_CUSTOM_MKL_VERSION.tgz | \
+    tar -xzf - -C /usr/local/CNTKCustomMKL
+
+# Install Kaldi
+ENV KALDI_VERSION=c024e8aa
+ENV KALDI_PATH /usr/local/kaldi-$KALDI_VERSION
+
+RUN mv /bin/sh /bin/sh.orig && \
+   ln -s -f /bin/bash /bin/sh && \
+   mkdir $KALDI_PATH && \
+   wget --no-verbose -O - https://github.com/kaldi-asr/kaldi/archive/$KALDI_VERSION.tar.gz | tar -xzf - --strip-components=1 -C $KALDI_PATH && \
+   cd $KALDI_PATH && \
+   cd tools && \
+   perl -pi -e 's/^# (OPENFST_VERSION = 1.4.1)$/\1/' Makefile && \
+   ./extras/check_dependencies.sh && \
+   make -j $(nproc) all && \
+   cd ../src && \
+   ./configure --openblas-root=/usr/local/openblas --shared && \
+   make -j $(nproc) depend && \
+   make -j $(nproc) all && \
+# Remove some unneeded stuff in $KALDI_PATH to reduce size
+   find $KALDI_PATH -name '*.o' -print0 | xargs -0 rm && \
+   for dir in $KALDI_PATH/src/*bin; do make -C $dir clean; done && \
+   mv -f /bin/sh.orig /bin/sh
+
+## PYTHON
+
+# Swig
+RUN cd /root && \
+    wget -q http://prdownloads.sourceforge.net/swig/swig-3.0.10.tar.gz -O - | tar xvfz - && \
+    cd swig-3.0.10 && \
+    ./configure --without-perl5 && \
+    make -j $(nproc) && \
     make install
-    
-# Install Jupyter Notebook for iTorch
-# RUN pip install --upgrade pip
-# RUN pip install jupyter
 
-# take 1
-# RUN git clone https://github.com/torch/distro.git /root/torch --recursive;
-#  	cd /root/torch && \
-#  	bash install-deps && \
-#  	yes no | ./install.sh
+# Anaconda
+RUN wget -q https://repo.continuum.io/archive/Anaconda3-4.2.0-Linux-x86_64.sh && \
+    bash Anaconda3-4.2.0-Linux-x86_64.sh -b && \
+    rm Anaconda3-4.2.0-Linux-x86_64.sh
 
-# take 2 (permission error with itorch kernal)
-# RUN git clone https://github.com/torch/distro.git /root/torch --recursive;
-# WORKDIR /root/torch
-# RUN bash install-deps && \
-#   	yes no | ./install.sh
+RUN CONDA_ENV_PATH=/tmp/conda-linux-cntk-py35-environment.yml; \
+    wget -q https://raw.githubusercontent.com/Microsoft/CNTK/master/Scripts/install/linux/conda-linux-cntk-py35-environment.yml -O "$CONDA_ENV_PATH" && \
+    /root/anaconda3/bin/conda env create -p /root/anaconda3/envs/cntk-py35 --file "$CONDA_ENV_PATH" && \
+    rm -f "$CONDA_ENV_PATH"
 
-# take 3
-USER $NB_USER
+ENV PATH /root/anaconda3/envs/cntk-py35/bin:$PATH
 
-RUN git clone --recursive https://github.com/torch/distro.git $HOME/torch
+# NCCL
+ENV NCCL_VERSION=1.3.0-1
+ENV NCCL_PATH /usr/local/nccl-${NCCL_VERSION}
+RUN git clone --depth=1 -b v${NCCL_VERSION} https://github.com/NVIDIA/nccl.git && \
+    cd nccl && \
+    make CUDA_HOME=/usr/local/cuda PREFIX=$NCCL_PATH install && \
+    rm -rf /nccl
 
-USER root
-RUN cd $HOME/torch && bash install-deps
+WORKDIR /cntk
 
-USER $NB_USER
+RUN mkdir -p /usr/local/cudnn/cuda/include && \
+    ln -s /usr/include/cudnn.h /usr/local/cudnn/cuda/include/cudnn.h && \
+    mkdir -p /usr/local/cudnn/cuda/lib64 && \
+    ln -s /etc/alternatives/libcudnn_so /usr/local/cudnn/cuda/lib64/libcudnn.so && \
+    ln -s /usr/local/cuda/lib64/stubs/libnvidia-ml.so /usr/local/cuda/lib64/stubs/libnvidia-ml.so.1
 
-RUN cd $HOME/torch && bash install.sh -b && \
-    install/bin/torch-activate && \
-    install/bin/luarocks install itorch
+# Build CNTK
+RUN git clone --depth=1 -b master https://github.com/Microsoft/CNTK.git . && \
+    CONFIGURE_OPTS="\
+      --with-cuda=/usr/local/cuda \
+      --with-gdk-include=/usr/local/cuda/include \
+      --with-gdk-nvml-lib=/usr/local/cuda/lib64/stubs \
+      --with-kaldi=${KALDI_PATH} \
+      --with-py35-path=/root/anaconda3/envs/cntk-py35 \
+      --with-cudnn=/usr/local/cudnn \
+      --with-nccl=${NCCL_PATH}" && \
+    git submodule update --init Source/Multiverso && \
+    mkdir -p build/gpu/release && \
+    cd build/gpu/release && \
+    ../../../configure $CONFIGURE_OPTS --with-openblas=/usr/local/openblas && \
+    make -j"$(nproc)" all && \
+    cd ../../.. && \
+    mkdir -p build-mkl/gpu/release && \
+    cd build-mkl/gpu/release && \
+    ../../../configure $CONFIGURE_OPTS --with-mkl=/usr/local/CNTKCustomMKL && \
+    make -j"$(nproc)" all
 
-# Run Torch7 installation scripts (dependencies only)
-# RUN git clone https://github.com/torch/distro.git /root/torch --recursive && cd /root/torch && \
-#  bash install-deps
+RUN cd Examples/Image/DataSets/CIFAR-10 && \
+    python install_cifar10.py && \
+    cd ../../../..
 
-# Run Torch7 installation scripts
-# RUN cd /root/torch && \
-# Run without nvcc to prevent timeouts
-#  sed -i 's/path_to_nvcc=$(which nvcc)/path_to_nvcc=$(which no_nvcc)/g' install.sh && \
-#  sed -i 's,path_to_nvcc=/usr/local/cuda/bin/nvcc,path_to_nvcc=,g' install.sh && \
-#  ./install.sh
+RUN cd Examples/Image/DataSets/MNIST && \
+    python install_mnist.py && \
+    cd ../../../..
 
-# Export environment variables manually
-# ENV LUA_PATH='/root/.luarocks/share/lua/5.1/?.lua;/root/.luarocks/share/lua/5.1/?/init.lua;/root/torch/install/share/lua/5.1/?.lua;/root/torch/install/share/lua/5.1/?/init.lua;./?.lua;/root/torch/install/share/luajit-2.1.0-beta1/?.lua;/usr/local/share/lua/5.1/?.lua;/usr/local/share/lua/5.1/?/init.lua'
-# ENV LUA_CPATH='/root/.luarocks/lib/lua/5.1/?.so;/root/torch/install/lib/lua/5.1/?.so;./?.so;/usr/local/lib/lua/5.1/?.so;/usr/local/lib/lua/5.1/loadall.so'
-# ENV PATH=/root/torch/install/bin:$PATH
-# ENV LD_LIBRARY_PATH=/root/torch/install/lib:$LD_LIBRARY_PATH
-# ENV DYLD_LIBRARY_PATH=/root/torch/install/lib:$DYLD_LIBRARY_PATH
-# ENV LUA_CPATH='/root/torch/install/lib/?.so;'$LUA_CPATH
-
-# ENV LUA_PATH='/root/.luarocks/share/lua/5.1/?.lua;/root/.luarocks/share/lua/5.1/?/init.lua;/root/torch/install/share/lua/5.1/?.lua;/root/torch/install/share/lua/5.1/?/init.lua;./?.lua;/root/torch/install/share/luajit-2.1.0-beta1/?.lua;/usr/local/share/lua/5.1/?.lua;/usr/local/share/lua/5.1/?/init.lua' \
-# 	LUA_CPATH='/root/.luarocks/lib/lua/5.1/?.so;/root/torch/install/lib/lua/5.1/?.so;./?.so;/usr/local/lib/lua/5.1/?.so;/usr/local/lib/lua/5.1/loadall.so' \
-# 	PATH=/root/torch/install/bin:$PATH \
-# 	LD_LIBRARY_PATH=/root/torch/install/lib:$LD_LIBRARY_PATH \
-# 	DYLD_LIBRARY_PATH=/root/torch/install/lib:$DYLD_LIBRARY_PATH
-# ENV LUA_CPATH='/root/torch/install/lib/?.so;'$LUA_CPATH
-
-ENV LUA_PATH="$HOME/.luarocks/share/lua/5.1/?.lua;/$HOME/.luarocks/share/lua/5.1/?/init.lua;$HOME/torch/install/share/lua/5.1/?.lua;$HOME/torch/install/share/lua/5.1/?/init.lua;./?.lua;$HOME/torch/install/share/luajit-2.1.0-beta1/?.lua;/usr/local/share/lua/5.1/?.lua;/usr/local/share/lua/5.1/?/init.lua" \
-	LUA_CPATH="$HOME/.luarocks/lib/lua/5.1/?.so;$HOME/torch/install/lib/lua/5.1/?.so;./?.so;/usr/local/lib/lua/5.1/?.so;/usr/local/lib/lua/5.1/loadall.so" \
-	PATH=$HOME/torch/install/bin:$PATH \
-	LD_LIBRARY_PATH=$HOME/torch/install/lib:$LD_LIBRARY_PATH \
-	DYLD_LIBRARY_PATH=$HOME/torch/install/lib:$DYLD_LIBRARY_PATH
-ENV LUA_CPATH="$HOME/torch/install/lib/?.so;"$LUA_CPATH
-
-# Set ~/torch as working directory
-# WORKDIR /root/torch
-
-# Restore Torch7 installation script
-# RUN sed -i 's/path_to_nvcc=$(which no_nvcc)/path_to_nvcc=$(which nvcc)/g' install.sh
-
-# Install latest CUDA libraries
-# RUN luarocks install torch && \
-#  luarocks install cutorch && \
-#  luarocks install cunn && \
-#  luarocks install cudnn
-
-# Install dependencies for Caffe so we can run luarocks install loadcaffe
-USER root
-RUN apt-get update && apt-get install -y \
-		libboost-all-dev \
-		libgflags-dev \
-		libgoogle-glog-dev \
-		libhdf5-serial-dev \
-		libleveldb-dev \
-		liblmdb-dev \
-		libopencv-dev \
-		libprotobuf-dev \
-		libsnappy-dev \
-		protobuf-compiler \
-		&& \
-	apt-get clean && \
-	apt-get autoremove && \
-	rm -rf /var/lib/apt/lists/*
-
-# Install the latest versions of nn, cutorch, cunn, cuDNN bindings and iTorch
-RUN luarocks install nn && \
-    luarocks install torch && \
-  	luarocks install cutorch && \
-  	luarocks install cunn && \
-    luarocks install cudnn && \
-    luarocks install loadcaffe
-
-# USER $NB_USER
-# RUN cd $HOME && git clone https://github.com/soumith/cudnn.torch.git && cd cudnn.torch && \
-#   	git checkout R4 && \
-#   	luarocks make && \
-#   	\
-#   	cd $HOME && git clone https://github.com/facebook/iTorch.git && \
-#   	cd iTorch && \
-#   	luarocks make
-
-USER $NB_USER
-RUN cd $HOME && git clone https://github.com/soumith/cudnn.torch.git
-
-USER root
-WORKDIR $HOME/cudnn.torch
-RUN git checkout R4 && \
-    luarocks make
-
-USER $NB_USER
-RUN cd $HOME && git clone https://github.com/facebook/iTorch.git
-
-USER root
-WORKDIR $HOME/iTorch
-RUN luarocks make
-
-RUN . $HOME/torch/install/bin/torch-activate
+ENV PATH=/cntk/build/gpu/release/bin:$PATH PYTHONPATH=/cntk/bindings/python LD_LIBRARY_PATH=/cntk/bindings/python/cntk/libs:$LD_LIBRARY_PATH
 
 # cleanup
 WORKDIR /home/$NB_USER/work/
