@@ -216,12 +216,12 @@ RUN cd cudnn.torch && \
   	luarocks make && \
 
 USER $NB_USER
-  	cd $HOME && git clone https://github.com/facebook/iTorch.git
+RUN cd $HOME && git clone https://github.com/facebook/iTorch.git
 
+USER root
 RUN cd iTorch && \
     luarocks make
 
-USER root
 RUN . $HOME/torch/install/bin/torch-activate
 
 # cleanup
