@@ -155,12 +155,19 @@ RUN cd $HOME/torch && bash install.sh -b && \
 # ENV DYLD_LIBRARY_PATH=/root/torch/install/lib:$DYLD_LIBRARY_PATH
 # ENV LUA_CPATH='/root/torch/install/lib/?.so;'$LUA_CPATH
 
-ENV LUA_PATH='/root/.luarocks/share/lua/5.1/?.lua;/root/.luarocks/share/lua/5.1/?/init.lua;/root/torch/install/share/lua/5.1/?.lua;/root/torch/install/share/lua/5.1/?/init.lua;./?.lua;/root/torch/install/share/luajit-2.1.0-beta1/?.lua;/usr/local/share/lua/5.1/?.lua;/usr/local/share/lua/5.1/?/init.lua' \
-	LUA_CPATH='/root/.luarocks/lib/lua/5.1/?.so;/root/torch/install/lib/lua/5.1/?.so;./?.so;/usr/local/lib/lua/5.1/?.so;/usr/local/lib/lua/5.1/loadall.so' \
-	PATH=/root/torch/install/bin:$PATH \
-	LD_LIBRARY_PATH=/root/torch/install/lib:$LD_LIBRARY_PATH \
-	DYLD_LIBRARY_PATH=/root/torch/install/lib:$DYLD_LIBRARY_PATH
-ENV LUA_CPATH='/root/torch/install/lib/?.so;'$LUA_CPATH
+# ENV LUA_PATH='/root/.luarocks/share/lua/5.1/?.lua;/root/.luarocks/share/lua/5.1/?/init.lua;/root/torch/install/share/lua/5.1/?.lua;/root/torch/install/share/lua/5.1/?/init.lua;./?.lua;/root/torch/install/share/luajit-2.1.0-beta1/?.lua;/usr/local/share/lua/5.1/?.lua;/usr/local/share/lua/5.1/?/init.lua' \
+# 	LUA_CPATH='/root/.luarocks/lib/lua/5.1/?.so;/root/torch/install/lib/lua/5.1/?.so;./?.so;/usr/local/lib/lua/5.1/?.so;/usr/local/lib/lua/5.1/loadall.so' \
+# 	PATH=/root/torch/install/bin:$PATH \
+# 	LD_LIBRARY_PATH=/root/torch/install/lib:$LD_LIBRARY_PATH \
+# 	DYLD_LIBRARY_PATH=/root/torch/install/lib:$DYLD_LIBRARY_PATH
+# ENV LUA_CPATH='/root/torch/install/lib/?.so;'$LUA_CPATH
+
+ENV LUA_PATH='$HOME/.luarocks/share/lua/5.1/?.lua;/$HOME/.luarocks/share/lua/5.1/?/init.lua;$HOME/torch/install/share/lua/5.1/?.lua;$HOME/torch/install/share/lua/5.1/?/init.lua;./?.lua;$HOME/torch/install/share/luajit-2.1.0-beta1/?.lua;/usr/local/share/lua/5.1/?.lua;/usr/local/share/lua/5.1/?/init.lua' \
+	LUA_CPATH='$HOME/.luarocks/lib/lua/5.1/?.so;$HOME/torch/install/lib/lua/5.1/?.so;./?.so;/usr/local/lib/lua/5.1/?.so;/usr/local/lib/lua/5.1/loadall.so' \
+	PATH=$HOME/torch/install/bin:$PATH \
+	LD_LIBRARY_PATH=$HOME/torch/install/lib:$LD_LIBRARY_PATH \
+	DYLD_LIBRARY_PATH=$HOME/torch/install/lib:$DYLD_LIBRARY_PATH
+ENV LUA_CPATH='$HOME/torch/install/lib/?.so;'$LUA_CPATH
 
 # Set ~/torch as working directory
 # WORKDIR /root/torch
@@ -201,16 +208,16 @@ RUN luarocks install nn && \
     luarocks install loadcaffe
 
 USER $NB_USER
-RUN cd /root && git clone https://github.com/soumith/cudnn.torch.git && cd cudnn.torch && \
+RUN cd $HOME && git clone https://github.com/soumith/cudnn.torch.git && cd cudnn.torch && \
   	git checkout R4 && \
   	luarocks make && \
   	\
-  	cd /root && git clone https://github.com/facebook/iTorch.git && \
+  	cd $HOME && git clone https://github.com/facebook/iTorch.git && \
   	cd iTorch && \
   	luarocks make
 
 USER root
-RUN . /root/torch/install/bin/torch-activate
+RUN . $HOME/torch/install/bin/torch-activate
 
 # cleanup
 WORKDIR /home/$NB_USER/work/
