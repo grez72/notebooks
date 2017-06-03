@@ -146,10 +146,10 @@ ENV LUA_CPATH='/root/torch/install/lib/?.so;'$LUA_CPATH
 # RUN sed -i 's/path_to_nvcc=$(which no_nvcc)/path_to_nvcc=$(which nvcc)/g' install.sh
 
 # Install latest CUDA libraries
-RUN luarocks install torch && \
-  luarocks install cutorch && \
-  luarocks install cunn && \
-  luarocks install cudnn
+# RUN luarocks install torch && \
+#  luarocks install cutorch && \
+#  luarocks install cunn && \
+#  luarocks install cudnn
 
 # Install the latest versions of nn, cutorch, cunn, cuDNN bindings and iTorch
 RUN luarocks install nn && \
