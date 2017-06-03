@@ -198,9 +198,10 @@ RUN CNTK_CUSTOM_MKL_VERSION=3 && \
 ENV KALDI_VERSION=c024e8aa
 ENV KALDI_PATH /usr/local/kaldi-$KALDI_VERSION
 
-RUN bash -c "source activate python2" && apt-get install -y libtool subversion
+# RUN bash -c "source activate python2" && apt-get install -y libtool subversion
 
-RUN mv /bin/sh /bin/sh.orig && \
+RUN bash -c "source activate python2" && \
+   mv /bin/sh /bin/sh.orig && \
    ln -s -f /bin/bash /bin/sh && \
    mkdir $KALDI_PATH && \
    wget --no-verbose -O - https://github.com/kaldi-asr/kaldi/archive/$KALDI_VERSION.tar.gz | tar -xzf - --strip-components=1 -C $KALDI_PATH && \
