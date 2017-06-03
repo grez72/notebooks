@@ -95,6 +95,13 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         ca-certificates \
         wget \
         && \
+    # For Image Reader
+        libjasper1 \
+        libjpeg8 \
+        libpng12-0 \
+    # For Kaldi Reader
+        libgfortran3 \
+        && \
     # Clean-up
     apt-get -y autoremove \
         && \
