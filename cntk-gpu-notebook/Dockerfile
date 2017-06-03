@@ -88,25 +88,6 @@ WORKDIR /home/$NB_USER/work
 #  INSTALL MICROSOFT COGNITIVE TOOLKIT!
 # ==============================================================
 
-ARG ENABLE_1BIT_SGD true
-
-RUN test "$ENABLE_1BIT_SGD" = "true" ||  ( echo "\033[0;31m\
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n\
-You are attempting to build an image of CNTK with 1-bit Stochastic Gradient\n\
-Descent (1bit-SGD) enabled. Before proceeding further please ensure you     \n\
-understand the license difference between CNTK and 1bit-SGD. See            \n\
-https://github.com/Microsoft/CNTK/wiki/Enabling-1bit-SGD#license-difference-between-cntk-and-1bit-sgd\n\
-\n\
-To build the image pass the following parameter to Docker:\n\
-\n\
-  --build-arg ENABLE_1BIT_SGD=true\n\
-\n\
-Example:\n\
-\n\
-  docker build -t cntk --build-arg ENABLE_1BIT_SGD=true ./CNTK-GPU-1bit-Image\n\
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n\
-\n\033[0m"; exit 1)
-
 RUN apt-get update && apt-get install -y --no-install-recommends \
         autotools-dev \
         build-essential \
