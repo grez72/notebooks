@@ -198,99 +198,101 @@ RUN CNTK_CUSTOM_MKL_VERSION=3 && \
 ENV KALDI_VERSION=c024e8aa
 ENV KALDI_PATH /usr/local/kaldi-$KALDI_VERSION
 
+RUN bash -c "source activate python2"
+
 # RUN bash -c "source activate python2" && apt-get install -y libtool subversion
 
-RUN bash -c "source activate python2" && \
-   apt-get install -y libtool subversion && \
-   mv /bin/sh /bin/sh.orig && \
-   ln -s -f /bin/bash /bin/sh && \
-   mkdir $KALDI_PATH && \
-   wget --no-verbose -O - https://github.com/kaldi-asr/kaldi/archive/$KALDI_VERSION.tar.gz | tar -xzf - --strip-components=1 -C $KALDI_PATH && \
-   cd $KALDI_PATH && \
-   cd tools && \
-   perl -pi -e 's/^# (OPENFST_VERSION = 1.4.1)$/\1/' Makefile && \
-   ./extras/check_dependencies.sh && \
-   make -j $(nproc) all && \
-   cd ../src && \
-   ./configure --openblas-root=/usr/local/openblas --shared && \
-   make -j $(nproc) depend && \
-   make -j $(nproc) all && \
-# Remove some unneeded stuff in $KALDI_PATH to reduce size
-   find $KALDI_PATH -name '*.o' -print0 | xargs -0 rm && \
-   for dir in $KALDI_PATH/src/*bin; do make -C $dir clean; done && \
-   mv -f /bin/sh.orig /bin/sh
-
-# RUN source activate root
-
-## PYTHON
-
-# Swig
-RUN cd /root && \
-    wget -q http://prdownloads.sourceforge.net/swig/swig-3.0.10.tar.gz -O - | tar xvfz - && \
-    cd swig-3.0.10 && \
-    ./configure --without-perl5 && \
-    make -j $(nproc) && \
-    make install
-
-# Anaconda
-RUN wget -q https://repo.continuum.io/archive/Anaconda3-4.2.0-Linux-x86_64.sh && \
-    bash Anaconda3-4.2.0-Linux-x86_64.sh -b && \
-    rm Anaconda3-4.2.0-Linux-x86_64.sh
-
-RUN CONDA_ENV_PATH=/tmp/conda-linux-cntk-py35-environment.yml; \
-    wget -q https://raw.githubusercontent.com/Microsoft/CNTK/master/Scripts/install/linux/conda-linux-cntk-py35-environment.yml -O "$CONDA_ENV_PATH" && \
-    /root/anaconda3/bin/conda env create -p /root/anaconda3/envs/cntk-py35 --file "$CONDA_ENV_PATH" && \
-    rm -f "$CONDA_ENV_PATH"
-
-ENV PATH /root/anaconda3/envs/cntk-py35/bin:$PATH
-
-# NCCL
-ENV NCCL_VERSION=1.3.0-1
-ENV NCCL_PATH /usr/local/nccl-${NCCL_VERSION}
-RUN git clone --depth=1 -b v${NCCL_VERSION} https://github.com/NVIDIA/nccl.git && \
-    cd nccl && \
-    make CUDA_HOME=/usr/local/cuda PREFIX=$NCCL_PATH install && \
-    rm -rf /nccl
-
-WORKDIR /cntk
-
-RUN mkdir -p /usr/local/cudnn/cuda/include && \
-    ln -s /usr/include/cudnn.h /usr/local/cudnn/cuda/include/cudnn.h && \
-    mkdir -p /usr/local/cudnn/cuda/lib64 && \
-    ln -s /etc/alternatives/libcudnn_so /usr/local/cudnn/cuda/lib64/libcudnn.so && \
-    ln -s /usr/local/cuda/lib64/stubs/libnvidia-ml.so /usr/local/cuda/lib64/stubs/libnvidia-ml.so.1
-
-# Build CNTK
-RUN git clone --depth=1 --recursive -b master https://github.com/Microsoft/CNTK.git . && \
-    CONFIGURE_OPTS="\
-      --1bitsgd=yes \
-      --with-cuda=/usr/local/cuda \
-      --with-gdk-include=/usr/local/cuda/include \
-      --with-gdk-nvml-lib=/usr/local/cuda/lib64/stubs \
-      --with-kaldi=${KALDI_PATH} \
-      --with-py35-path=/root/anaconda3/envs/cntk-py35 \
-      --with-cudnn=/usr/local/cudnn \
-      --with-nccl=${NCCL_PATH}" && \
-    mkdir -p build/gpu/release && \
-    cd build/gpu/release && \
-    ../../../configure $CONFIGURE_OPTS --with-openblas=/usr/local/openblas && \
-    make -j"$(nproc)" all && \
-    cd ../../.. && \
-    mkdir -p build-mkl/gpu/release && \
-    cd build-mkl/gpu/release && \
-    ../../../configure $CONFIGURE_OPTS --with-mkl=/usr/local/CNTKCustomMKL && \
-    make -j"$(nproc)" all
-
-RUN cd Examples/Image/DataSets/CIFAR-10 && \
-    python install_cifar10.py && \
-    cd ../../../..
-
-RUN cd Examples/Image/DataSets/MNIST && \
-    python install_mnist.py && \
-    cd ../../../..
-
-ENV PATH=/cntk/build/gpu/release/bin:$PATH PYTHONPATH=/cntk/bindings/python LD_LIBRARY_PATH=/cntk/bindings/python/cntk/libs:$LD_LIBRARY_PATH
-
-# cleanup
-WORKDIR /home/$NB_USER/work/
-USER $NB_USER
+# RUN bash -c "source activate python2" && \
+#    apt-get install -y libtool subversion && \
+#    mv /bin/sh /bin/sh.orig && \
+#    ln -s -f /bin/bash /bin/sh && \
+#    mkdir $KALDI_PATH && \
+#    wget --no-verbose -O - https://github.com/kaldi-asr/kaldi/archive/$KALDI_VERSION.tar.gz | tar -xzf - --strip-components=1 -C $KALDI_PATH && \
+#    cd $KALDI_PATH && \
+#    cd tools && \
+#    perl -pi -e 's/^# (OPENFST_VERSION = 1.4.1)$/\1/' Makefile && \
+#    ./extras/check_dependencies.sh && \
+#    make -j $(nproc) all && \
+#    cd ../src && \
+#    ./configure --openblas-root=/usr/local/openblas --shared && \
+#    make -j $(nproc) depend && \
+#    make -j $(nproc) all && \
+# # Remove some unneeded stuff in $KALDI_PATH to reduce size
+#    find $KALDI_PATH -name '*.o' -print0 | xargs -0 rm && \
+#    for dir in $KALDI_PATH/src/*bin; do make -C $dir clean; done && \
+#    mv -f /bin/sh.orig /bin/sh
+#
+# # RUN source activate root
+#
+# ## PYTHON
+#
+# # Swig
+# RUN cd /root && \
+#     wget -q http://prdownloads.sourceforge.net/swig/swig-3.0.10.tar.gz -O - | tar xvfz - && \
+#     cd swig-3.0.10 && \
+#     ./configure --without-perl5 && \
+#     make -j $(nproc) && \
+#     make install
+#
+# # Anaconda
+# RUN wget -q https://repo.continuum.io/archive/Anaconda3-4.2.0-Linux-x86_64.sh && \
+#     bash Anaconda3-4.2.0-Linux-x86_64.sh -b && \
+#     rm Anaconda3-4.2.0-Linux-x86_64.sh
+#
+# RUN CONDA_ENV_PATH=/tmp/conda-linux-cntk-py35-environment.yml; \
+#     wget -q https://raw.githubusercontent.com/Microsoft/CNTK/master/Scripts/install/linux/conda-linux-cntk-py35-environment.yml -O "$CONDA_ENV_PATH" && \
+#     /root/anaconda3/bin/conda env create -p /root/anaconda3/envs/cntk-py35 --file "$CONDA_ENV_PATH" && \
+#     rm -f "$CONDA_ENV_PATH"
+#
+# ENV PATH /root/anaconda3/envs/cntk-py35/bin:$PATH
+#
+# # NCCL
+# ENV NCCL_VERSION=1.3.0-1
+# ENV NCCL_PATH /usr/local/nccl-${NCCL_VERSION}
+# RUN git clone --depth=1 -b v${NCCL_VERSION} https://github.com/NVIDIA/nccl.git && \
+#     cd nccl && \
+#     make CUDA_HOME=/usr/local/cuda PREFIX=$NCCL_PATH install && \
+#     rm -rf /nccl
+#
+# WORKDIR /cntk
+#
+# RUN mkdir -p /usr/local/cudnn/cuda/include && \
+#     ln -s /usr/include/cudnn.h /usr/local/cudnn/cuda/include/cudnn.h && \
+#     mkdir -p /usr/local/cudnn/cuda/lib64 && \
+#     ln -s /etc/alternatives/libcudnn_so /usr/local/cudnn/cuda/lib64/libcudnn.so && \
+#     ln -s /usr/local/cuda/lib64/stubs/libnvidia-ml.so /usr/local/cuda/lib64/stubs/libnvidia-ml.so.1
+#
+# # Build CNTK
+# RUN git clone --depth=1 --recursive -b master https://github.com/Microsoft/CNTK.git . && \
+#     CONFIGURE_OPTS="\
+#       --1bitsgd=yes \
+#       --with-cuda=/usr/local/cuda \
+#       --with-gdk-include=/usr/local/cuda/include \
+#       --with-gdk-nvml-lib=/usr/local/cuda/lib64/stubs \
+#       --with-kaldi=${KALDI_PATH} \
+#       --with-py35-path=/root/anaconda3/envs/cntk-py35 \
+#       --with-cudnn=/usr/local/cudnn \
+#       --with-nccl=${NCCL_PATH}" && \
+#     mkdir -p build/gpu/release && \
+#     cd build/gpu/release && \
+#     ../../../configure $CONFIGURE_OPTS --with-openblas=/usr/local/openblas && \
+#     make -j"$(nproc)" all && \
+#     cd ../../.. && \
+#     mkdir -p build-mkl/gpu/release && \
+#     cd build-mkl/gpu/release && \
+#     ../../../configure $CONFIGURE_OPTS --with-mkl=/usr/local/CNTKCustomMKL && \
+#     make -j"$(nproc)" all
+#
+# RUN cd Examples/Image/DataSets/CIFAR-10 && \
+#     python install_cifar10.py && \
+#     cd ../../../..
+#
+# RUN cd Examples/Image/DataSets/MNIST && \
+#     python install_mnist.py && \
+#     cd ../../../..
+#
+# ENV PATH=/cntk/build/gpu/release/bin:$PATH PYTHONPATH=/cntk/bindings/python LD_LIBRARY_PATH=/cntk/bindings/python/cntk/libs:$LD_LIBRARY_PATH
+#
+# # cleanup
+# WORKDIR /home/$NB_USER/work/
+# USER $NB_USER
