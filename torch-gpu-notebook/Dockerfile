@@ -167,6 +167,8 @@ RUN luarocks install nn && \
   	cd iTorch && \
   	luarocks make
 
+RUN . /root/torch/install/bin/torch-activate
+
 # cleanup
 WORKDIR /home/$NB_USER/work/
 USER $NB_USER
