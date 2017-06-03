@@ -110,10 +110,10 @@ RUN apt-get update && apt-get install -y \
 # RUN pip install --upgrade pip
 # RUN pip install jupyter
 
-RUN git clone https://github.com/torch/distro.git /root/torch --recursive;
-  	cd /root/torch && \
-  	bash install-deps && \
-  	yes no | ./install.sh
+# RUN git clone https://github.com/torch/distro.git /root/torch --recursive;
+#  	cd /root/torch && \
+#  	bash install-deps && \
+#  	yes no | ./install.sh
 
 RUN git clone https://github.com/torch/distro.git /root/torch --recursive;
 WORKDIR /root/torch
