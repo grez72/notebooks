@@ -201,6 +201,7 @@ ENV KALDI_PATH /usr/local/kaldi-$KALDI_VERSION
 # RUN bash -c "source activate python2" && apt-get install -y libtool subversion
 
 RUN bash -c "source activate python2" && \
+   apt-get install -y libtool subversion && \
    mv /bin/sh /bin/sh.orig && \
    ln -s -f /bin/bash /bin/sh && \
    mkdir $KALDI_PATH && \
