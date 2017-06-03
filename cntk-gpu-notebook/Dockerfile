@@ -88,7 +88,7 @@ WORKDIR /home/$NB_USER/work
 #  INSTALL MICROSOFT COGNITIVE TOOLKIT!
 # ==============================================================
 
-ARG ENABLE_1BIT_SGD
+ARG ENABLE_1BIT_SGD = true
 
 RUN test "$ENABLE_1BIT_SGD" = "true" ||  ( echo "\033[0;31m\
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n\
