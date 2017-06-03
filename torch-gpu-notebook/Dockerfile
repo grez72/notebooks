@@ -106,6 +106,12 @@ RUN apt-get update && apt-get install -y \
   protobuf-compiler \
   sudo
 
+# Install OpenBLAS?
+RUN git clone https://github.com/xianyi/OpenBLAS.git && \
+    cd OpenBLAS && \
+    make NO_AFFINITY=1 USE_OPENMP=1 && \
+    make install
+    
 # Install Jupyter Notebook for iTorch
 # RUN pip install --upgrade pip
 # RUN pip install jupyter
