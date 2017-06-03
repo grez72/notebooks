@@ -217,17 +217,18 @@ RUN luarocks install nn && \
 #   	luarocks make
 
 USER $NB_USER
-RUN cd $HOME && git clone https://github.com/soumith/cudnn.torch.git && cd cudnn.torch && \
-    git checkout R4
+RUN cd $HOME && git clone https://github.com/soumith/cudnn.torch.git
 
 USER root
-RUN luarocks make
+WORKDIR $HOME/cudnn.torch
+RUN git checkout R4 && \
+    luarocks make && \
 
 USER $NB_USER
-RUN cd $HOME && git clone https://github.com/facebook/iTorch.git && \
-    cd iTorch
+RUN cd $HOME && git clone https://github.com/facebook/iTorch.git
 
 USER root
+WORKDIR $HOME/iTorch
 RUN luarocks make
 
 RUN . $HOME/torch/install/bin/torch-activate
