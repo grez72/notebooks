@@ -102,16 +102,24 @@ RUN apt-get update && apt-get install -y \
   python-dev \
   python-pip \
   python-zmq \
+  libprotobuf-dev \
+  protobuf-compiler \
   sudo
 
 # Install Jupyter Notebook for iTorch
 # RUN pip install --upgrade pip
 # RUN pip install jupyter
 
-RUN git clone https://github.com/torch/distro.git /root/torch --recursive && \
+RUN git clone https://github.com/torch/distro.git /root/torch --recursive;
   	cd /root/torch && \
   	bash install-deps && \
   	yes no | ./install.sh
+
+RUN git clone https://github.com/torch/distro.git /root/torch --recursive;
+WORKDIR /root/torch
+RUN bash install-deps && \
+  	yes no | ./install.sh
+
 
 # Run Torch7 installation scripts (dependencies only)
 # RUN git clone https://github.com/torch/distro.git /root/torch --recursive && cd /root/torch && \
@@ -150,6 +158,23 @@ ENV LUA_CPATH='/root/torch/install/lib/?.so;'$LUA_CPATH
 #  luarocks install cutorch && \
 #  luarocks install cunn && \
 #  luarocks install cudnn
+
+# Install dependencies for Caffe so we can run luarocks install loadcaffe
+RUN apt-get update && apt-get install -y \
+		libboost-all-dev \
+		libgflags-dev \
+		libgoogle-glog-dev \
+		libhdf5-serial-dev \
+		libleveldb-dev \
+		liblmdb-dev \
+		libopencv-dev \
+		libprotobuf-dev \
+		libsnappy-dev \
+		protobuf-compiler \
+		&& \
+	apt-get clean && \
+	apt-get autoremove && \
+	rm -rf /var/lib/apt/lists/*
 
 # Install the latest versions of nn, cutorch, cunn, cuDNN bindings and iTorch
 RUN luarocks install nn && \
