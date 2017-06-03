@@ -208,13 +208,18 @@ RUN luarocks install nn && \
     luarocks install loadcaffe
 
 USER $NB_USER
-RUN cd $HOME && git clone https://github.com/soumith/cudnn.torch.git && cd cudnn.torch && \
+RUN cd $HOME && git clone https://github.com/soumith/cudnn.torch.git
+
+USER root
+RUN cd cudnn.torch && \
   	git checkout R4 && \
   	luarocks make && \
-  	\
-  	cd $HOME && git clone https://github.com/facebook/iTorch.git && \
-  	cd iTorch && \
-  	luarocks make
+
+USER $NB_USER
+  	cd $HOME && git clone https://github.com/facebook/iTorch.git
+
+RUN cd iTorch && \
+    luarocks make
 
 USER root
 RUN . $HOME/torch/install/bin/torch-activate
