@@ -90,7 +90,7 @@ WORKDIR /home/$NB_USER/work
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     libtool \
-    libatlas3-base \
+    libatlas3-base
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
         autotools-dev \
