@@ -89,6 +89,7 @@ WORKDIR /home/$NB_USER/work
 # ==============================================================
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
+        libtool \
         autotools-dev \
         build-essential \
         cmake \
