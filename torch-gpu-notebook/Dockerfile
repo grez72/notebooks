@@ -110,16 +110,31 @@ RUN apt-get update && apt-get install -y \
 # RUN pip install --upgrade pip
 # RUN pip install jupyter
 
+# take 1
 # RUN git clone https://github.com/torch/distro.git /root/torch --recursive;
 #  	cd /root/torch && \
 #  	bash install-deps && \
 #  	yes no | ./install.sh
 
-RUN git clone https://github.com/torch/distro.git /root/torch --recursive;
-WORKDIR /root/torch
-RUN bash install-deps && \
-  	yes no | ./install.sh
+# take 2 (permission error with itorch kernal)
+# RUN git clone https://github.com/torch/distro.git /root/torch --recursive;
+# WORKDIR /root/torch
+# RUN bash install-deps && \
+#   	yes no | ./install.sh
 
+# take 3
+USER $NB_USER
+
+RUN git clone --recursive https://github.com/torch/distro.git $HOME/torch
+
+USER root
+RUN cd $HOME/torch && bash install-deps
+
+USER $NB_USER
+
+RUN cd $HOME/torch && bash install.sh -b && \
+    install/bin/torch-activate && \
+    install/bin/luarocks install itorch
 
 # Run Torch7 installation scripts (dependencies only)
 # RUN git clone https://github.com/torch/distro.git /root/torch --recursive && cd /root/torch && \
@@ -160,6 +175,7 @@ ENV LUA_CPATH='/root/torch/install/lib/?.so;'$LUA_CPATH
 #  luarocks install cudnn
 
 # Install dependencies for Caffe so we can run luarocks install loadcaffe
+USER root
 RUN apt-get update && apt-get install -y \
 		libboost-all-dev \
 		libgflags-dev \
@@ -182,9 +198,10 @@ RUN luarocks install nn && \
   	luarocks install cutorch && \
   	luarocks install cunn && \
     luarocks install cudnn && \
-    luarocks install loadcaffe && \
-  	\
-  	cd /root && git clone https://github.com/soumith/cudnn.torch.git && cd cudnn.torch && \
+    luarocks install loadcaffe
+
+USER $NB_USER
+RUN cd /root && git clone https://github.com/soumith/cudnn.torch.git && cd cudnn.torch && \
   	git checkout R4 && \
   	luarocks make && \
   	\
@@ -192,6 +209,7 @@ RUN luarocks install nn && \
   	cd iTorch && \
   	luarocks make
 
+USER root
 RUN . /root/torch/install/bin/torch-activate
 
 # cleanup
