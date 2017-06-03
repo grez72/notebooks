@@ -90,7 +90,9 @@ WORKDIR /home/$NB_USER/work
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     libtool \
-    libatlas3-base
+    libatlas3-base \
+    curl \
+    autoconf
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
         autotools-dev \
@@ -196,6 +198,9 @@ RUN CNTK_CUSTOM_MKL_VERSION=3 && \
 ENV KALDI_VERSION=c024e8aa
 ENV KALDI_PATH /usr/local/kaldi-$KALDI_VERSION
 
+RUN alias python=python2 && \
+    apt-get install -y libtool subversion
+
 RUN mv /bin/sh /bin/sh.orig && \
    ln -s -f /bin/bash /bin/sh && \
    mkdir $KALDI_PATH && \
@@ -213,6 +218,8 @@ RUN mv /bin/sh /bin/sh.orig && \
    find $KALDI_PATH -name '*.o' -print0 | xargs -0 rm && \
    for dir in $KALDI_PATH/src/*bin; do make -C $dir clean; done && \
    mv -f /bin/sh.orig /bin/sh
+
+RUN alias python=python3
 
 ## PYTHON
 
