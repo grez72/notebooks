@@ -222,7 +222,7 @@ RUN cd $HOME && git clone https://github.com/soumith/cudnn.torch.git
 USER root
 WORKDIR $HOME/cudnn.torch
 RUN git checkout R4 && \
-    luarocks make && \
+    luarocks make
 
 USER $NB_USER
 RUN cd $HOME && git clone https://github.com/facebook/iTorch.git
