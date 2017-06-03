@@ -1,4 +1,4 @@
-# nvidia-cuda-notebook
+ # nvidia-cuda-notebook
 # Modified nvidia-cuda-devel to work as single-user notebook with jupyterhub
 # Starting with the ubuntu14.04 cuda8 runtime and development Dockerfiles
 # https://gitlab.com/nvidia/cuda/blob/ubuntu14.04/8.0/runtime/cudnn5/Dockerfile
@@ -90,6 +90,7 @@ WORKDIR /home/$NB_USER/work
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
         libtool \
+        libatlas3-base \
         autotools-dev \
         build-essential \
         cmake \
