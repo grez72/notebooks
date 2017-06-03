@@ -199,7 +199,7 @@ ENV KALDI_VERSION=c024e8aa
 ENV KALDI_PATH /usr/local/kaldi-$KALDI_VERSION
 
 RUN alias python=python2
-RUN apt-get install -y libtool subversion
+RUN sudo apt-get install -y libtool subversion
 
 RUN mv /bin/sh /bin/sh.orig && \
    ln -s -f /bin/bash /bin/sh && \
