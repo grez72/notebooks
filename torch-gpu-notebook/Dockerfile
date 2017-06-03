@@ -162,12 +162,12 @@ RUN cd $HOME/torch && bash install.sh -b && \
 # 	DYLD_LIBRARY_PATH=/root/torch/install/lib:$DYLD_LIBRARY_PATH
 # ENV LUA_CPATH='/root/torch/install/lib/?.so;'$LUA_CPATH
 
-ENV LUA_PATH='$HOME/.luarocks/share/lua/5.1/?.lua;/$HOME/.luarocks/share/lua/5.1/?/init.lua;$HOME/torch/install/share/lua/5.1/?.lua;$HOME/torch/install/share/lua/5.1/?/init.lua;./?.lua;$HOME/torch/install/share/luajit-2.1.0-beta1/?.lua;/usr/local/share/lua/5.1/?.lua;/usr/local/share/lua/5.1/?/init.lua' \
-	LUA_CPATH='$HOME/.luarocks/lib/lua/5.1/?.so;$HOME/torch/install/lib/lua/5.1/?.so;./?.so;/usr/local/lib/lua/5.1/?.so;/usr/local/lib/lua/5.1/loadall.so' \
+ENV LUA_PATH="$HOME/.luarocks/share/lua/5.1/?.lua;/$HOME/.luarocks/share/lua/5.1/?/init.lua;$HOME/torch/install/share/lua/5.1/?.lua;$HOME/torch/install/share/lua/5.1/?/init.lua;./?.lua;$HOME/torch/install/share/luajit-2.1.0-beta1/?.lua;/usr/local/share/lua/5.1/?.lua;/usr/local/share/lua/5.1/?/init.lua" \
+	LUA_CPATH="$HOME/.luarocks/lib/lua/5.1/?.so;$HOME/torch/install/lib/lua/5.1/?.so;./?.so;/usr/local/lib/lua/5.1/?.so;/usr/local/lib/lua/5.1/loadall.so" \
 	PATH=$HOME/torch/install/bin:$PATH \
 	LD_LIBRARY_PATH=$HOME/torch/install/lib:$LD_LIBRARY_PATH \
 	DYLD_LIBRARY_PATH=$HOME/torch/install/lib:$DYLD_LIBRARY_PATH
-ENV LUA_CPATH='$HOME/torch/install/lib/?.so;'$LUA_CPATH
+ENV LUA_CPATH="$HOME/torch/install/lib/?.so;"$LUA_CPATH
 
 # Set ~/torch as working directory
 # WORKDIR /root/torch
