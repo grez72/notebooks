@@ -3,7 +3,7 @@
 # Starting with the ubuntu14.04 cuda8 runtime and development Dockerfiles
 # https://gitlab.com/nvidia/cuda/blob/ubuntu14.04/8.0/runtime/cudnn5/Dockerfile
 # https://gitlab.com/nvidia/cuda/blob/ubuntu14.04/8.0/devel/Dockerfile
-# https://github.com/Microsoft/CNTK/blob/master/Tools/docker/CNTK-GPU-Image/Dockerfile
+# https://github.com/Microsoft/CNTK-docker/blob/v2.0/ubuntu-14.04/version_2/gpu/runtime/python-3/Dockerfile
 # sudo nvidia-docker build -t grez72/cntk-gpu-notebook https://github.com/grez72/notebooks.git#master:cntk-gpu-notebook
 # sudo nvidia-docker run -it --rm -p 8888:8888 grez72/cntk-gpu-notebook
 
