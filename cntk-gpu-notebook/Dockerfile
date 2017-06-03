@@ -100,6 +100,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         && \
     rm -rf /var/lib/apt/lists/*
 
+RUN apt-get install libjpeg62-turbo-dev
+
 # Get CNTK Binary Distribution
 WORKDIR $HOME
 RUN CNTK_VERSION_DASHED=$(echo $CNTK_VERSION | tr . -) && \
