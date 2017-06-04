@@ -232,6 +232,14 @@ RUN CNTK_CUSTOM_MKL_VERSION=3 && \
     wget --no-verbose -O - https://www.cntk.ai/mkl/CNTKCustomMKL-Linux-$CNTK_CUSTOM_MKL_VERSION.tgz | \
     tar -xzf - -C /usr/local/CNTKCustomMKL
 
+# Install Open Message Passing Interface Library (Open MPI)
+RUN wget https://www.open-mpi.org/software/ompi/v1.10/downloads/openmpi-1.10.3.tar.gz && \
+    tar -xzvf ./openmpi-1.10.3.tar.gz && \
+    cd openmpi-1.10.3 && \
+    ./configure --prefix=/usr/local/mpi && \
+    make -j"$(nproc)" all && \
+    make install
+
 # Install Kaldi
 ENV KALDI_VERSION=c024e8aa
 ENV KALDI_PATH /usr/local/kaldi-$KALDI_VERSION
@@ -271,25 +279,36 @@ RUN cd /root && \
     make install
 
 # Anaconda (already installed with notebook)
-# RUN cd /root && \
-#     wget -q https://repo.continuum.io/archive/Anaconda3-4.2.0-Linux-x86_64.sh && \
-#     bash Anaconda3-4.2.0-Linux-x86_64.sh -b && \
-#     rm Anaconda3-4.2.0-Linux-x86_64.sh
-#
+RUN cd /root && \
+    wget -q https://repo.continuum.io/archive/Anaconda3-4.2.0-Linux-x86_64.sh && \
+    bash Anaconda3-4.2.0-Linux-x86_64.sh -b && \
+    rm Anaconda3-4.2.0-Linux-x86_64.sh
+
 RUN CONDA_ENV_PATH=/tmp/conda-linux-cntk-py35-environment.yml; \
     wget -q https://raw.githubusercontent.com/Microsoft/CNTK/master/Scripts/install/linux/conda-linux-cntk-py35-environment.yml -O "$CONDA_ENV_PATH" && \
     /opt/conda/bin/conda env create -p /root/anaconda3/envs/cntk-py35 --file "$CONDA_ENV_PATH" && \
     rm -f "$CONDA_ENV_PATH"
 
-ENV PATH /root/anaconda3/envs/cntk-py35/bin:$PATH
+# RUN conda env create --file [CNTK clone root]/Scripts/install/linux/conda-linux-cntk-py35-environment.yml
+# RUN conda env create --file [CNTK clone root]/Scripts/install/linux/conda-linux-cntk-py35-environment.yml
+#
+# ENV PATH /root/anaconda3/envs/cntk-py35/bin:$PATH
 
 # NCCL
-ENV NCCL_VERSION=1.3.0-1
-ENV NCCL_PATH /usr/local/nccl-${NCCL_VERSION}
-RUN git clone --depth=1 -b v${NCCL_VERSION} https://github.com/NVIDIA/nccl.git && \
-    cd nccl && \
-    make CUDA_HOME=/usr/local/cuda PREFIX=$NCCL_PATH install && \
-    rm -rf /nccl
+# ENV NCCL_VERSION=1.3.0-1
+# ENV NCCL_PATH /usr/local/nccl-${NCCL_VERSION}
+# RUN git clone --depth=1 -b v${NCCL_VERSION} https://github.com/NVIDIA/nccl.git && \
+#     cd nccl && \
+#     make CUDA_HOME=/usr/local/cuda PREFIX=$NCCL_PATH install && \
+#     rm -rf /nccl
+
+# install nccl
+RUN wget https://github.com/NVIDIA/nccl/releases/download/v1.2.3-1%2Bcuda8.0/libnccl1_1.2.3-1.cuda8.0_amd64.deb && \
+  dpkg -i libnccl1_1.2.3-1.cuda8.0_amd64.deb && \
+  rm libnccl1_1.2.3-1.cuda8.0_amd64.deb && \
+  wget https://github.com/NVIDIA/nccl/releases/download/v1.2.3-1%2Bcuda8.0/libnccl-dev_1.2.3-1.cuda8.0_amd64.deb && \
+  dpkg -i libnccl-dev_1.2.3-1.cuda8.0_amd64.deb && \
+  rm libnccl-dev_1.2.3-1.cuda8.0_amd64.deb
 
 WORKDIR /cntk
 
