@@ -109,7 +109,8 @@ RUN CNTK_VERSION_DASHED=$(echo $CNTK_VERSION | tr . -) && \
     echo "$CNTK_SHA256 CNTK-${CNTK_VERSION_DASHED}-Linux-64bit-GPU.tar.gz" | sha256sum --check --strict - && \
     tar -xzf CNTK-${CNTK_VERSION_DASHED}-Linux-64bit-GPU.tar.gz && \
     rm -f CNTK-${CNTK_VERSION_DASHED}-Linux-64bit-GPU.tar.gz && \
-    /bin/bash $HOME/cntk/Scripts/install/linux/install-cntk.sh --py-version 35 --docker
+    # /bin/bash $HOME/cntk/Scripts/install/linux/install-cntk.sh --py-version 35 --docker
+    # /bin/bash $HOME/cntk/Scripts/install/linux/install-cntk.sh --py-version 27 --docker
 
 # RUN apt-get update && apt-get install -y --no-install-recommends \
 #     libtool \
