@@ -88,8 +88,8 @@ WORKDIR /home/$NB_USER/work
 #  INSTALL MICROSOFT COGNITIVE TOOLKIT!
 # ==============================================================
 
-RUN pip install https://cntk.ai/PythonWheel/GPU-1bit-SGD/cntk-2.0rc3-cp35-cp35m-win_amd64.whl
-RUN pip2 install https://cntk.ai/PythonWheel/GPU-1bit-SGD/cntk-2.0rc3-cp27-cp27m-win_amd64.whl
+#RUN pip install https://cntk.ai/PythonWheel/GPU-1bit-SGD/cntk-2.0rc3-cp35-cp35m-win_amd64.whl
+#RUN pip2 install https://cntk.ai/PythonWheel/GPU-1bit-SGD/cntk-2.0rc3-cp27-cp27m-win_amd64.whl
 
 # ENV CNTK_VERSION="2.0"
 #
