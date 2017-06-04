@@ -112,13 +112,15 @@ RUN wget https://www.open-mpi.org/software/ompi/v1.10/downloads/openmpi-1.10.3.t
 # Get CNTK Binary Distribution
 WORKDIR $HOME
 RUN apt-get update && apt-get install -y libcairo2-dev libjpeg62-turbo-dev libpango1.0-dev libgif-dev build-essential g++
-RUN sed -i 's/libjpeg8//g' $HOME/cntk/Scripts/install/linux/install-cntk.sh
+
 RUN CNTK_VERSION_DASHED=$(echo $CNTK_VERSION | tr . -) && \
     CNTK_SHA256="dab691a81602efe7c2c3729bff86e5934489c9f72cfc6911ae18bc909adf83b4" && \
     wget -q https://cntk.ai/BinaryDrop/CNTK-${CNTK_VERSION_DASHED}-Linux-64bit-GPU.tar.gz && \
     echo "$CNTK_SHA256 CNTK-${CNTK_VERSION_DASHED}-Linux-64bit-GPU.tar.gz" | sha256sum --check --strict - && \
     tar -xzf CNTK-${CNTK_VERSION_DASHED}-Linux-64bit-GPU.tar.gz && \
-    rm -f CNTK-${CNTK_VERSION_DASHED}-Linux-64bit-GPU.tar.gz && \
+    rm -f CNTK-${CNTK_VERSION_DASHED}-Linux-64bit-GPU.tar.gz
+
+RUN sed -i 's/libjpeg8//g' $HOME/cntk/Scripts/install/linux/install-cntk.sh && \
     /bin/bash $HOME/cntk/Scripts/install/linux/install-cntk.sh --py-version 35 --docker
     # /bin/bash $HOME/cntk/Scripts/install/linux/install-cntk.sh --py-version 27 --docker
 
