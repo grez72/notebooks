@@ -256,16 +256,16 @@ RUN cd /root && \
     make install
 
 # Anaconda (already installed with notebook)
-# RUN wget -q https://repo.continuum.io/archive/Anaconda3-4.2.0-Linux-x86_64.sh && \
-#     bash Anaconda3-4.2.0-Linux-x86_64.sh -b && \
-#     rm Anaconda3-4.2.0-Linux-x86_64.sh
-#
-# RUN CONDA_ENV_PATH=/tmp/conda-linux-cntk-py35-environment.yml; \
-#     wget -q https://raw.githubusercontent.com/Microsoft/CNTK/master/Scripts/install/linux/conda-linux-cntk-py35-environment.yml -O "$CONDA_ENV_PATH" && \
-#     /root/anaconda3/bin/conda env create -p /root/anaconda3/envs/cntk-py35 --file "$CONDA_ENV_PATH" && \
-#     rm -f "$CONDA_ENV_PATH"
-#
-# ENV PATH /root/anaconda3/envs/cntk-py35/bin:$PATH
+RUN wget -q https://repo.continuum.io/archive/Anaconda3-4.2.0-Linux-x86_64.sh && \
+    bash Anaconda3-4.2.0-Linux-x86_64.sh -b && \
+    rm Anaconda3-4.2.0-Linux-x86_64.sh
+
+RUN CONDA_ENV_PATH=/tmp/conda-linux-cntk-py35-environment.yml; \
+    wget -q https://raw.githubusercontent.com/Microsoft/CNTK/master/Scripts/install/linux/conda-linux-cntk-py35-environment.yml -O "$CONDA_ENV_PATH" && \
+    /root/anaconda3/bin/conda env create -p /root/anaconda3/envs/cntk-py35 --file "$CONDA_ENV_PATH" && \
+    rm -f "$CONDA_ENV_PATH"
+
+ENV PATH /root/anaconda3/envs/cntk-py35/bin:$PATH
 
 # NCCL
 ENV NCCL_VERSION=1.3.0-1
