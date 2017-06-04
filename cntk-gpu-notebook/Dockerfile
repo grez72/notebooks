@@ -291,7 +291,7 @@ RUN git clone --depth=1 --recursive -b master https://github.com/Microsoft/CNTK.
       --with-gdk-include=/usr/local/cuda/include \
       --with-gdk-nvml-lib=/usr/local/cuda/lib64/stubs \
       --with-kaldi=${KALDI_PATH} \
-      --with-py35-path=/opt/conda/bin/python3 \
+      --with-py35-path=/opt/conda/bin/python \
       --with-cudnn=/usr/local/cudnn \
       --with-nccl=${NCCL_PATH}" && \
     mkdir -p build/gpu/release && \
