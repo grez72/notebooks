@@ -124,6 +124,8 @@ RUN sed -i 's/libjpeg8//g' $HOME/cntk/Scripts/install/linux/install-cntk.sh && \
     /bin/bash $HOME/cntk/Scripts/install/linux/install-cntk.sh --py-version 35 --docker
     # /bin/bash $HOME/cntk/Scripts/install/linux/install-cntk.sh --py-version 27 --docker
 
+RUN source "$HOME/cntk/activate-cntk"
+
 # RUN apt-get update && apt-get install -y --no-install-recommends \
 #     libtool \
 #     libatlas3-base \
