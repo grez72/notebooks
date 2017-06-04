@@ -198,30 +198,30 @@ RUN CNTK_CUSTOM_MKL_VERSION=3 && \
 ENV KALDI_VERSION=c024e8aa
 ENV KALDI_PATH /usr/local/kaldi-$KALDI_VERSION
 
-RUN bash -c "source activate python2"
+# RUN bash -c "source activate python2"
 
 # RUN bash -c "source activate python2" && apt-get install -y libtool subversion
 
-# RUN bash -c "source activate python2" && \
-#    apt-get install -y libtool subversion && \
-#    mv /bin/sh /bin/sh.orig && \
-#    ln -s -f /bin/bash /bin/sh && \
-#    mkdir $KALDI_PATH && \
-#    wget --no-verbose -O - https://github.com/kaldi-asr/kaldi/archive/$KALDI_VERSION.tar.gz | tar -xzf - --strip-components=1 -C $KALDI_PATH && \
-#    cd $KALDI_PATH && \
-#    cd tools && \
-#    perl -pi -e 's/^# (OPENFST_VERSION = 1.4.1)$/\1/' Makefile && \
-#    ./extras/check_dependencies.sh && \
-#    make -j $(nproc) all && \
-#    cd ../src && \
-#    ./configure --openblas-root=/usr/local/openblas --shared && \
-#    make -j $(nproc) depend && \
-#    make -j $(nproc) all && \
-# # Remove some unneeded stuff in $KALDI_PATH to reduce size
-#    find $KALDI_PATH -name '*.o' -print0 | xargs -0 rm && \
-#    for dir in $KALDI_PATH/src/*bin; do make -C $dir clean; done && \
-#    mv -f /bin/sh.orig /bin/sh
-#
+RUN bash -c "source activate python2 && \
+   apt-get install -y libtool subversion && \
+   mv /bin/sh /bin/sh.orig && \
+   ln -s -f /bin/bash /bin/sh && \
+   mkdir $KALDI_PATH && \
+   wget --no-verbose -O - https://github.com/kaldi-asr/kaldi/archive/$KALDI_VERSION.tar.gz | tar -xzf - --strip-components=1 -C $KALDI_PATH && \
+   cd $KALDI_PATH && \
+   cd tools && \
+   perl -pi -e 's/^# (OPENFST_VERSION = 1.4.1)$/\1/' Makefile && \
+   ./extras/check_dependencies.sh && \
+   make -j $(nproc) all && \
+   cd ../src && \
+   ./configure --openblas-root=/usr/local/openblas --shared && \
+   make -j $(nproc) depend && \
+   make -j $(nproc) all && \
+# Remove some unneeded stuff in $KALDI_PATH to reduce size
+   find $KALDI_PATH -name '*.o' -print0 | xargs -0 rm && \
+   for dir in $KALDI_PATH/src/*bin; do make -C $dir clean; done && \
+   mv -f /bin/sh.orig /bin/sh"
+
 # # RUN source activate root
 #
 # ## PYTHON
