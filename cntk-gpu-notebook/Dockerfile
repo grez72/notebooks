@@ -261,12 +261,12 @@ RUN cd /root && \
 #     bash Anaconda3-4.2.0-Linux-x86_64.sh -b && \
 #     rm Anaconda3-4.2.0-Linux-x86_64.sh
 #
-# RUN CONDA_ENV_PATH=/tmp/conda-linux-cntk-py35-environment.yml; \
-#     wget -q https://raw.githubusercontent.com/Microsoft/CNTK/master/Scripts/install/linux/conda-linux-cntk-py35-environment.yml -O "$CONDA_ENV_PATH" && \
-#     /root/anaconda3/bin/conda env create -p /root/anaconda3/envs/cntk-py35 --file "$CONDA_ENV_PATH" && \
-#     rm -f "$CONDA_ENV_PATH"
-#
-# ENV PATH /root/anaconda3/envs/cntk-py35/bin:$PATH
+RUN CONDA_ENV_PATH=/tmp/conda-linux-cntk-py35-environment.yml; \
+    wget -q https://raw.githubusercontent.com/Microsoft/CNTK/master/Scripts/install/linux/conda-linux-cntk-py35-environment.yml -O "$CONDA_ENV_PATH" && \
+    /opt/conda/bin/conda env create -p /root/anaconda3/envs/cntk-py35 --file "$CONDA_ENV_PATH" && \
+    rm -f "$CONDA_ENV_PATH"
+
+ENV PATH /root/anaconda3/envs/cntk-py35/bin:$PATH
 
 # NCCL
 ENV NCCL_VERSION=1.3.0-1
@@ -285,36 +285,36 @@ RUN mkdir -p /usr/local/cudnn/cuda/include && \
     ln -s /usr/local/cuda/lib64/stubs/libnvidia-ml.so /usr/local/cuda/lib64/stubs/libnvidia-ml.so.1
 
 # Build CNTK
-# RUN git clone --depth=1 --recursive -b master https://github.com/Microsoft/CNTK.git . && \
-#     CONFIGURE_OPTS="\
-#       --1bitsgd=yes \
-#       --with-cuda=/usr/local/cuda \
-#       --with-gdk-include=/usr/local/cuda/include \
-#       --with-gdk-nvml-lib=/usr/local/cuda/lib64/stubs \
-#       --with-kaldi=${KALDI_PATH} \
-#       --with-py35-path=/root/anaconda3/envs/cntk-py35 \
-#       --with-cudnn=/usr/local/cudnn \
-#       --with-nccl=${NCCL_PATH}" && \
-#     mkdir -p build/gpu/release && \
-#     cd build/gpu/release && \
-#     ../../../configure $CONFIGURE_OPTS --with-openblas=/usr/local/openblas && \
-#     make -j"$(nproc)" all && \
-#     cd ../../.. && \
-#     mkdir -p build-mkl/gpu/release && \
-#     cd build-mkl/gpu/release && \
-#     ../../../configure $CONFIGURE_OPTS --with-mkl=/usr/local/CNTKCustomMKL && \
-#     make -j"$(nproc)" all
-#
-# RUN cd Examples/Image/DataSets/CIFAR-10 && \
-#     python install_cifar10.py && \
-#     cd ../../../..
-#
-# RUN cd Examples/Image/DataSets/MNIST && \
-#     python install_mnist.py && \
-#     cd ../../../..
-#
-# ENV PATH=/cntk/build/gpu/release/bin:$PATH PYTHONPATH=/cntk/bindings/python LD_LIBRARY_PATH=/cntk/bindings/python/cntk/libs:$LD_LIBRARY_PATH
-#
-# # cleanup
-# WORKDIR /home/$NB_USER/work/
-# USER $NB_USER
+RUN git clone --depth=1 --recursive -b master https://github.com/Microsoft/CNTK.git . && \
+    CONFIGURE_OPTS="\
+      --1bitsgd=yes \
+      --with-cuda=/usr/local/cuda \
+      --with-gdk-include=/usr/local/cuda/include \
+      --with-gdk-nvml-lib=/usr/local/cuda/lib64/stubs \
+      --with-kaldi=${KALDI_PATH} \
+      --with-py35-path=/root/anaconda3/envs/cntk-py35 \
+      --with-cudnn=/usr/local/cudnn \
+      --with-nccl=${NCCL_PATH}" && \
+    mkdir -p build/gpu/release && \
+    cd build/gpu/release && \
+    ../../../configure $CONFIGURE_OPTS --with-openblas=/usr/local/openblas && \
+    make -j"$(nproc)" all && \
+    cd ../../.. && \
+    mkdir -p build-mkl/gpu/release && \
+    cd build-mkl/gpu/release && \
+    ../../../configure $CONFIGURE_OPTS --with-mkl=/usr/local/CNTKCustomMKL && \
+    make -j"$(nproc)" all
+
+RUN cd Examples/Image/DataSets/CIFAR-10 && \
+    python install_cifar10.py && \
+    cd ../../../..
+
+RUN cd Examples/Image/DataSets/MNIST && \
+    python install_mnist.py && \
+    cd ../../../..
+
+ENV PATH=/cntk/build/gpu/release/bin:$PATH PYTHONPATH=/cntk/bindings/python LD_LIBRARY_PATH=/cntk/bindings/python/cntk/libs:$LD_LIBRARY_PATH
+
+# cleanup
+WORKDIR /home/$NB_USER/work/
+USER $NB_USER
