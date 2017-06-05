@@ -1,9 +1,16 @@
-# nvidia-cuda-notebook
+# base-notebook for deep learning
+#
 # Modified nvidia-cuda-devel to work as single-user notebook with jupyterhub
-# Starting with the ubuntu14.04 cuda8 runtime and development Dockerfiles
+# Starting with jupyter/scipy-notebook, then incorporating the ubuntu14.04
+# cuda8 runtime and development Dockerfile instructions:
 # https://gitlab.com/nvidia/cuda/blob/ubuntu14.04/8.0/runtime/cudnn5/Dockerfile
 # https://gitlab.com/nvidia/cuda/blob/ubuntu14.04/8.0/devel/Dockerfile
+# ...then including opencv
+#
+# build it:
 # nvidia-docker build -t grez72/cuda-v8.0-gpu-notebook https://github.com/grez72/notebooks.git#master:cuda-v8.0-gpu-notebook
+#
+# run it:
 # nvidia-docker run -it --rm -p 8888:8888 grez72/cuda-v8.0-gpu-notebook
 # nvidia-docker run --user root -it --rm -p 8888:8888 grez72/cuda-v8.0-gpu-notebook
 
@@ -74,12 +81,23 @@ RUN cp -P /usr/include/cudnn.h /usr/local/cuda/include
 # test devices
 WORKDIR /usr/local/cuda/samples/1_Utilities/deviceQuery
 
-RUN make
+RUN make -j"$(nproc)"
 
 # CMD defines the default command to be run in the container
 # CMD is overridden by supplying a command + arguments to
 # `docker run`, e.g. `nvcc --version` or `bash`
 # CMD ./deviceQuery
+
+# Install OpenCV
+RUN git clone --depth 1 https://github.com/opencv/opencv.git /root/opencv && \
+	cd /root/opencv && \
+	mkdir build && \
+	cd build && \
+	cmake -DWITH_QT=ON -DWITH_OPENGL=ON -DFORCE_VTK=ON -DWITH_TBB=ON -DWITH_GDAL=ON -DWITH_XINE=ON -DBUILD_EXAMPLES=ON .. && \
+	make -j"$(nproc)"  && \
+	make install && \
+	ldconfig && \
+	echo 'ln /dev/null /dev/raw1394' >> ~/.bashrc
 
 # setup for notebook use
 WORKDIR /home/$NB_USER/work/
