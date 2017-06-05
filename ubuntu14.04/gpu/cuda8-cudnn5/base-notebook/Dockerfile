@@ -89,7 +89,7 @@ RUN make -j"$(nproc)"
 # CMD ./deviceQuery
 
 RUN conda install opencv
-RUN source activate python2 && conda install opencv
+RUN /bin/bash -c "source activate python2 && conda install opencv"
 
 # Various dependencies
 # RUN apt-get update && apt-get upgrade -y && apt-get install -y \
