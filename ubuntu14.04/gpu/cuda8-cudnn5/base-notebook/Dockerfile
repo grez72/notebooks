@@ -102,7 +102,8 @@ RUN apt-get update && apt-get upgrade -y && apt-get install -y \
     libjpeg-dev \
 		libpng-dev \
     libtiff-dev \
-    libjasper-dev
+    libjasper-dev \
+    qt5-default
 
 # opencv
 RUN git clone --depth 1 https://github.com/opencv/opencv.git /root/opencv && \
