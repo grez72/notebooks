@@ -88,33 +88,35 @@ RUN make -j"$(nproc)"
 # `docker run`, e.g. `nvcc --version` or `bash`
 # CMD ./deviceQuery
 
-# Various dependencies
-RUN apt-get update && apt-get upgrade -y && apt-get install -y \
-    unzip \
-    wget \
-    build-essential \
-		cmake \
-    git \
-    pkg-config \
-    libswscale-dev \
-		libtbb2 \
-    libtbb-dev \
-    libjpeg-dev \
-		libpng-dev \
-    libtiff-dev \
-    libjasper-dev \
-    qt5-default
+RUN conda install opencv
 
-# opencv
-RUN git clone --depth 1 https://github.com/opencv/opencv.git /root/opencv && \
-	cd /root/opencv && \
-	mkdir build && \
-	cd build && \
-	cmake -DWITH_QT=ON -DWITH_OPENGL=ON -DFORCE_VTK=ON -DWITH_TBB=ON -DWITH_GDAL=ON -DWITH_XINE=ON -DBUILD_EXAMPLES=ON -DCUDA_CUDA_LIBRARY=/usr/local/cuda/lib64/stubs/libcuda.so .. && \
-	make -j"$(nproc)"  && \
-	make install && \
-	ldconfig && \
-	echo 'ln /dev/null /dev/raw1394' >> ~/.bashrc
+# Various dependencies
+# RUN apt-get update && apt-get upgrade -y && apt-get install -y \
+#     unzip \
+#     wget \
+#     build-essential \
+# 		cmake \
+#     git \
+#     pkg-config \
+#     libswscale-dev \
+# 		libtbb2 \
+#     libtbb-dev \
+#     libjpeg-dev \
+# 		libpng-dev \
+#     libtiff-dev \
+#     libjasper-dev \
+#     qt5-default
+#
+# # opencv
+# RUN git clone --depth 1 https://github.com/opencv/opencv.git /root/opencv && \
+# 	cd /root/opencv && \
+# 	mkdir build && \
+# 	cd build && \
+# 	cmake -DWITH_QT=ON -DWITH_OPENGL=ON -DFORCE_VTK=ON -DWITH_TBB=ON -DWITH_GDAL=ON -DWITH_XINE=ON -DBUILD_EXAMPLES=ON -DCUDA_CUDA_LIBRARY=/usr/local/cuda/lib64/stubs/libcuda.so .. && \
+# 	make -j"$(nproc)"  && \
+# 	make install && \
+# 	ldconfig && \
+# 	echo 'ln /dev/null /dev/raw1394' >> ~/.bashrc
 
 # setup for notebook use
 WORKDIR /home/$NB_USER/work/

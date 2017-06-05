@@ -19,6 +19,6 @@ sudo nvidia-docker build -t grez72/deep-notebooks:ubuntu14.04-gpu-cuda8-cudnn5-b
 ```
 
 # run it as standalone container
-nvidia-docker run -it --rm -p 8888:8888 grez72/cuda-tensorflow-gpu-notebook
+nvidia-docker run -it --rm -p 8888:8888 grez72/deep-notebooks:ubuntu14.04-gpu-cuda8-cudnn5-base-notebook
 
 # run it with jupyterhub and Dockerspawner
