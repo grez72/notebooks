@@ -88,8 +88,23 @@ WORKDIR /home/$NB_USER/work
 #  INSTALL MICROSOFT COGNITIVE TOOLKIT!
 # ==============================================================
 
-#RUN pip install https://cntk.ai/PythonWheel/GPU-1bit-SGD/cntk-2.0rc3-cp35-cp35m-win_amd64.whl
-#RUN pip2 install https://cntk.ai/PythonWheel/GPU-1bit-SGD/cntk-2.0rc3-cp27-cp27m-win_amd64.whl
+# Install Open Message Passing Interface Library (Open MPI)
+RUN OPENMPI_VERSION=1.10.3 && \
+    wget -q -O - https://www.open-mpi.org/software/ompi/v1.10/downloads/openmpi-${OPENMPI_VERSION}.tar.gz | tar -xzf - && \
+    cd openmpi-${OPENMPI_VERSION} && \
+    ./configure --prefix=/usr/local/mpi && \
+    make -j"$(nproc)" install && \
+    rm -rf /openmpi-${OPENMPI_VERSION}
+
+ENV PATH /usr/local/mpi/bin:$PATH
+ENV LD_LIBRARY_PATH /usr/local/mpi/lib:$LD_LIBRARY_PATH
+
+RUN pip install --upgrade pip
+RUN pip install https://cntk.ai/PythonWheel/GPU-1bit-SGD/cntk-2.0rc3-cp35-cp35m-linux_x86_64.whl
+RUN pip2 install https://cntk.ai/PythonWheel/GPU-1bit-SGD/cntk-2.0rc3-cp27-cp27mu-linux_x86_64.whl
+
+WORKDIR /home/$NB_USER/work/
+USER $NB_USER
 
 # ENV CNTK_VERSION="2.0"
 #
