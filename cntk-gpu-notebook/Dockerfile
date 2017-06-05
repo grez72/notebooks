@@ -108,6 +108,6 @@ RUN pip2 install https://cntk.ai/PythonWheel/GPU-1bit-SGD/cntk-2.0rc3-cp27-cp27m
 
 WORKDIR /home/$NB_USER/work/
 
-# RUN python -m cntk.sample_installer
+RUN python -m cntk.sample_installer
 
 USER $NB_USER
