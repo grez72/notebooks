@@ -88,33 +88,74 @@ RUN make -j"$(nproc)"
 # `docker run`, e.g. `nvcc --version` or `bash`
 # CMD ./deviceQuery
 
-# Install OpenCV
-# Various Python and C/build deps
+# Various dependencies
 RUN apt-get update && apt-get install -y \
-    wget \
-    build-essential \
-    cmake \
-    git \
-    unzip \
-    pkg-config \
-    python-dev \
-    python-opencv \
-    libopencv-dev \
-    libav-tools  \
-    libjpeg-dev \
-    libpng-dev \
-    libtiff-dev \
-    libjasper-dev \
-    libgtk2.0-dev \
-    python-numpy \
-    python-pycurl \
-    libatlas-base-dev \
-    gfortran \
-    webp \
-    python-opencv \
-    qt5-default \
-    libvtk6-dev \
-    zlib1g-dev
+		bc \
+		build-essential \
+		cmake \
+		curl \
+		g++ \
+		gfortran \
+		git \
+		libffi-dev \
+		libfreetype6-dev \
+		libhdf5-dev \
+		libjpeg-dev \
+		liblcms2-dev \
+		libopenblas-dev \
+		liblapack-dev \
+		libopenjpeg2 \
+		libpng12-dev \
+		libssl-dev \
+		libtiff5-dev \
+		libwebp-dev \
+		libzmq3-dev \
+		nano \
+		pkg-config \
+		python-dev \
+		software-properties-common \
+		unzip \
+		vim \
+		wget \
+		zlib1g-dev \
+		qt5-default \
+		libvtk6-dev \
+		zlib1g-dev \
+		libjpeg-dev \
+		libwebp-dev \
+		libpng-dev \
+		libtiff5-dev \
+		libjasper-dev \
+		libopenexr-dev \
+		libgdal-dev \
+		libdc1394-22-dev \
+		libavcodec-dev \
+		libavformat-dev \
+		libswscale-dev \
+		libtheora-dev \
+		libvorbis-dev \
+		libxvidcore-dev \
+		libx264-dev \
+		yasm \
+		libopencore-amrnb-dev \
+		libopencore-amrwb-dev \
+		libv4l-dev \
+		libxine2-dev \
+		libtbb-dev \
+		libeigen3-dev \
+		python-dev \
+		python-tk \
+		python-numpy \
+		python3-dev \
+		python3-tk \
+		python3-numpy \
+		ant \
+		default-jdk \
+		doxygen \
+		&& \
+	apt-get clean && \
+	apt-get autoremove && \
+	rm -rf /var/lib/apt/lists/*
 
 # opencv
 RUN git clone --depth 1 https://github.com/opencv/opencv.git /root/opencv && \
