@@ -88,8 +88,8 @@ RUN make -j"$(nproc)"
 # `docker run`, e.g. `nvcc --version` or `bash`
 # CMD ./deviceQuery
 
-RUN alias python=python2 && conda install opencv
 RUN conda install opencv
+RUN source activate python2 && conda install opencv
 
 # Various dependencies
 # RUN apt-get update && apt-get upgrade -y && apt-get install -y \
