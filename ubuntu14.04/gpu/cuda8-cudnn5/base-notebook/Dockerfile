@@ -89,6 +89,9 @@ RUN make -j"$(nproc)"
 # CMD ./deviceQuery
 
 # Install OpenCV
+RUN && apt-get install -y --no-install-recommends \
+    cmake
+
 RUN git clone --depth 1 https://github.com/opencv/opencv.git /root/opencv && \
 	cd /root/opencv && \
 	mkdir build && \
