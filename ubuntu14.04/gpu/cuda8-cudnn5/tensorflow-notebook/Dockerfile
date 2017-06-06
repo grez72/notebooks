@@ -40,8 +40,8 @@ RUN apt-get upgrade -y bazel
 # install tensorflow
 RUN git clone https://github.com/tensorflow/tensorflow
 WORKDIR /home/$NB_USER/work/tensorflow
-# change to version 1.1
-RUN git checkout remotes/origin/r1.1
+# change to version 1.1?
+# RUN git checkout remotes/origin/r1.1
 
 # Next we configure the installation
 # Normally we call ./configure, and do an interactive setup
@@ -140,8 +140,10 @@ RUN rm -R tensorflow
 # ==============================================================
 
 # conda install -c anaconda hdf5=1.8.17
-# RUN conda remove hdf5 -y && conda install hdf5=1.8.17 -y
-# RUN /bin/bash -c "source activate python2 && conda remove hdf5 -y && conda install hdf5=1.8.17 -y"
+RUN conda remove hdf5 -y && conda install hdf5=1.8.17 -y
+RUN /bin/bash -c "source activate python2 && conda remove hdf5 -y && conda install hdf5=1.8.17 -y"
+RUN pip install hdf5
+RUN pip2 install hdf5
 
 # ==============================================================
 #  install keras and tensorflow
