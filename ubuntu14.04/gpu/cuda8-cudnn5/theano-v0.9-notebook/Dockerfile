@@ -82,11 +82,22 @@ RUN pip --no-cache-dir install git+git://github.com/Theano/Theano.git@${THEANO_V
 		\n[DebugMode]\ncheck_finite=1" \
 	> /root/.theanorc
 
-# Install Keras
-RUN pip --no-cache-dir install git+git://github.com/fchollet/keras.git@${KERAS_VERSION}
+RUN pip2 --no-cache-dir install git+git://github.com/Theano/Theano.git@${THEANO_VERSION} && \
+	\
+	echo "[global]\ndevice=gpu\nfloatX=float32\noptimizer_including=cudnn\nmode=FAST_RUN \
+		\n[lib]\ncnmem=0.95 \
+		\n[nvcc]\nfastmath=True \
+		\n[blas]\nldflag = -L/usr/lib/openblas-base -lopenblas \
+		\n[DebugMode]\ncheck_finite=1" \
+	> /root/.theanorc
 
-# Install Lasagne
+# Install Keras (pip for python3, pip2 for python2)
+RUN pip --no-cache-dir install git+git://github.com/fchollet/keras.git@${KERAS_VERSION}
+RUN pip2 --no-cache-dir install git+git://github.com/fchollet/keras.git@${KERAS_VERSION}
+
+# Install Lasagne (pip for python3, pip2 for python2)
 RUN pip --no-cache-dir install git+git://github.com/Lasagne/Lasagne.git@${LASAGNE_VERSION}
+RUN pip2 --no-cache-dir install git+git://github.com/Lasagne/Lasagne.git@${LASAGNE_VERSION}
 
 # ==============================================================
 #  set workdir and user for jupyter notebook
