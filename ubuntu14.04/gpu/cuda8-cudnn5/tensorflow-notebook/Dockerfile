@@ -90,7 +90,7 @@ ENV TF_NEED_VERBS=0
 # You can reference https://github.com/tensorflow/tensorflow/blob/master/configure to determine
 # what the actual variable names should be, which you can then set in this file, and re-build the image,
 # uncommenting everything from here down so tensorflow will be built.
-RUN ./configure
+# RUN ./configure
 
 # RUN bazel build -c opt --config=opt --config=cuda //tensorflow/tools/pip_package:build_pip_package
 # RUN bazel-bin/tensorflow/tools/pip_package/build_pip_package /tmp/tensorflow_pkg
