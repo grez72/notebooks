@@ -12,6 +12,8 @@ MAINTAINER George Alvarez <gre72@gmail.com, alvarez@wjh.harvard.edu>
 
 USER root
 
+WORKDIR /home/$NB_USER/work
+
 # ==============================================================
 #  INSTALL TENSORFLOW FROM SOURCE (python3)
 # ==============================================================
