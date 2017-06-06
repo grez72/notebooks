@@ -39,6 +39,9 @@ RUN apt-get upgrade -y bazel
 
 # install tensorflow
 RUN git clone https://github.com/tensorflow/tensorflow
+
+# change to version 1.1
+RUN git checkout remotes/origin/r1.1
 WORKDIR /home/$NB_USER/work/tensorflow
 
 # Next we configure the installation
