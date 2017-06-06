@@ -20,7 +20,7 @@ WORKDIR $HOME
 # ==============================================================
 
 RUN pip install chainer==${CHAINER_VERSION}
-RUN pip install cupy
+# RUN pip install cupy
 
 RUN pip2 install chainer==${CHAINER_VERSION}
-RUN pip2 install cupy
+# RUN pip2 install cupy
