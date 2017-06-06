@@ -94,9 +94,9 @@ RUN pip2 --no-cache-dir install git+git://github.com/Theano/Theano.git@${THEANO_
 # Install Keras (pip for python3, pip2 for python2)
 RUN pip --no-cache-dir install git+git://github.com/fchollet/keras.git@${KERAS_VERSION}
 RUN pip2 --no-cache-dir install git+git://github.com/fchollet/keras.git@${KERAS_VERSION}
-COPY keras.json ~/.keras/keras.json
-COPY keras.json ./opt/conda/envs/python2/lib/python2.7/site-packages/keras/keras.json
-COPY keras.json ./opt/conda/lib/python3.5/site-packages/keras/keras.json
+COPY keras.json $HOME/.keras/keras.json
+# COPY keras.json ./opt/conda/envs/python2/lib/python2.7/site-packages/keras/keras.json
+# COPY keras.json ./opt/conda/lib/python3.5/site-packages/keras/keras.json
 
 # Install Lasagne (pip for python3, pip2 for python2)
 RUN pip --no-cache-dir install git+git://github.com/Lasagne/Lasagne.git@${LASAGNE_VERSION}
