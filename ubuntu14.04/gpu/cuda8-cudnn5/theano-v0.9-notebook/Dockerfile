@@ -108,6 +108,13 @@ COPY keras.json $HOME/.keras/keras.json
 RUN pip install --upgrade https://github.com/Lasagne/Lasagne/archive/master.zip
 RUN pip2 install --upgrade https://github.com/Lasagne/Lasagne/archive/master.zip
 
+# Install NoLearn
+RUN pip install -r https://raw.githubusercontent.com/dnouri/nolearn/master/requirements.txt
+RUN pip install git+https://github.com/dnouri/nolearn.git@master#egg=nolearn==0.7.git
+
+RUN pip2 install -r https://raw.githubusercontent.com/dnouri/nolearn/master/requirements.txt
+RUN pip2 install git+https://github.com/dnouri/nolearn.git@master#egg=nolearn==0.7.git
+
 # ==============================================================
 #  downgrade anaconda's hdf5 to resolve error
 # ==============================================================
