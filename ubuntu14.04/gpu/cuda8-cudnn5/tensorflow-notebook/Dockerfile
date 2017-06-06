@@ -138,7 +138,8 @@ RUN rm -R tensorflow
 # ==============================================================
 
 # conda install -c anaconda hdf5=1.8.18
-RUN conda install -c anaconda hdf5
+RUN conda remove hdf5 -y && conda install hdf5 -y
+RUN /bin/bash -c "source activate python2 && conda remove hdf5 -y && conda install hdf5 -y"
 
 # ==============================================================
 #  install keras and tensorflow
