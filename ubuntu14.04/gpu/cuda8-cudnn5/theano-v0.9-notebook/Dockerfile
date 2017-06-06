@@ -11,7 +11,7 @@ MAINTAINER George Alvarez <gre72@gmail.com, alvarez@wjh.harvard.edu>
 
 # using theano 0.9.0rc1 because of this Lasagne error: "ImportError: cannot import name downsample"
 # ARG THEANO_VERSION=rel-0.9.0
-ARG THEANO_VERSION=0.9.0rc1
+ARG THEANO_VERSION=rel-0.9.0rc1 
 ARG KERAS_VERSION=2.0.4
 ARG LASAGNE_VERSION=v0.2.dev1
 
