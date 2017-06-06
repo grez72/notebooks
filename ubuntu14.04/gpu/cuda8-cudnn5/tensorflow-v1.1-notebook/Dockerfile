@@ -140,18 +140,6 @@ RUN pip2 install /tmp/tensorflow_pkg/*27*
 RUN rm -R tensorflow
 
 # ==============================================================
-#  update anaconda's hdf5
-# ==============================================================
-
-# conda install -c anaconda hdf5=1.8.17
-# RUN conda remove hdf5 -y && conda install hdf5=1.8.17 -y
-# # RUN /bin/bash -c "source activate python2 && conda remove hdf5 -y && conda install hdf5=1.8.17 -y"
-# RUN apt-get update && apt-get install -y \
-#     libhdf5-serial-dev \
-#     netcdf-bin \
-#     libnetcdf-dev
-
-# ==============================================================
 #  install keras and tensorflow
 # ==============================================================
 
@@ -164,6 +152,18 @@ COPY keras.json ~/.keras/keras.json
 # install tflearn
 RUN pip install git+https://github.com/tflearn/tflearn.git
 RUN pip2 install git+https://github.com/tflearn/tflearn.git
+
+# ==============================================================
+#  update anaconda's hdf5
+# ==============================================================
+
+# conda install -c anaconda hdf5=1.8.17
+RUN conda remove hdf5 -y && conda install hdf5=1.8.17 -y
+# RUN /bin/bash -c "source activate python2 && conda remove hdf5 -y && conda install hdf5=1.8.17 -y"
+RUN apt-get update && apt-get install -y \
+    libhdf5-serial-dev \
+    netcdf-bin \
+    libnetcdf-dev
 
 # cleanup
 WORKDIR /home/$NB_USER/work/
