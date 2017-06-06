@@ -94,6 +94,7 @@ RUN pip2 --no-cache-dir install git+git://github.com/Theano/Theano.git@${THEANO_
 # Install Keras (pip for python3, pip2 for python2)
 RUN pip --no-cache-dir install git+git://github.com/fchollet/keras.git@${KERAS_VERSION}
 RUN pip2 --no-cache-dir install git+git://github.com/fchollet/keras.git@${KERAS_VERSION}
+COPY keras.json ~/.keras/keras.json
 
 # Install Lasagne (pip for python3, pip2 for python2)
 RUN pip --no-cache-dir install git+git://github.com/Lasagne/Lasagne.git@${LASAGNE_VERSION}
