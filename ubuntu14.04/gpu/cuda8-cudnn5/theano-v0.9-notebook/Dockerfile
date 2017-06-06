@@ -105,8 +105,10 @@ COPY keras.json $HOME/.keras/keras.json
 # Install Lasagne (pip for python3, pip2 for python2)
 # RUN pip --no-cache-dir install git+git://github.com/Lasagne/Lasagne.git@${LASAGNE_VERSION}
 # RUN pip2 --no-cache-dir install git+git://github.com/Lasagne/Lasagne.git@${LASAGNE_VERSION}
-RUN pip install --upgrade https://github.com/Lasagne/Lasagne/archive/master.zip
-RUN pip2 install --upgrade https://github.com/Lasagne/Lasagne/archive/master.zip
+# RUN pip install --upgrade https://github.com/Lasagne/Lasagne/archive/master.zip
+# RUN pip2 install --upgrade https://github.com/Lasagne/Lasagne/archive/master.zip
+RUN pip install Lasagne==${LASAGNE_VERSION}
+RUN pip2 install Lasagne==${LASAGNE_VERSION}
 
 # ==============================================================
 #  downgrade anaconda's hdf5 to resolve error
