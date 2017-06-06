@@ -92,58 +92,58 @@ ENV TF_NEED_VERBS=0
 # uncommenting everything from here down so tensorflow will be built.
 RUN ./configure
 
-RUN bazel build -c opt --config=opt --config=cuda //tensorflow/tools/pip_package:build_pip_package
-RUN bazel-bin/tensorflow/tools/pip_package/build_pip_package /tmp/tensorflow_pkg
-RUN pip3 install /tmp/tensorflow_pkg/*
-
-# ==============================================================
-#  build tensorflow for python2
-# ==============================================================
-
-# python2 dependencies
-RUN apt-get update && sudo apt-get install -y \
-        build-essential \
-        curl \
-        libcurl3-dev \
-        git \
-        libfreetype6-dev \
-        libpng12-dev \
-        libzmq3-dev \
-        pkg-config \
-        python-dev \
-        python-numpy \
-        python-pip \
-        software-properties-common \
-        swig \
-        zip \
-        zlib1g-dev
-
-# update config
-# /usr/bin/python2
-# /usr/local/lib/python2.7/dist-packages
-ENV PYTHON_BIN_PATH=/usr/bin/python2
-ENV PYTHON_LIB_PATH=/usr/local/lib/python2.7/dist-packages
-RUN ./configure
-
-RUN bazel build -c opt --config=opt --config=cuda //tensorflow/tools/pip_package:build_pip_package
-RUN bazel-bin/tensorflow/tools/pip_package/build_pip_package /tmp/tensorflow_pkg
-RUN pip2 install /tmp/tensorflow_pkg/*27*
-RUN rm -R tensorflow
-
-# ==============================================================
-#  install keras and tensorflow
-# ==============================================================
-
-# install keras
-# RUN pip install keras==${KERAS_VERSION}
-RUN pip install keras
-RUN pip2 install keras
-COPY keras.json ~/.keras/keras.json
-
-# install tflearn
-RUN pip install git+https://github.com/tflearn/tflearn.git
-RUN pip2 install git+https://github.com/tflearn/tflearn.git
-
-# cleanup
-WORKDIR /home/$NB_USER/work/
-USER $NB_USER
+# RUN bazel build -c opt --config=opt --config=cuda //tensorflow/tools/pip_package:build_pip_package
+# RUN bazel-bin/tensorflow/tools/pip_package/build_pip_package /tmp/tensorflow_pkg
+# RUN pip3 install /tmp/tensorflow_pkg/*
+#
+# # ==============================================================
+# #  build tensorflow for python2
+# # ==============================================================
+#
+# # python2 dependencies
+# RUN apt-get update && sudo apt-get install -y \
+#         build-essential \
+#         curl \
+#         libcurl3-dev \
+#         git \
+#         libfreetype6-dev \
+#         libpng12-dev \
+#         libzmq3-dev \
+#         pkg-config \
+#         python-dev \
+#         python-numpy \
+#         python-pip \
+#         software-properties-common \
+#         swig \
+#         zip \
+#         zlib1g-dev
+#
+# # update config
+# # /usr/bin/python2
+# # /usr/local/lib/python2.7/dist-packages
+# ENV PYTHON_BIN_PATH=/usr/bin/python2
+# ENV PYTHON_LIB_PATH=/usr/local/lib/python2.7/dist-packages
+# RUN ./configure
+#
+# RUN bazel build -c opt --config=opt --config=cuda //tensorflow/tools/pip_package:build_pip_package
+# RUN bazel-bin/tensorflow/tools/pip_package/build_pip_package /tmp/tensorflow_pkg
+# RUN pip2 install /tmp/tensorflow_pkg/*27*
+# RUN rm -R tensorflow
+#
+# # ==============================================================
+# #  install keras and tensorflow
+# # ==============================================================
+#
+# # install keras
+# # RUN pip install keras==${KERAS_VERSION}
+# RUN pip install keras
+# RUN pip2 install keras
+# COPY keras.json ~/.keras/keras.json
+#
+# # install tflearn
+# RUN pip install git+https://github.com/tflearn/tflearn.git
+# RUN pip2 install git+https://github.com/tflearn/tflearn.git
+#
+# # cleanup
+# WORKDIR /home/$NB_USER/work/
+# USER $NB_USER
