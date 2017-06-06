@@ -24,3 +24,18 @@ RUN pip install chainer==${CHAINER_VERSION}
 
 RUN pip2 install chainer==${CHAINER_VERSION}
 # RUN pip2 install cupy
+
+# ==============================================================
+#  downgrade anaconda's hdf5 to resolve error
+# ==============================================================
+
+# conda install -c anaconda hdf5=1.8.17
+RUN conda remove hdf5 -y && conda install hdf5=1.8.17 -y
+RUN /bin/bash -c "source activate python2 && conda remove hdf5 -y && conda install hdf5=1.8.17 -y"
+
+# ==============================================================
+#  set workdir and user for jupyter notebook
+# ==============================================================
+
+WORKDIR /home/$NB_USER/work/
+USER $NB_USER
