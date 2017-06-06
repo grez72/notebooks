@@ -156,16 +156,12 @@ RUN pip install tflearn==${TFLEARN_VERSION}
 RUN pip2 install tflearn==${TFLEARN_VERSION}
 
 # ==============================================================
-#  update anaconda's hdf5
+#  downgrade anaconda's hdf5 to resolve error
 # ==============================================================
 
 # conda install -c anaconda hdf5=1.8.17
 RUN conda remove hdf5 -y && conda install hdf5=1.8.17 -y
 RUN /bin/bash -c "source activate python2 && conda remove hdf5 -y && conda install hdf5=1.8.17 -y"
-# RUN apt-get update && apt-get install -y \
-#     libhdf5-serial-dev \
-#     netcdf-bin \
-#     libnetcdf-dev
 
 # cleanup
 WORKDIR /home/$NB_USER/work/
