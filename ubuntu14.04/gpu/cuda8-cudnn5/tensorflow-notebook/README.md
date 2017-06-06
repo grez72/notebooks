@@ -1,5 +1,8 @@
 # grez72/deep-notebooks-ubuntu14.04-cuda8-cudnn5-base
 
+Dockerfile for building for building the deep-learning framework [Tensorflow](https://www.tensorflow.org/) (with the option to use [Keras](http://keras.io/) or [TFLearn](http://tflearn.org)) for use with jupyter notebook.
+This docker image can be used with Jupyterhub + DockerSpawner to spawn single-user notebooks.
+
 ## Base Notebook
 * Ubuntu 14.04
 * [CUDA 8.0](https://developer.nvidia.com/cuda-toolkit) (GPU version only)
