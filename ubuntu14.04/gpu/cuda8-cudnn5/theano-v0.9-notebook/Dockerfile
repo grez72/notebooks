@@ -11,7 +11,7 @@ MAINTAINER George Alvarez <gre72@gmail.com, alvarez@wjh.harvard.edu>
 
 ARG THEANO_VERSION=rel-0.9.0
 ARG KERAS_VERSION=2.0.4
-ARG LASAGNE_VERSION=v0.1
+ARG LASAGNE_VERSION=v0.2.dev1
 
 USER root
 
@@ -101,6 +101,8 @@ COPY keras.json $HOME/.keras/keras.json
 # Install Lasagne (pip for python3, pip2 for python2)
 RUN pip --no-cache-dir install git+git://github.com/Lasagne/Lasagne.git@${LASAGNE_VERSION}
 RUN pip2 --no-cache-dir install git+git://github.com/Lasagne/Lasagne.git@${LASAGNE_VERSION}
+# RUN pip install --upgrade https://github.com/Lasagne/Lasagne/archive/master.zip
+# RUN pip2 install --upgrade https://github.com/Lasagne/Lasagne/archive/master.zip
 
 # ==============================================================
 #  downgrade anaconda's hdf5 to resolve error
