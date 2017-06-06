@@ -147,7 +147,7 @@ RUN rm -R tensorflow
 # RUN pip install keras==${KERAS_VERSION}
 RUN pip install keras
 RUN pip2 install keras
-COPY keras.json ~/.keras/keras.json
+COPY keras.json $HOME/.keras/keras.json
 
 # install tflearn
 RUN pip install git+https://github.com/tflearn/tflearn.git

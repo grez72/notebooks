@@ -103,6 +103,14 @@ RUN pip --no-cache-dir install git+git://github.com/Lasagne/Lasagne.git@${LASAGN
 RUN pip2 --no-cache-dir install git+git://github.com/Lasagne/Lasagne.git@${LASAGNE_VERSION}
 
 # ==============================================================
+#  downgrade anaconda's hdf5 to resolve error
+# ==============================================================
+
+# conda install -c anaconda hdf5=1.8.17
+RUN conda remove hdf5 -y && conda install hdf5=1.8.17 -y
+RUN /bin/bash -c "source activate python2 && conda remove hdf5 -y && conda install hdf5=1.8.17 -y"
+
+# ==============================================================
 #  set workdir and user for jupyter notebook
 # ==============================================================
 
