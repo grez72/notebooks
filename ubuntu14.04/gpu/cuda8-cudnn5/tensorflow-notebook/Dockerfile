@@ -134,6 +134,13 @@ RUN pip2 install /tmp/tensorflow_pkg/*27*
 RUN rm -R tensorflow
 
 # ==============================================================
+#  update anaconda's hdf5
+# ==============================================================
+
+# conda install -c anaconda hdf5=1.8.18
+RUN conda install -c anaconda hdf5
+
+# ==============================================================
 #  install keras and tensorflow
 # ==============================================================
 
