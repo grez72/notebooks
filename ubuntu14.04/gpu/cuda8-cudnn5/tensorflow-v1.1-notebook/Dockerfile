@@ -159,11 +159,11 @@ RUN pip2 install git+https://github.com/tflearn/tflearn.git
 
 # conda install -c anaconda hdf5=1.8.17
 RUN conda remove hdf5 -y && conda install hdf5=1.8.17 -y
-# RUN /bin/bash -c "source activate python2 && conda remove hdf5 -y && conda install hdf5=1.8.17 -y"
-RUN apt-get update && apt-get install -y \
-    libhdf5-serial-dev \
-    netcdf-bin \
-    libnetcdf-dev
+RUN /bin/bash -c "source activate python2 && conda remove hdf5 -y && conda install hdf5=1.8.17 -y"
+# RUN apt-get update && apt-get install -y \
+#     libhdf5-serial-dev \
+#     netcdf-bin \
+#     libnetcdf-dev
 
 # cleanup
 WORKDIR /home/$NB_USER/work/
