@@ -1,4 +1,4 @@
-# grez72/deep-notebooks:ubuntu14.04-gpu-cuda8-cudnn5-tensorflow-notebook
+# grez72/deep-notebooks:ubuntu14.04-gpu-cuda8-cudnn5-tensorflow-v1.1-notebook
 #
 # Tensorflow jupyternotebook with gpu suppport (nvidia CUDA cuDNN),
 # and optional Keras or TFLearn wrappers.
@@ -9,6 +9,10 @@
 FROM grez72/deep-notebooks:ubuntu14.04-gpu-cuda8-cudnn5-base-notebook
 
 MAINTAINER George Alvarez <gre72@gmail.com, alvarez@wjh.harvard.edu>
+
+# ARG TENSORFLOW_VERSION=1.1
+# ARG KERAS_VERSION=1.2.0
+# ARG TFLEARN_VERSION=1.2.0
 
 USER root
 
