@@ -25,7 +25,7 @@ WORKDIR $HOME
 
 # https://github.com/Kaixhin/dockerfiles/blob/master/cuda-theano/cuda_v8.0/Dockerfile
 
-# RUN pip install --upgrade pip
+RUN pip install --upgrade pip
 
 # Install git, wget, python-dev, pip, BLAS + LAPACK and other dependencies
 RUN apt-get update && apt-get install -y \
@@ -103,10 +103,10 @@ COPY keras.json $HOME/.keras/keras.json
 # COPY keras.json ./opt/conda/lib/python3.5/site-packages/keras/keras.json
 
 # Install Lasagne (pip for python3, pip2 for python2)
-RUN pip --no-cache-dir install git+git://github.com/Lasagne/Lasagne.git@${LASAGNE_VERSION}
-RUN pip2 --no-cache-dir install git+git://github.com/Lasagne/Lasagne.git@${LASAGNE_VERSION}
-# RUN pip install --upgrade https://github.com/Lasagne/Lasagne/archive/master.zip
-# RUN pip2 install --upgrade https://github.com/Lasagne/Lasagne/archive/master.zip
+# RUN pip --no-cache-dir install git+git://github.com/Lasagne/Lasagne.git@${LASAGNE_VERSION}
+# RUN pip2 --no-cache-dir install git+git://github.com/Lasagne/Lasagne.git@${LASAGNE_VERSION}
+RUN pip install --upgrade https://github.com/Lasagne/Lasagne/archive/master.zip
+RUN pip2 install --upgrade https://github.com/Lasagne/Lasagne/archive/master.zip
 
 # ==============================================================
 #  downgrade anaconda's hdf5 to resolve error
