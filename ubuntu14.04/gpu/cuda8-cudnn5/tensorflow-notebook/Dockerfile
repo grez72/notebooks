@@ -164,8 +164,8 @@ COPY keras.json ~/.keras/keras.json
 WORKDIR $HOME
 RUN wget https://github.com/tflearn/tflearn.git
 WORKDIR $HOME/tflearn
-RUN python setup.py install && python2 setup.py install
-
-# cleanup
-WORKDIR /home/$NB_USER/work/
-USER $NB_USER
+# RUN python setup.py install && python2 setup.py install
+#
+# # cleanup
+# WORKDIR /home/$NB_USER/work/
+# USER $NB_USER
