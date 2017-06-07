@@ -31,6 +31,7 @@ RUN apt-get install -y --no-install-recommends \
       python-pip
 RUN pip install --upgrade pip
 RUN pip install numpy protobuf
+RUN pip2 install numpy protobuf
 
 # GPU Support CUDA 8.0
 # RUN apt-get update && sudo apt-get install wget -y --no-install-recommends
@@ -58,7 +59,23 @@ RUN apt-get install -y --no-install-recommends \
       openmpi-bin \
       openmpi-doc \
       python-pydot
-      sudo pip install \
+RUN pip install \
+      flask \
+      future \
+      graphviz \
+      hypothesis \
+      jupyter \
+      matplotlib \
+      pydot python-nvd3 \
+      pyyaml \
+      requests \
+      scikit-image \
+      scipy \
+      setuptools \
+      six \
+      tornado
+
+RUN pip2 install \
       flask \
       future \
       graphviz \
