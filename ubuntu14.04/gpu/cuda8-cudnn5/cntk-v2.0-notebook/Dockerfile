@@ -10,6 +10,7 @@ FROM grez72/deep-notebooks:ubuntu14.04-gpu-cuda8-cudnn5-base-notebook
 MAINTAINER George Alvarez <gre72@gmail.com, alvarez@wjh.harvard.edu>
 
 ARG CNTK_VERSION=v0.7.0
+ARG OPENMPI_VERSION=1.10.3
 
 # ==============================================================
 #  INSTALL CNTK
@@ -17,3 +18,23 @@ ARG CNTK_VERSION=v0.7.0
 
 USER root
 WORKDIR $HOME
+
+# Install Open Message Passing Interface Library (Open MPI)
+RUN wget -q -O - https://www.open-mpi.org/software/ompi/v1.10/downloads/openmpi-${OPENMPI_VERSION}.tar.gz | tar -xzf - && \
+    cd openmpi-${OPENMPI_VERSION} && \
+    ./configure --prefix=/usr/local/mpi && \
+    make -j"$(nproc)" install && \
+    rm -rf /openmpi-${OPENMPI_VERSION}
+
+ENV PATH /usr/local/mpi/bin:$PATH
+ENV LD_LIBRARY_PATH /usr/local/mpi/lib:$LD_LIBRARY_PATH
+
+RUN pip install --upgrade pip
+RUN pip install https://cntk.ai/PythonWheel/GPU-1bit-SGD/cntk-2.0rc3-cp35-cp35m-linux_x86_64.whl
+RUN pip2 install https://cntk.ai/PythonWheel/GPU-1bit-SGD/cntk-2.0rc3-cp27-cp27mu-linux_x86_64.whl
+
+# RUN python -m cntk.sample_installer
+# RUN /bin/bash -c "source ~/.bashrc && python -m cntk.sample_installer"
+
+WORKDIR /home/$NB_USER/work/
+USER $NB_USER
