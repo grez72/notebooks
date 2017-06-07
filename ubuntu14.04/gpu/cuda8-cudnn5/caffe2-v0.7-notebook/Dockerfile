@@ -98,7 +98,6 @@ RUN git checkout tags/${CAFFE2_VERSION}
 RUN make && cd build && make install
 RUN python -c 'from caffe2.python import core' 2>/dev/null && echo "Success" || echo "Failure"
 
-
 # Test your gpu
 # RUN python -m caffe2.python.operator_test.relu_op_test
 
