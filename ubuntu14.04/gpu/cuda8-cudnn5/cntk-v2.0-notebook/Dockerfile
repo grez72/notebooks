@@ -38,7 +38,8 @@ WORKDIR /home/$NB_USER/work/
 RUN wget https://cntk.ai/Samples/CNTK-Samples-2-0rc3.zip && \
     unzip CNTK-Samples-2-0rc3.zip -d CNTK-Samples-2-0rc3 && \
     pip install -r CNTK-Samples-2-0rc3/requirements.txt && \
+    pip2 install -r CNTK-Samples-2-0rc3/requirements.txt && \
     rm CNTK-Samples-2-0rc3.zip
 
-# change to notebook user    
+# change to notebook user
 USER $NB_USER
