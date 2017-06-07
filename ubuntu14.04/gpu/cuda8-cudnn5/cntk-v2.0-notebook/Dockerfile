@@ -35,11 +35,9 @@ RUN pip2 install https://cntk.ai/PythonWheel/GPU-1bit-SGD/cntk-2.0rc3-cp27-cp27m
 
 # change to work directory, install samples
 WORKDIR /home/$NB_USER/work/
+USER $NB_USER
 RUN wget https://cntk.ai/Samples/CNTK-Samples-2-0rc3.zip && \
     unzip CNTK-Samples-2-0rc3.zip -d CNTK-Samples-2-0rc3 && \
     pip install -r CNTK-Samples-2-0rc3/requirements.txt && \
     pip2 install -r CNTK-Samples-2-0rc3/requirements.txt && \
     rm CNTK-Samples-2-0rc3.zip
-
-# change to notebook user
-USER $NB_USER
