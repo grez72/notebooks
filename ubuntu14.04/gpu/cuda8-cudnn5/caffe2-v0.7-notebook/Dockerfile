@@ -1,6 +1,6 @@
 # grez72/deep-notebooks:ubuntu14.04-gpu-cuda8-cudnn5-caffe2-v0.7-notebook
 #
-# Chainer jupyter notebook with gpu suppport (nvidia CUDA cuDNN).
+# Caffe2 jupyter notebook with gpu suppport (nvidia CUDA cuDNN).
 #
 # sudo nvidia-docker build -t grez72/deep-notebooks:ubuntu14.04-gpu-cuda8-cudnn5-caffe2-v0.7-notebook https://github.com/grez72/notebooks.git#master:ubuntu14.04/gpu/cuda8-cudnn5/caffe2-v0.7-notebook
 # nvidia-docker run -it --rm -p 8888:8888 grez72/deep-notebooks:ubuntu14.04-gpu-cuda8-cudnn5-caffe2-v0.7-notebook
@@ -92,7 +92,8 @@ RUN pip2 install \
       tornado
 
 # Clone and build
-RUN git clone --recursive https://github.com/caffe2/caffe2.git && cd caffe2
+RUN git clone --recursive https://github.com/caffe2/caffe2.git
+WORKDIR $HOME/caffe2
 RUN git checkout tags/${CAFFE2_VERSION}
 RUN make && cd build && make install
 RUN python -c 'from caffe2.python import core' 2>/dev/null && echo "Success" || echo "Failure"
