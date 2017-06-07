@@ -93,7 +93,7 @@ RUN pip2 install \
 
 # Clone and build
 RUN git clone --recursive https://github.com/caffe2/caffe2.git && cd caffe2
-RUN git checkout tags/v0.7.0
+# RUN git checkout tags/v0.7.0
 # RUN git checkout tags/${CAFFE2_VERSION}
 RUN make && cd build && sudo make install
 RUN python -c 'from caffe2.python import core' 2>/dev/null && echo "Success" || echo "Failure"
