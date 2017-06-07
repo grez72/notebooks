@@ -33,9 +33,12 @@ RUN pip install --upgrade pip
 RUN pip install https://cntk.ai/PythonWheel/GPU-1bit-SGD/cntk-2.0rc3-cp35-cp35m-linux_x86_64.whl
 RUN pip2 install https://cntk.ai/PythonWheel/GPU-1bit-SGD/cntk-2.0rc3-cp27-cp27mu-linux_x86_64.whl
 
-# RUN python -m cntk.sample_installer
-# RUN /bin/bash -c "source ~/.bashrc && python -m cntk.sample_installer"
-# RUN /bin/bash -c "source ~/.profile && python -m cntk.sample_installer"
-
+# change to work directory, install samples
 WORKDIR /home/$NB_USER/work/
+RUN wget https://cntk.ai/Samples/CNTK-Samples-2-0rc3.zip && \
+    unzip CNTK-Samples-2-0rc3.zip -d CNTK-Samples-2-0rc3 && \
+    pip install -r CNTK-Samples-2-0rc3/requirements.txt && \
+    rm CNTK-Samples-2-0rc3.zip
+
+# change to notebook user    
 USER $NB_USER
