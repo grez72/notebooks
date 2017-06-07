@@ -103,10 +103,10 @@ RUN python -c 'from caffe2.python import core' 2>/dev/null && echo "Success" || 
 
 # Make sure these ENV variables are set
 # echo $PYTHONPATH
-# export PYTHONPATH=/usr/local:$PYTHONPATH
-# export PYTHONPATH=$PYTHONPATH:/home/ubuntu/caffe2/build
+ENV PYTHONPATH=/usr/local:$PYTHONPATH
+ENV PYTHONPATH=$PYTHONPATH:$HOME/caffe2/build
 # echo $LD_LIBRARY_PATH
-# export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
+ENV LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
 
 # ==============================================================
 #  downgrade anaconda's hdf5 to resolve error
