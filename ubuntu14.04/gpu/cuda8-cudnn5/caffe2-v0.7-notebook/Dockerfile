@@ -46,7 +46,7 @@ RUN pip install numpy protobuf
 # RUN rm cudnn-8.0-linux-x64-v5.1.tgz && sudo ldconfig
 
 # Optional Dependeincies
-RUN apt-get install -y --no-install-recommends libgflags2
+RUN apt-get install -y --no-install-recommends \
       libgflags2 \
       libgtest-dev \
       libiomp-dev \
