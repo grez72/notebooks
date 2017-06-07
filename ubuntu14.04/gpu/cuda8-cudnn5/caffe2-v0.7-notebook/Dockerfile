@@ -93,9 +93,9 @@ RUN pip2 install \
 
 # Clone and build
 RUN git clone --recursive https://github.com/caffe2/caffe2.git && cd caffe2
-# RUN git checkout remotes/origin/r${CAFFE2_VERSION}
-# RUN make && cd build && sudo make install
-# RUN python -c 'from caffe2.python import core' 2>/dev/null && echo "Success" || echo "Failure"
+RUN git checkout tags/${CAFFE2_VERSION}
+RUN make && cd build && sudo make install
+RUN python -c 'from caffe2.python import core' 2>/dev/null && echo "Success" || echo "Failure"
 
 # Test your gpu
 # RUN python -m caffe2.python.operator_test.relu_op_test
@@ -119,5 +119,5 @@ RUN git clone --recursive https://github.com/caffe2/caffe2.git && cd caffe2
 #  set workdir and user for jupyter notebook
 # ==============================================================
 
-WORKDIR /home/$NB_USER/work/
-USER $NB_USER
+# WORKDIR /home/$NB_USER/work/
+# USER $NB_USER
