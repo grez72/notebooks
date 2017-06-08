@@ -81,10 +81,10 @@ RUN cmake -DUSE_CUDNN=1 -DUSE_NCCL=1 .. && \
 # export PYTHONPATH=$PYCAFFE_ROOT:$PYTHONPATH
 # export PATH=$CAFFE_ROOT/build/tools:$PYCAFFE_ROOT:$PATH
 
-ENV PYCAFFE_ROOT $CAFFE_ROOT/python
-ENV PYTHONPATH $PYCAFFE_ROOT:$PYTHONPATH
-ENV PATH $CAFFE_ROOT/build/tools:$PYCAFFE_ROOT:$PATH
-RUN echo "$CAFFE_ROOT/build/lib" >> /etc/ld.so.conf.d/caffe.conf && ldconfig
+# ENV PYCAFFE_ROOT $CAFFE_ROOT/python
+# ENV PYTHONPATH $PYCAFFE_ROOT:$PYTHONPATH
+# ENV PATH $CAFFE_ROOT/build/tools:$PYCAFFE_ROOT:$PATH
+# RUN echo "$CAFFE_ROOT/build/lib" >> /etc/ld.so.conf.d/caffe.conf && ldconfig
 
 # ENV PYTHONPATH /opt/caffe/python
 #
@@ -100,6 +100,11 @@ RUN apt-get update && apt-get install -y python-skimage python-protobuf
 # python -c "import caffe;print caffe.__version__"
 # python2 -c "import caffe;print caffe.__version__"
 # python3 -c "import caffe;print(caffe.__version__)"
+
+# RUN cd $CAFFE_ROOT
+# RUN ./data/mnist/get_mnist.sh
+# RUN ./examples/mnist/create_mnist.sh
+# cd $CAFFE_ROOT && ./examples/mnist/train_lenet.sh
 
 # ==============================================================
 #  set workdir and user for jupyter notebook
