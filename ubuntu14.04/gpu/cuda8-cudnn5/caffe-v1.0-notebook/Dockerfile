@@ -51,15 +51,16 @@ ENV CAFFE_ROOT=/opt/caffe
 RUN mkdir $CAFFE_ROOT
 WORKDIR $CAFFE_ROOT
 
-RUN git clone -b ${CAFFE_VERSION} --depth 1 https://github.com/BVLC/caffe.git . && \
-    pip install --upgrade pip && \
-    cd python && \
-    for req in $(cat requirements.txt) pydot; do pip install $req; done && cd .. && \
-    for req in $(cat requirements.txt) pydot; do pip2 install $req; done && cd .. && \
-    git clone https://github.com/NVIDIA/nccl.git && cd nccl && make -j install && cd .. && rm -rf nccl && \
-    mkdir build && cd build && \
-    cmake -DUSE_CUDNN=1 -DUSE_NCCL=1 .. && \
-    make -j"$(nproc)"
+RUN git clone -b ${CAFFE_VERSION} --depth 1 https://github.com/BVLC/caffe.git .
+# && \
+#     pip install --upgrade pip && \
+#     cd python && \
+#     for req in $(cat requirements.txt) pydot; do pip install $req; done && cd .. && \
+#     for req in $(cat requirements.txt) pydot; do pip2 install $req; done && cd .. && \
+#     git clone https://github.com/NVIDIA/nccl.git && cd nccl && make -j install && cd .. && rm -rf nccl && \
+#     mkdir build && cd build && \
+#     cmake -DUSE_CUDNN=1 -DUSE_NCCL=1 .. && \
+#     make -j"$(nproc)"
 
 # RUN git clone -b ${CAFFE_VERSION} --depth 1 https://github.com/BVLC/caffe.git
 # RUN pip install --upgrade pip
@@ -110,6 +111,8 @@ RUN git clone -b ${CAFFE_VERSION} --depth 1 https://github.com/BVLC/caffe.git . 
 # RUN ./data/mnist/get_mnist.sh
 # RUN ./examples/mnist/create_mnist.sh
 # cd $CAFFE_ROOT && ./examples/mnist/train_lenet.sh
+
+# http://kennmyers.github.io/libraries/2016/02/23/caffe-agonies.html
 
 # ==============================================================
 #  set workdir and user for jupyter notebook
