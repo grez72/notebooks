@@ -109,12 +109,10 @@ ENV PATH $CAFFE_ROOT/build/tools:$PYCAFFE_ROOT:$PATH
 # RUN ln -s /usr/include/python2.7/ /usr/local/include/python2.7 && \
 #   ln -s /usr/local/lib/python2.7/dist-packages/numpy/core/include/numpy/ /usr/local/include/python2.7/numpy
 #
-# RUN apt-get update && apt-get install -y python-skimage python-protobuf
+RUN apt-get update && apt-get install -y python-skimage python-protobuf
 
 # verify installation:
-# python -c "import caffe;print caffe.__version__"
 # python2 -c "import caffe;print caffe.__version__"
-# python3 -c "import caffe;print(caffe.__version__)"
 
 # RUN cd $CAFFE_ROOT
 # RUN ./data/mnist/get_mnist.sh
@@ -129,3 +127,8 @@ ENV PATH $CAFFE_ROOT/build/tools:$PYCAFFE_ROOT:$PATH
 
 WORKDIR $HOME/work/
 USER $NB_USER
+
+# copy caffe example files and models to work directory
+RUN cp $CAFFE_ROOT/examples $HOME/work && \
+    cp $CAFFE_ROOT/models $HOME/work && \
+    cp $CAFFE_ROOT/scripts $HOME/work && \
