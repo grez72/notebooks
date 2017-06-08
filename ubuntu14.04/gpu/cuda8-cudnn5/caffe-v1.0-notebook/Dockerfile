@@ -114,3 +114,10 @@ RUN echo "$CAFFE_ROOT/build/lib" >> /etc/ld.so.conf.d/caffe.conf && ldconfig
 # as per SO, the following line fixes it, but I'm not sure why...
 # see also http://stackoverflow.com/questions/42149458/open-cv-error-failed-to-init-raw1394-persisting-in-docker/42151836#42151836
 # RUN ln /dev/null /dev/raw1394
+
+# ==============================================================
+#  set workdir and user for jupyter notebook
+# ==============================================================
+
+WORKDIR /home/$NB_USER/work/
+USER $NB_USER
