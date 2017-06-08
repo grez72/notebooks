@@ -51,11 +51,8 @@ ENV CAFFE_ROOT=/opt/caffe
 RUN mkdir $CAFFE_ROOT
 WORKDIR $CAFFE_ROOT
 
-USER $NB_USER
-RUN git clone -b ${CAFFE_VERSION} --depth 1 https://github.com/BVLC/caffe.git .
-
-USER root
-RUN pip install --upgrade pip
+RUN git clone -b ${CAFFE_VERSION} --depth 1 https://github.com/BVLC/caffe.git . && \
+    pip install --upgrade pip
 
 WORKDIR $CAFFE_ROOT/python
 RUN for req in $(cat requirements.txt) pydot; do pip2 install $req; done
