@@ -54,22 +54,21 @@ WORKDIR $CAFFE_ROOT
 RUN git clone -b ${CAFFE_VERSION} --depth 1 https://github.com/BVLC/caffe.git . && \
     pip install --upgrade pip
 
-WORKDIR python
+WORKDIR $CAFFE_ROOT/python
 RUN for req in $(cat requirements.txt) pydot; do pip install $req; done && \
     for req in $(cat requirements.txt) pydot; do pip2 install $req; done
 
 WORKDIR $CAFFE_ROOT
 RUN git clone https://github.com/NVIDIA/nccl.git
 
-WORKDIR nccl
+WORKDIR $CAFFE_ROOT/nccl
 RUN make -j install
 
 WORKDIR $CAFFE_ROOT
-
 RUN rm -rf nccl && \
     mkdir build
 
-WORKDIR build
+WORKDIR $CAFFE_ROOT/build
 RUN cmake -DUSE_CUDNN=1 -DUSE_NCCL=1 .. && \
     make -j"$(nproc)"
 
@@ -129,5 +128,5 @@ RUN cmake -DUSE_CUDNN=1 -DUSE_NCCL=1 .. && \
 #  set workdir and user for jupyter notebook
 # ==============================================================
 
-WORKDIR /home/$NB_USER/work/
+WORKDIR $HOME/work/
 USER $NB_USER
