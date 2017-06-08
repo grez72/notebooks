@@ -111,34 +111,25 @@ ENV PATH $CAFFE_ROOT/build/tools:$PYCAFFE_ROOT:$PATH
 #
 RUN apt-get update && apt-get install -y python-skimage python-protobuf
 
-# copy caffe example files and models to work directory
-# RUN cp -R $CAFFE_ROOT/examples $HOME/work && \
-#     cp -R $CAFFE_ROOT/models $HOME/work && \
-#     cp -R $CAFFE_ROOT/scripts $HOME/work
-
-# verify installation:
-# python2 -c "import caffe;print caffe.__version__"
-
-# RUN cd $CAFFE_ROOT
-# RUN ./data/mnist/get_mnist.sh
-# RUN ./examples/mnist/create_mnist.sh
-# cd $CAFFE_ROOT && ./examples/mnist/train_lenet.sh
-
-# http://kennmyers.github.io/libraries/2016/02/23/caffe-agonies.html
+# Download some sample data for testing
+WORKDIR $CAFFE_ROOT
+RUN ./data/mnist/get_mnist.sh
+RUN ./examples/mnist/create_mnist.sh
 
 # ==============================================================
 #  set workdir and user for jupyter notebook
 # ==============================================================
 
-WORKDIR $HOME/work/
-USER $NB_USER
-
-# Copying examples, models, and scripts as $NB_USER, so that
-# we can modify these files / directories in jupyter notebook.
-# e.g., if we don't do this, then scripts that download data will fail
-# because they cannot create the necessary folders.
-RUN cp -R $CAFFE_ROOT/examples $HOME/work && \
-    cp -R $CAFFE_ROOT/models $HOME/work && \
-    cp -R $CAFFE_ROOT/scripts $HOME/work && \
-    cp -R $CAFFE_ROOT/data $HOME/work && \
-    cp -R $CAFFE_ROOT/python/caffe/imagenet $HOME/work
+# WORKDIR $HOME/work/
+# USER $NB_USER
+#
+# # Copying examples, models, and scripts as $NB_USER, so that
+# # we can modify these files / directories in jupyter notebook.
+# # e.g., if we don't do this, then scripts that download data will fail
+# # because they cannot create the necessary folders.
+# RUN cp -R $CAFFE_ROOT/examples $HOME/work && \
+#     cp -R $CAFFE_ROOT/models $HOME/work && \
+#     cp -R $CAFFE_ROOT/scripts $HOME/work && \
+#     cp -R $CAFFE_ROOT/data $HOME/work && \
+#     cp -R $CAFFE_ROOT/include $HOME/work && \
+#     cp -R $CAFFE_ROOT/python/caffe/imagenet $HOME/work
