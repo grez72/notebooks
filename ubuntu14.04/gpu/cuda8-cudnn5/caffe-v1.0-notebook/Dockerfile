@@ -115,9 +115,9 @@ RUN apt-get update && apt-get install -y python-skimage python-protobuf
 # RUN chown -R jovyan:users $CAFFE_ROOT
 
 # Download some sample data for testing
-WORKDIR $CAFFE_ROOT
-RUN ./data/mnist/get_mnist.sh
-RUN ./examples/mnist/create_mnist.sh
+# WORKDIR $CAFFE_ROOT
+# RUN ./data/mnist/get_mnist.sh
+# RUN ./examples/mnist/create_mnist.sh
 
 # ==============================================================
 #  set workdir and user for jupyter notebook
