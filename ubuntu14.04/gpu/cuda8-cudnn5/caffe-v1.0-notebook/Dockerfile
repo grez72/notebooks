@@ -131,4 +131,4 @@ USER $NB_USER
 # copy caffe example files and models to work directory
 RUN cp $CAFFE_ROOT/examples $HOME/work && \
     cp $CAFFE_ROOT/models $HOME/work && \
-    cp $CAFFE_ROOT/scripts $HOME/work && \
+    cp $CAFFE_ROOT/scripts $HOME/work
