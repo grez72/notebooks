@@ -68,7 +68,7 @@ RUN rm -rf nccl && \
     mkdir build
 
 WORKDIR $CAFFE_ROOT/build
-RUN cmake -DUSE_CUDNN=1 -DUSE_NCCL=1 .. && \
+RUN cmake -DUSE_CUDNN=1 -DUSE_NCCL=1 -DUSE_MPI=1 -DMPI_INCLUDE=/usr/include/openmpi .. && \
     make -j"$(nproc)"
 
 # RUN git clone -b ${CAFFE_VERSION} --depth 1 https://github.com/BVLC/caffe.git
