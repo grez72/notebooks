@@ -45,7 +45,6 @@ RUN apt-get install -y --no-install-recommends \
       python-numpy \
       python-setuptools \
       python-scipy && \
-      gfortran > /dev/null && \
     rm -rf /var/lib/apt/lists/*
 
 # install nccl
