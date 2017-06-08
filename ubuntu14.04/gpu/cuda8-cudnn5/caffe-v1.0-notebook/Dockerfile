@@ -112,9 +112,9 @@ ENV PATH $CAFFE_ROOT/build/tools:$PYCAFFE_ROOT:$PATH
 RUN apt-get update && apt-get install -y python-skimage python-protobuf
 
 # copy caffe example files and models to work directory
-# RUN cp $CAFFE_ROOT/examples $HOME/work && \
-#     cp $CAFFE_ROOT/models $HOME/work && \
-#     cp $CAFFE_ROOT/scripts $HOME/work
+RUN cp -R $CAFFE_ROOT/examples $HOME/work && \
+    cp -R $CAFFE_ROOT/models $HOME/work && \
+    cp -R $CAFFE_ROOT/scripts $HOME/work
 
 # verify installation:
 # python2 -c "import caffe;print caffe.__version__"
