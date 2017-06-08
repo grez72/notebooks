@@ -48,33 +48,41 @@ RUN apt-get install -y --no-install-recommends \
 
 # install caffe
 ENV CAFFE_ROOT=/opt/caffe
-WORKDIR $CAFFE_ROOT
-
-RUN git clone -b ${CAFFE_VERSION} --depth 1 https://github.com/BVLC/caffe.git . && \
-    pip install --upgrade pip
-
-WORKDIR python
-RUN for req in $(cat requirements.txt) pydot; do pip install $req; done
-
-WORKDIR $CAFFE_ROOT
-RUN git clone https://github.com/NVIDIA/nccl.git
-
-WORKDIR nccl
-RUN make -j install
-
-WORKDIR $CAFFE_ROOT
-RUN rm -rf nccl && \
-    mkdir build
-
-WORKDIR build
-RUN cmake -DUSE_CUDNN=1 -DUSE_NCCL=1 .. && \
-    make -j"$(nproc)"
+# WORKDIR $CAFFE_ROOT
+#
+# RUN git clone -b ${CAFFE_VERSION} --depth 1 https://github.com/BVLC/caffe.git . && \
+#     pip install --upgrade pip
+#
+# WORKDIR python
+# RUN for req in $(cat requirements.txt) pydot; do pip install $req; done
+#
+# WORKDIR $CAFFE_ROOT
+# RUN git clone https://github.com/NVIDIA/nccl.git
+#
+# WORKDIR nccl
+# RUN make -j install
+#
+# WORKDIR $CAFFE_ROOT
+# RUN rm -rf nccl && \
+#     mkdir build
+#
+# WORKDIR build
+# RUN cmake -DUSE_CUDNN=1 -DUSE_NCCL=1 .. && \
+#     make -j"$(nproc)"
 
 ENV PYCAFFE_ROOT $CAFFE_ROOT/python
 # ENV PYTHONPATH $PYCAFFE_ROOT:$PYTHONPATH
 # ENV PATH $CAFFE_ROOT/build/tools:$PYCAFFE_ROOT:$PATH
 # RUN echo "$CAFFE_ROOT/build/lib" >> /etc/ld.so.conf.d/caffe.conf && ldconfig
 
+# ENV PYTHONPATH /opt/caffe/python
+#
+# # Add caffe binaries to path
+# ENV PATH $PATH:/opt/caffe/.build_release/tools
+
+# RUN ln -s /usr/include/python2.7/ /usr/local/include/python2.7 && \
+#   ln -s /usr/local/lib/python2.7/dist-packages/numpy/core/include/numpy/ /usr/local/include/python2.7/numpy
+#
 RUN apt-get update && apt-get install -y python-skimage python-protobuf
 
 # ==============================================================
