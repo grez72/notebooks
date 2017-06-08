@@ -123,16 +123,16 @@ RUN ./examples/mnist/create_mnist.sh
 #  set workdir and user for jupyter notebook
 # ==============================================================
 
-# WORKDIR $HOME/work/
-# USER $NB_USER
-#
-# # Copying examples, models, and scripts as $NB_USER, so that
-# # we can modify these files / directories in jupyter notebook.
-# # e.g., if we don't do this, then scripts that download data will fail
-# # because they cannot create the necessary folders.
-# RUN cp -R $CAFFE_ROOT/examples $HOME/work && \
-#     cp -R $CAFFE_ROOT/models $HOME/work && \
-#     cp -R $CAFFE_ROOT/scripts $HOME/work && \
-#     cp -R $CAFFE_ROOT/data $HOME/work && \
-#     cp -R $CAFFE_ROOT/include $HOME/work && \
-#     cp -R $CAFFE_ROOT/python/caffe/imagenet $HOME/work
+WORKDIR $HOME/work/
+USER $NB_USER
+
+# Copying examples, models, and scripts as $NB_USER, so that
+# we can modify these files / directories in jupyter notebook.
+# e.g., if we don't do this, then scripts that download data will fail
+# because they cannot create the necessary folders.
+RUN cp -R $CAFFE_ROOT/examples $HOME/work && \
+    cp -R $CAFFE_ROOT/models $HOME/work && \
+    cp -R $CAFFE_ROOT/scripts $HOME/work && \
+    cp -R $CAFFE_ROOT/data $HOME/work && \
+    cp -R $CAFFE_ROOT/include $HOME/work && \
+    cp -R $CAFFE_ROOT/python/caffe/imagenet $HOME/work
