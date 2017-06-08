@@ -55,22 +55,21 @@ RUN git clone -b ${CAFFE_VERSION} --depth 1 https://github.com/BVLC/caffe.git . 
     pip install --upgrade pip
 
 WORKDIR $CAFFE_ROOT/python
-# RUN for req in $(cat requirements.txt) pydot; do pip install $req; done
 RUN for req in $(cat requirements.txt) pydot; do pip2 install $req; done
 
-# WORKDIR $CAFFE_ROOT
-# RUN git clone https://github.com/NVIDIA/nccl.git
-#
-# WORKDIR $CAFFE_ROOT/nccl
-# RUN make -j install
-#
-# WORKDIR $CAFFE_ROOT
-# RUN rm -rf nccl && \
-#     mkdir build
-#
-# WORKDIR $CAFFE_ROOT/build
-# RUN cmake -DUSE_CUDNN=1 -DUSE_NCCL=1 .. && \
-#     make -j"$(nproc)"
+WORKDIR $CAFFE_ROOT
+RUN git clone https://github.com/NVIDIA/nccl.git
+
+WORKDIR $CAFFE_ROOT/nccl
+RUN make -j install
+
+WORKDIR $CAFFE_ROOT
+RUN rm -rf nccl && \
+    mkdir build
+
+WORKDIR $CAFFE_ROOT/build
+RUN cmake -DUSE_CUDNN=1 -DUSE_NCCL=1 .. && \
+    make -j"$(nproc)"
 
 # RUN git clone -b ${CAFFE_VERSION} --depth 1 https://github.com/BVLC/caffe.git
 # RUN pip install --upgrade pip
@@ -97,9 +96,9 @@ RUN for req in $(cat requirements.txt) pydot; do pip2 install $req; done
 # export PYTHONPATH=$PYCAFFE_ROOT:$PYTHONPATH
 # export PATH=$CAFFE_ROOT/build/tools:$PYCAFFE_ROOT:$PATH
 
-# ENV PYCAFFE_ROOT $CAFFE_ROOT/python
-# ENV PYTHONPATH $PYCAFFE_ROOT:$PYTHONPATH
-# ENV PATH $CAFFE_ROOT/build/tools:$PYCAFFE_ROOT:$PATH
+ENV PYCAFFE_ROOT $CAFFE_ROOT/python
+ENV PYTHONPATH $PYCAFFE_ROOT:$PYTHONPATH
+ENV PATH $CAFFE_ROOT/build/tools:$PYCAFFE_ROOT:$PATH
 # RUN echo "$CAFFE_ROOT/build/lib" >> /etc/ld.so.conf.d/caffe.conf && ldconfig
 
 # ENV PYTHONPATH /opt/caffe/python
