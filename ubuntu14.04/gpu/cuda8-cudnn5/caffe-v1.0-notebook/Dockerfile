@@ -119,5 +119,5 @@ WORKDIR build
 #  set workdir and user for jupyter notebook
 # ==============================================================
 
-# WORKDIR /home/$NB_USER/work/
-# USER $NB_USER
+WORKDIR /home/$NB_USER/work/
+USER $NB_USER
