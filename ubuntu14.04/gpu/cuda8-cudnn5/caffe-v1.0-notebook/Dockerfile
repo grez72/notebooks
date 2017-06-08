@@ -112,7 +112,7 @@ ENV PATH $CAFFE_ROOT/build/tools:$PYCAFFE_ROOT:$PATH
 RUN apt-get update && apt-get install -y python-skimage python-protobuf
 
 # own it
-# RUN chown -R jovyan:users $CAFFE_ROOT
+RUN chown -R jovyan:users $CAFFE_ROOT
 
 # Download some sample data for testing
 # WORKDIR $CAFFE_ROOT
@@ -123,16 +123,16 @@ RUN apt-get update && apt-get install -y python-skimage python-protobuf
 #  set workdir and user for jupyter notebook
 # ==============================================================
 
-WORKDIR $HOME/work/
-USER $NB_USER
+# WORKDIR $HOME/work/
+# USER $NB_USER
 
 # Copying examples, models, and scripts as $NB_USER, so that
 # we can modify these files / directories in jupyter notebook.
 # e.g., if we don't do this, then scripts that download data will fail
 # because they cannot create the necessary folders.
-RUN cp -R $CAFFE_ROOT/examples $HOME/work && \
-    cp -R $CAFFE_ROOT/models $HOME/work && \
-    cp -R $CAFFE_ROOT/scripts $HOME/work && \
-    cp -R $CAFFE_ROOT/data $HOME/work && \
-    cp -R $CAFFE_ROOT/include $HOME/work && \
-    cp -R $CAFFE_ROOT/python/caffe/imagenet $HOME/work
+# RUN cp -R $CAFFE_ROOT/examples $HOME/work && \
+#     cp -R $CAFFE_ROOT/models $HOME/work && \
+#     cp -R $CAFFE_ROOT/scripts $HOME/work && \
+#     cp -R $CAFFE_ROOT/data $HOME/work && \
+#     cp -R $CAFFE_ROOT/include $HOME/work && \
+#     cp -R $CAFFE_ROOT/python/caffe/imagenet $HOME/work
