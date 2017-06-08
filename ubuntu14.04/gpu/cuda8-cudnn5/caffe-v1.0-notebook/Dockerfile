@@ -69,8 +69,8 @@ RUN rm -rf nccl && \
     mkdir build
 
 WORKDIR build
-RUN cmake -DUSE_CUDNN=1 -DUSE_NCCL=1 .. && \
-    make -j"$(nproc)"
+# RUN cmake -DUSE_CUDNN=1 -DUSE_NCCL=1 .. && \
+#     make -j"$(nproc)"
 
 # export PYCAFFE_ROOT=$CAFFE_ROOT/python
 # export PYTHONPATH=$PYCAFFE_ROOT:$PYTHONPATH
