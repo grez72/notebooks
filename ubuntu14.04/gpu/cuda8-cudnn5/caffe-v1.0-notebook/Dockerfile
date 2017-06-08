@@ -52,7 +52,7 @@ RUN mkdir $CAFFE_ROOT
 WORKDIR $CAFFE_ROOT
 
 RUN git clone -b ${CAFFE_VERSION} --depth 1 https://github.com/BVLC/caffe.git . && \
-    pip install --upgrade pip && \
+    pip install --upgrade pip
 
 WORKDIR python
 RUN for req in $(cat requirements.txt) pydot; do pip install $req; done && \
