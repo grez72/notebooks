@@ -89,7 +89,7 @@ WORKDIR build
 # RUN ln -s /usr/include/python2.7/ /usr/local/include/python2.7 && \
 #   ln -s /usr/local/lib/python2.7/dist-packages/numpy/core/include/numpy/ /usr/local/include/python2.7/numpy
 #
-RUN apt-get update && apt-get install -y python-skimage python-protobuf
+# RUN apt-get update && apt-get install -y python-skimage python-protobuf
 
 # verify installation:
 # python -c "import caffe;print caffe.__version__"
@@ -105,5 +105,5 @@ RUN apt-get update && apt-get install -y python-skimage python-protobuf
 #  set workdir and user for jupyter notebook
 # ==============================================================
 
-WORKDIR /home/$NB_USER/work/
-USER $NB_USER
+# WORKDIR /home/$NB_USER/work/
+# USER $NB_USER
