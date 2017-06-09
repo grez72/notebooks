@@ -45,15 +45,15 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
       python-skimage \
       python-sklearn
 
-ENV CAFFE_HOME = $HOME/caffe
-RUN git clone https://github.com/NVIDIA/caffe.git $CAFFE_HOME
-RUN cat $CAFFE_HOME/python/requirements.txt | xargs -n1 pip2 install
-    # pip2 install -r $CAFFE_HOME/python/requirements.txt
-WORKDIR $CAFFE_HOME
-RUN mkdir build
-WORKDIR $CAFFE_HOME/build
-RUN cmake .. && \
-    make -j"$(nproc)"
+# ENV CAFFE_HOME = $HOME/caffe
+# RUN git clone https://github.com/NVIDIA/caffe.git $CAFFE_HOME
+# RUN cat $CAFFE_HOME/python/requirements.txt | xargs -n1 pip2 install
+#     # pip2 install -r $CAFFE_HOME/python/requirements.txt
+# WORKDIR $CAFFE_HOME
+# RUN mkdir build
+# WORKDIR $CAFFE_HOME/build
+# RUN cmake .. && \
+#     make -j"$(nproc)"
 
 # ARG CAFFE_VERSION=1.0
 #
