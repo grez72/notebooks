@@ -19,8 +19,7 @@ USER root
 WORKDIR $HOME
 
 # Required Dependencies
-RUN apt-get update
-RUN apt-get install -y --no-install-recommends \
+RUN apt-get update && apt-get install -y --no-install-recommends \
       build-essential \
       cmake \
       git \
@@ -48,6 +47,8 @@ RUN pip2 install numpy protobuf
 
 # Optional Dependeincies
 RUN apt-get install -y --no-install-recommends \
+      libgflags-dev \
+      libgoogle-glog-dev \
       libgflags2 \
       libgtest-dev \
       libiomp-dev \
@@ -58,7 +59,12 @@ RUN apt-get install -y --no-install-recommends \
       libsnappy-dev \
       openmpi-bin \
       openmpi-doc \
-      python-pydot
+      python-numpy \
+      python-pydot \
+      python-setuptools \
+      python-scipy \
+      wget
+
 RUN pip install \
       flask \
       future \
@@ -66,7 +72,8 @@ RUN pip install \
       hypothesis \
       jupyter \
       matplotlib \
-      pydot python-nvd3 \
+      pydot \
+      python-nvd3 \
       pyyaml \
       requests \
       scikit-image \
@@ -82,7 +89,8 @@ RUN pip2 install \
       hypothesis \
       jupyter \
       matplotlib \
-      pydot python-nvd3 \
+      pydot \
+      python-nvd3 \
       pyyaml \
       requests \
       scikit-image \
@@ -91,11 +99,18 @@ RUN pip2 install \
       six \
       tornado
 
-# Clone and build
-RUN git clone --recursive https://github.com/caffe2/caffe2.git
+# clone it
+RUN git clone --recursive https://github.com/caffe2/caffe2.git && \
+    pip install --upgrade pip && \
+    pip install numpy protobuf
+
 WORKDIR $HOME/caffe2
 RUN git checkout tags/${CAFFE2_VERSION}
 RUN make && cd build && make install
+
+ENV PYTHONPATH /usr/local
+ENV LD_LIBRARY_PATH /usr/local/lib:$LD_LIBRARY_PATH
+ENV LIBRARY_PATH /usr/local/lib:$LD_LIBRARY_PATH
 RUN python -c 'from caffe2.python import core' 2>/dev/null && echo "Success" || echo "Failure"
 
 # Test your gpu
@@ -103,13 +118,28 @@ RUN python -c 'from caffe2.python import core' 2>/dev/null && echo "Success" || 
 
 # Make sure these ENV variables are set
 # echo $PYTHONPATH
-ENV PYTHONPATH=/usr/local:$PYTHONPATH
-ENV PYTHONPATH=$PYTHONPATH:$HOME/caffe2/build
+# ENV PYTHONPATH=/usr/local:$PYTHONPATH
+# ENV PYTHONPATH=$PYTHONPATH:$HOME/caffe2/build
 # echo $LD_LIBRARY_PATH
-ENV LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
+# ENV LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
+
+# this is added due to some issues that were found
 
 # ==============================================================
-#  downgrade anaconda's hdf5 to resolve error
+#  troubleshooting: downgrade anaconda's hdf5 to resolve error
+# ==============================================================
+
+# libdc1394 error
+# for some reason once opencv is installed you may get errors with libdc1394
+# http://stackoverflow.com/questions/12689304/ctypes-error-libdc1394-error-failed-to-initialize-libdc1394
+# RUN ln /dev/null /dev/raw1394
+# But that's not persistent http://stackoverflow.com/questions/31768441/how-to-persist-ln-in-docker-with-ubuntu
+# CMD sh -c 'ln -s /dev/null /dev/raw1394'
+# or when instantiating the container use:
+# --device /dev/null:/dev/raw1394
+
+# ==============================================================
+#  troubleshooting: downgrade anaconda's hdf5 to resolve error
 # ==============================================================
 
 # conda install -c anaconda hdf5=1.8.17
@@ -120,5 +150,5 @@ ENV LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
 #  set workdir and user for jupyter notebook
 # ==============================================================
 
-# WORKDIR /home/$NB_USER/work/
-# USER $NB_USER
+WORKDIR /home/$NB_USER/work/
+USER $NB_USER
