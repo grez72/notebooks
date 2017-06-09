@@ -59,10 +59,6 @@ RUN cat $CAFFE_HOME/python/requirements.txt | xargs -n1 pip2 install
 RUN mkdir build
 WORKDIR $CAFFE_HOME/build
 RUN cmake \
-    -DUSE_CUDNN=1 \
-    -DUSE_NCCL=1 \
-    -DUSE_MPI=1 \
-    -DMPI_INCLUDE=/usr/include/openmpi \
     -DCUDA_ARCH_NAME="Manual" \
     -DCUDA_ARCH_BIN="52 60" \
     -DCUDA_ARCH_PTX="60" .. && \
