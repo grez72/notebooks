@@ -42,7 +42,7 @@ RUN apt-get update && apt-get install --no-install-recommends \
       python-skimage \
       python-sklearn
 
-ENV CAFFE_HOME = ~/caffe
+ENV CAFFE_HOME = $HOME/caffe
 RUN git clone https://github.com/NVIDIA/caffe.git $CAFFE_HOME
 RUN cat $CAFFE_HOME/python/requirements.txt | xargs -n1 pip2 install
     # pip2 install -r $CAFFE_HOME/python/requirements.txt
