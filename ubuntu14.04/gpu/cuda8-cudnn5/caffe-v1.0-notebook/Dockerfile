@@ -136,7 +136,14 @@ RUN rm -rf nccl && \
     mkdir build
 
 WORKDIR $CAFFE_ROOT/build
-RUN cmake -DUSE_CUDNN=1 -DUSE_NCCL=1 -DUSE_MPI=1 -DMPI_INCLUDE=/usr/include/openmpi .. && \
+RUN cmake \
+    -DUSE_CUDNN=1 \
+    -DUSE_NCCL=1 \
+    -DUSE_MPI=1 \
+    -DMPI_INCLUDE=/usr/include/openmpi \
+    -DCUDA_ARCH_NAME="Manual" \
+    -DCUDA_ARCH_BIN="52 60" \
+    -DCUDA_ARCH_PTX="60" .. && \
     make -j"$(nproc)"
 
 ENV PYCAFFE_ROOT $CAFFE_ROOT/python
