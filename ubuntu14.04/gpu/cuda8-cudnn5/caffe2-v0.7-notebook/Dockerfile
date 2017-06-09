@@ -150,5 +150,5 @@ RUN python2 -c 'from caffe2.python import core' 2>/dev/null && echo "Success" ||
 #  set workdir and user for jupyter notebook
 # ==============================================================
 
-# WORKDIR /home/$NB_USER/work/
-# USER $NB_USER
+WORKDIR /home/$NB_USER/work/
+USER $NB_USER
