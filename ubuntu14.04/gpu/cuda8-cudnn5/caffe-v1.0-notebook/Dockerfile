@@ -52,9 +52,18 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 ENV CAFFE_HOME $HOME/caffe
 USER $NB_USER
 RUN git clone https://github.com/NVIDIA/caffe.git /home/jovyan/caffe/
-USER root
-WORKDIR $CAFFE_HOME
 RUN git checkout tags/${NVCAFFE_VERSION}
+
+WORKDIR $CAFFE_HOME
+RUN git clone https://github.com/NVIDIA/nccl.git
+
+WORKDIR $CAFFE_HOME/nccl
+USER root
+RUN make -j install
+
+WORKDIR $CAFFE_HOME
+RUN rm -rf nccl
+
 RUN cat $CAFFE_HOME/python/requirements.txt | xargs -n1 pip2 install
 RUN mkdir build
 WORKDIR $CAFFE_HOME/build
