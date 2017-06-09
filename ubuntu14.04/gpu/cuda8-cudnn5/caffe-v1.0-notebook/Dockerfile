@@ -117,7 +117,7 @@ ENV CAFFE_ROOT=/opt/caffe
 WORKDIR /opt
 USER $NB_USER
 # RUN git clone https://github.com/NVIDIA/caffe.git /home/jovyan/caffe/
-RUN git clone https://github.com/BVLC/caffe.git /home/jovyan/caffe/
+RUN git clone https://github.com/BVLC/caffe.git /opt/caffe/
 
 # default python is python 3.5, so we need to use pip2 to install for python2
 WORKDIR $CAFFE_ROOT/python
