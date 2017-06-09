@@ -52,11 +52,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 ENV CAFFE_HOME $HOME/caffe
 USER $NB_USER
 RUN git clone https://github.com/NVIDIA/caffe.git /home/jovyan/caffe/
-RUN git checkout tags/${NVCAFFE_VERSION}
 
 WORKDIR $CAFFE_HOME
-RUN git clone https://github.com/NVIDIA/nccl.git
+RUN git checkout tags/${NVCAFFE_VERSION}
 
+RUN git clone https://github.com/NVIDIA/nccl.git
 WORKDIR $CAFFE_HOME/nccl
 USER root
 RUN make -j install
