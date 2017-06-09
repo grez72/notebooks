@@ -9,7 +9,7 @@ FROM grez72/deep-notebooks:ubuntu14.04-gpu-cuda8-cudnn5-base-notebook
 
 MAINTAINER George Alvarez <gre72@gmail.com, alvarez@wjh.harvard.edu>
 
-ARG NVCAFFE_VERSION=0.16.1
+ARG NVCAFFE_VERSION=v0.16.1
 
 # ==============================================================
 #  INSTALL Caffe from NVIDIA's fork
@@ -52,7 +52,7 @@ RUN mkdir $CAFFE_HOME
 WORKDIR $CAFFE_HOME
 RUN git clone https://github.com/NVIDIA/caffe.git .
 WORKDIR $CAFFE_HOME
-RUN git checkout -r 0.16.1
+RUN git checkout tags/${NVCAFFE_VERSION}
 # RUN cat $CAFFE_HOME/python/requirements.txt | xargs -n1 pip2 install
 #     # pip2 install -r $CAFFE_HOME/python/requirements.txt
 # RUN mkdir build
