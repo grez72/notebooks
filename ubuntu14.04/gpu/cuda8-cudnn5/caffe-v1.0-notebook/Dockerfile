@@ -62,7 +62,7 @@ RUN cat $CAFFE_HOME/python/requirements.txt | xargs -n1 pip2 install
     # pip2 install -r $CAFFE_HOME/python/requirements.txt
 RUN mkdir build
 WORKDIR $CAFFE_HOME/build
-RUN cmake -DUSE_CUDNN=true -DUSE_NCCL=true .. && \
+RUN cmake -DCUDA_ARCH_NAME="Manual" -DCUDA_ARCH_BIN="52 60" -DCUDA_ARCH_PTX="60" .. && \
     make -j"$(nproc)"
 
 ENV PYCAFFE_ROOT=$CAFFE_HOME/python
