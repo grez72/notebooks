@@ -102,7 +102,8 @@ RUN pip2 install \
 # clone it
 RUN git clone --recursive https://github.com/caffe2/caffe2.git && \
     pip install --upgrade pip && \
-    pip install numpy protobuf
+    pip install numpy protobuf && \
+    pip2 install numpy protobuf
 
 WORKDIR $HOME/caffe2
 RUN git checkout tags/${CAFFE2_VERSION}

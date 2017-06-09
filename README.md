@@ -19,12 +19,11 @@ Most of the framework notebooks (e.g., Tensorflow, Torch, etc.) were created by 
 
 ## Frameworks
 https://developer.nvidia.com/deep-learning-frameworks
-* [Tensorflow](https://www.tensorflow.org/), with the option to use [Keras](http://keras.io/) or [TFLearn](http://tflearn.org/~~~~~~~~)
+* [Tensorflow](https://www.tensorflow.org/), with the option to use [Keras](http://keras.io/) or [TFLearn](http://tflearn.org/)
 * [Torch](http://torch.ch/) (includes nn, cutorch, cunn and cuDNN bindings), and [iPython/Jupyter Notebook](http://jupyter.org/) with the itorch kernal.
 * [CNTK v2.0-GPU-1bit-SGD](https://www.microsoft.com/en-us/cognitive-toolkit/)
 * [NVCaffe](https://github.com/NVIDIA/caffe.git) (NVIDIA's fork of Caffe)
-
-[ ] - [Caffe](http://caffe.berkeleyvision.org/)
+* [Caffe](http://caffe.berkeleyvision.org/)
 
 [ ] - [Caffe2](https://caffe2.ai/)
 
@@ -32,9 +31,9 @@ https://developer.nvidia.com/deep-learning-frameworks
 
 [ ] - [Chainer](https://chainer.org/)
 
-[ ] - [Digits](https://developer.nvidia.com/digits)
-
 [ ] - [MXNET](http://mxnet.io/)
+
+[ ] - [Digits](https://developer.nvidia.com/digits)
 
 ## Build
 
