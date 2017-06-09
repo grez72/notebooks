@@ -9,7 +9,9 @@ FROM grez72/deep-notebooks:ubuntu14.04-gpu-cuda8-cudnn5-base-notebook
 
 MAINTAINER George Alvarez <gre72@gmail.com, alvarez@wjh.harvard.edu>
 
-ARG NVCAFFE_VERSION=v0.16.1
+# v0.16.1 requires cudnn6
+# ARG NVCAFFE_VERSION=v0.16.1
+ARG NVCAFFE_VERSION=v0.15.13
 
 # ==============================================================
 #  INSTALL Caffe from NVIDIA's fork
