@@ -111,7 +111,7 @@ RUN make && cd build && make install
 ENV PYTHONPATH /usr/local
 ENV LD_LIBRARY_PATH /usr/local/lib:$LD_LIBRARY_PATH
 ENV LIBRARY_PATH /usr/local/lib:$LD_LIBRARY_PATH
-RUN python -c 'from caffe2.python import core' 2>/dev/null && echo "Success" || echo "Failure"
+RUN python2 -c 'from caffe2.python import core' 2>/dev/null && echo "Success" || echo "Failure"
 
 # Test your gpu
 # RUN python -m caffe2.python.operator_test.relu_op_test
