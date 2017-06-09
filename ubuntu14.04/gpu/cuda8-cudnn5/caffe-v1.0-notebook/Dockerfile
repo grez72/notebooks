@@ -50,10 +50,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
       python-sklearn
 
 ENV CAFFE_HOME $HOME/caffe
-RUN mkdir $CAFFE_HOME
-WORKDIR $CAFFE_HOME
+# RUN mkdir $CAFFE_HOME
+# WORKDIR $CAFFE_HOME
 USER $NB_USER
-RUN git clone https://github.com/NVIDIA/caffe.git .
+RUN git clone https://github.com/NVIDIA/caffe.git /home/jovyan/caffe/
 USER root
 WORKDIR $CAFFE_HOME
 RUN git checkout tags/${NVCAFFE_VERSION}
