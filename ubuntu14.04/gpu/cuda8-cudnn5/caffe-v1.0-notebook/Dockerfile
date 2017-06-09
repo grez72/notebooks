@@ -116,8 +116,8 @@ RUN chown -R jovyan:users $CAFFE_ROOT/examples
 
 # Download some sample data for testing
 WORKDIR $CAFFE_ROOT
-RUN ./data/mnist/get_mnist.sh
-RUN ./examples/mnist/create_mnist.sh
+RUN /data/mnist/get_mnist.sh
+RUN /examples/mnist/create_mnist.sh
 
 # ==============================================================
 #  set workdir and user for jupyter notebook
