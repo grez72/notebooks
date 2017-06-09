@@ -113,11 +113,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     rm -rf /var/lib/apt/lists/*
 
 # install caffe
-ENV CAFFE_ROOT=/opt/caffe
+ENV CAFFE_ROOT=/opt/caffe/
 WORKDIR /opt
 USER $NB_USER
 # RUN git clone https://github.com/NVIDIA/caffe.git /home/jovyan/caffe/
-RUN git clone https://github.com/BVLC/caffe.git /opt/caffe/
+RUN git clone https://github.com/BVLC/caffe.git $CAFFE_ROOT
 
 # default python is python 3.5, so we need to use pip2 to install for python2
 WORKDIR $CAFFE_ROOT/python
