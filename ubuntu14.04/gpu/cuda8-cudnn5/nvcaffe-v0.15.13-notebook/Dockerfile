@@ -81,6 +81,8 @@ ENV PYTHONPATH=$PYCAFFE_ROOT:$PYTHONPATH
 ENV PATH=$CAFFE_ROOT/build/tools:$PYCAFFE_ROOT:$PATH
 RUN echo "$CAFFE_HOME/build/lib" >> /etc/ld.so.conf.d/caffe.conf && ldconfig
 
+# make runtest
+
 # ==============================================================
 #  set workdir and user for jupyter notebook
 # ==============================================================
