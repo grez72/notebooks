@@ -113,7 +113,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     rm -rf /var/lib/apt/lists/*
 
 # install caffe
-ENV CAFFE_ROOT=/opt/caffe
+ENV CAFFE_ROOT=$HOME/caffe
 WORKDIR $CAFFE_ROOT
 USER $NB_USER
 RUN git clone -b ${CAFFE_VERSION} --depth 1 https://github.com/BVLC/caffe.git /opt/caffe
