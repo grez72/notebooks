@@ -55,7 +55,8 @@ WORKDIR $CAFFE_HOME
 RUN git clone https://github.com/NVIDIA/caffe.git .
 WORKDIR $CAFFE_HOME
 RUN git checkout tags/${NVCAFFE_VERSION}
-RUN cat $CAFFE_HOME/python/requirements.txt | xargs -n1 pip2 install
+RUN cat $CAFFE_HOME/python/requirements.txt | xargs -n1 pip install && \
+    cat $CAFFE_HOME/python/requirements.txt | xargs -n1 pip2 install
     # pip2 install -r $CAFFE_HOME/python/requirements.txt
 RUN mkdir build
 WORKDIR $CAFFE_HOME/build
@@ -65,7 +66,7 @@ RUN cmake .. && \
 ENV PYCAFFE_ROOT=$CAFFE_HOME/python
 ENV PYTHONPATH=$PYCAFFE_ROOT:$PYTHONPATH
 ENV PATH=$CAFFE_ROOT/build/tools:$PYCAFFE_ROOT:$PATH
-    
+
 WORKDIR $HOME/work/
 USER $NB_USER
 
