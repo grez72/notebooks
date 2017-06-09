@@ -13,6 +13,9 @@ MAINTAINER George Alvarez <gre72@gmail.com, alvarez@wjh.harvard.edu>
 #  INSTALL Caffe from NVIDIA's fork
 # ==============================================================
 
+WORKDIR $HOME
+USER root
+
 RUN apt-get update && apt-get install --no-install-recommends \
       build-essential \
       cmake \
