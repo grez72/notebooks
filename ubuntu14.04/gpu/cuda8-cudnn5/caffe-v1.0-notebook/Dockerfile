@@ -50,24 +50,27 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
       python-sklearn
 
 ENV CAFFE_HOME $HOME/caffe
-# RUN mkdir $CAFFE_HOME
-# WORKDIR $CAFFE_HOME
 USER $NB_USER
 RUN git clone https://github.com/NVIDIA/caffe.git /home/jovyan/caffe/
 USER root
 WORKDIR $CAFFE_HOME
 RUN git checkout tags/${NVCAFFE_VERSION}
 RUN cat $CAFFE_HOME/python/requirements.txt | xargs -n1 pip2 install
-    # cat $CAFFE_HOME/python/requirements.txt | xargs -n1 pip2 install
-    # pip2 install -r $CAFFE_HOME/python/requirements.txt
 RUN mkdir build
 WORKDIR $CAFFE_HOME/build
-RUN cmake -DCUDA_ARCH_NAME="Manual" -DCUDA_ARCH_BIN="52 60" -DCUDA_ARCH_PTX="60" .. && \
+RUN cmake \
+    -DUSE_CUDNN=1 \
+    -DUSE_NCCL=1 \
+    -DUSE_MPI=1 \
+    -DMPI_INCLUDE=/usr/include/openmpi \
+    -DCUDA_ARCH_NAME="Manual" \
+    -DCUDA_ARCH_BIN="52 60" \
+    -DCUDA_ARCH_PTX="60" .. && \
     make -j"$(nproc)"
-
 ENV PYCAFFE_ROOT=$CAFFE_HOME/python
 ENV PYTHONPATH=$PYCAFFE_ROOT:$PYTHONPATH
 ENV PATH=$CAFFE_ROOT/build/tools:$PYCAFFE_ROOT:$PATH
+# RUN echo "$CAFFE_ROOT/build/lib" >> /etc/ld.so.conf.d/caffe.conf && ldconfig
 
 WORKDIR $HOME/work/
 USER $NB_USER
