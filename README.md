@@ -2,11 +2,12 @@
 A collection of Dockerfiles for building docker containers used to
 spawn single-user notebooks with DockerSpawner in JupyterHub. All notebooks are GPU enabled (CUDA 8.0, cuDNN v5.1), and there are different containers supporting several popular deep-learning frameworks (e.g., Tensorflow, Torch, Caffe, etc.).
 
-The base notebook was created by modifying nvidia-cuda-devel to work as single-user notebook with jupyterhub, and then adding OpenCV.
+The base notebook was created by modifying nvidia-cuda-devel to work as a single-user notebook with jupyterhub, and then adding OpenCV.
+
 https://gitlab.com/nvidia/cuda/blob/ubuntu14.04/8.0/runtime/cudnn5/Dockerfile
 https://gitlab.com/nvidia/cuda/blob/ubuntu14.04/8.0/devel/Dockerfile
 
-Most of the framework notebooks were created by copying  https://github.com/floydhub/dl-docker, making minor modifications for compatibility with the base-notebook.
+Most of the framework notebooks (e.g., Tensorflow, Torch, etc.) were created by copying  https://github.com/floydhub/dl-docker, and then making minor modifications for compatibility with the base-notebook.
 
 ## Base Notebook
 * Ubuntu 14.04
