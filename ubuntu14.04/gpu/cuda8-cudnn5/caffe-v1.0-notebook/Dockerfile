@@ -16,7 +16,7 @@ MAINTAINER George Alvarez <gre72@gmail.com, alvarez@wjh.harvard.edu>
 WORKDIR $HOME
 USER root
 
-RUN apt-get update && apt-get install --no-install-recommends \
+RUN apt-get update && apt-get install -y --no-install-recommends \
       build-essential \
       cmake \
       git \
