@@ -32,6 +32,8 @@ RUN pip install --upgrade pip && \
     pip install numpy protobuf && \
     pip2 install numpy protobuf
 
+RUN conda install libgcc
+
 # Caffe2 works best with openmpi 1.8.5 or above (which has cuda support).
 # If you do not need openmpi, skip this step.
 RUN cd /tmp && \
@@ -160,7 +162,7 @@ RUN cmake .. && \
 ENV PYTHONPATH /usr/local
 ENV LD_LIBRARY_PATH /usr/local/lib:$LD_LIBRARY_PATH
 ENV LIBRARY_PATH /usr/local/lib:$LD_LIBRARY_PATH
-RUN python2 -c 'from caffe2.python import core' 2>/dev/null && echo "Success" || echo "Failure"
+RUN python -c 'from caffe2.python import core' 2>/dev/null && echo "Success" || echo "Failure"
 
 # Test your gpu
 # RUN python -m caffe2.python.operator_test.relu_op_test
