@@ -16,7 +16,6 @@ WORKDIR $HOME
 
 # caffe2 install with gpu support
 
-########## REQUIRED DEPENDENCIES ################
 RUN apt-get update && apt-get install -y --no-install-recommends \
     python-dev \
     python-pip \
