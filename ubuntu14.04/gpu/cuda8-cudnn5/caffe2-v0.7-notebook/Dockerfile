@@ -7,7 +7,8 @@
 # nvidia-docker run -it grez72/deep-notebooks:ubuntu14.04-gpu-cuda8-cudnn5-caffe2-v0.7-notebook python -m caffe2.python.operator_test.relu_op_test
 
 # FROM nvidia/cuda:8.0-cudnn5-devel-ubuntu14.04
-FROM grez72/deep-notebooks:ubuntu14.04-gpu-cuda8-cudnn5-base-notebook
+FROM grez72/deep-notebooks:ubuntu14.04-gpu-cuda8-cudnn5-devel
+# FROM grez72/deep-notebooks:ubuntu14.04-gpu-cuda8-cudnn5-base-notebook
 MAINTAINER George Alvarez <alvarez@wjh.harvard.edu, grez72@gmail.com>
 
 USER root
