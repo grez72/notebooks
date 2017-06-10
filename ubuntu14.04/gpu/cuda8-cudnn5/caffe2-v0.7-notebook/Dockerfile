@@ -151,12 +151,12 @@ RUN pip2 install \
 RUN git clone --recursive https://github.com/caffe2/caffe2.git
 WORKDIR $HOME/caffe2
 RUN git checkout tags/${CAFFE2_VERSION}
-# RUN make && cd build && make install
-RUN mkdir build
-WORKDIR $HOME/caffe2/build
-# RUN sed -i -e 's/VERSION_GREATER 4.8/VERSION_GREATER 5.0/g' CMakeLists.txt
-RUN cmake .. && \
-    make
+RUN make && cd build && make install
+# RUN mkdir build
+# WORKDIR $HOME/caffe2/build
+# # RUN sed -i -e 's/VERSION_GREATER 4.8/VERSION_GREATER 5.0/g' CMakeLists.txt
+# RUN cmake .. && \
+#     make
 
 ENV PYTHONPATH /usr/local
 ENV PYTHONPATH $PYTHONPATH:$HOME/caffe2/build
