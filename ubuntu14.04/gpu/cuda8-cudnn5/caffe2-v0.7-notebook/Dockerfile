@@ -8,7 +8,7 @@
 
 # FROM nvidia/cuda:8.0-cudnn5-devel-ubuntu14.04
 FROM grez72/deep-notebooks:ubuntu14.04-gpu-cuda8-cudnn5-base-notebook
-MAINTAINER Aaron Markham <aaronmarkham@fb.com>
+MAINTAINER George Alvarez <alvarez@wjh.harvard.edu, grez72@gmail.com>
 
 USER root
 WORKDIR $HOME
