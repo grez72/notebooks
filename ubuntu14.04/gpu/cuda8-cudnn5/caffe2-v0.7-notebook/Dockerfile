@@ -6,8 +6,12 @@
 # nvidia-docker run -it --rm -p 8888:8888 grez72/deep-notebooks:ubuntu14.04-gpu-cuda8-cudnn5-caffe2-v0.7-notebook
 # nvidia-docker run -it grez72/deep-notebooks:ubuntu14.04-gpu-cuda8-cudnn5-caffe2-v0.7-notebook python -m caffe2.python.operator_test.relu_op_test
 
+# these work
 # FROM nvidia/cuda:8.0-cudnn5-devel-ubuntu14.04
-FROM grez72/deep-notebooks:ubuntu14.04-gpu-cuda8-cudnn5-devel
+# FROM grez72/deep-notebooks:ubuntu14.04-gpu-cuda8-cudnn5-devel
+FROM debian@sha256:52af198afd8c264f1035206ca66a5c48e602afb32dc912ebf9e9478134601ec4
+
+# this one doesn't
 # FROM grez72/deep-notebooks:ubuntu14.04-gpu-cuda8-cudnn5-base-notebook
 MAINTAINER George Alvarez <alvarez@wjh.harvard.edu, grez72@gmail.com>
 
