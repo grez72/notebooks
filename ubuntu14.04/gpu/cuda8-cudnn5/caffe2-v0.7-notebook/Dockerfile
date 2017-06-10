@@ -46,16 +46,16 @@ RUN cd /tmp && \
 
 # Caffe2 requires zeromq 4.0 or above, manually install.
 # If you do not need zeromq, skip this step.
-RUN apt-get install -q -y autoconf libtool
-RUN mkdir /tmp/zeromq-build && \
-  cd /tmp/zeromq-build && \
-  wget https://github.com/zeromq/zeromq4-1/archive/v4.1.3.tar.gz && \
-  tar xzvf v4.1.3.tar.gz --strip 1 && \
-  ./autogen.sh && \
-  ./configure --without-libsodium && \
-  make && make install && \
-  cd / && \
-  rm -rf /tmp/zeromq-build
+# RUN apt-get install -q -y autoconf libtool
+# RUN mkdir /tmp/zeromq-build && \
+#   cd /tmp/zeromq-build && \
+#   wget https://github.com/zeromq/zeromq4-1/archive/v4.1.3.tar.gz && \
+#   tar xzvf v4.1.3.tar.gz --strip 1 && \
+#   ./autogen.sh && \
+#   ./configure --without-libsodium && \
+#   make && make install && \
+#   cd / && \
+#   rm -rf /tmp/zeromq-build
 
 # pip self upgrade
 RUN pip install --upgrade pip
@@ -150,7 +150,12 @@ RUN git clone --recursive https://github.com/caffe2/caffe2.git
 WORKDIR $HOME/caffe2
 RUN git checkout tags/${CAFFE2_VERSION}
 RUN make && cd build && make install
+# RUN mkdir build
+# WORKDIR $HOME/caffe2/build
+# RUN cmake .. && \
+#     make
 
+# export PYTHONPATH=$PYTHONPATH:$HOME/caffe2/build
 ENV PYTHONPATH /usr/local
 ENV LD_LIBRARY_PATH /usr/local/lib:$LD_LIBRARY_PATH
 ENV LIBRARY_PATH /usr/local/lib:$LD_LIBRARY_PATH
