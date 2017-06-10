@@ -9,9 +9,12 @@
 # these work
 # FROM nvidia/cuda:8.0-cudnn5-devel-ubuntu14.04
 # FROM grez72/deep-notebooks:ubuntu14.04-gpu-cuda8-cudnn5-devel
-FROM debian@sha256:52af198afd8c264f1035206ca66a5c48e602afb32dc912ebf9e9478134601ec4
 
-# this one doesn't
+# testing:
+FROM debian@sha256:52af198afd8c264f1035206ca66a5c48e602afb32dc912ebf9e9478134601ec4
+# FROM jupyter/scipy-notebook
+
+# doesn't work :(
 # FROM grez72/deep-notebooks:ubuntu14.04-gpu-cuda8-cudnn5-base-notebook
 MAINTAINER George Alvarez <alvarez@wjh.harvard.edu, grez72@gmail.com>
 
