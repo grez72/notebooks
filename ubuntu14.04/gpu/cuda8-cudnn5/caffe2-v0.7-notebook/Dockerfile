@@ -12,7 +12,7 @@ FROM grez72/deep-notebooks:ubuntu14.04-gpu-cuda8-cudnn5-devel
 MAINTAINER George Alvarez <alvarez@wjh.harvard.edu, grez72@gmail.com>
 
 USER root
-WORKDIR $HOME
+# WORKDIR $HOME
 
 # caffe2 install with gpu support
 
