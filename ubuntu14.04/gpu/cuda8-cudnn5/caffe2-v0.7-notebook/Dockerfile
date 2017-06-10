@@ -62,6 +62,8 @@ RUN pip install \
     setuptools \
     tornado
 
+RUN pip install future
+
 ########## INSTALLATION STEPS ###################
 RUN cd caffe2 && make && cd build && make install
 
