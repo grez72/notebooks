@@ -28,9 +28,48 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
       protobuf-compiler \
       python-dev \
       python-pip
+RUN pip install --upgrade pip && \
+    pip install numpy protobuf && \
+    pip2 install numpy protobuf
+
+# Caffe2 works best with openmpi 1.8.5 or above (which has cuda support).
+# If you do not need openmpi, skip this step.
+RUN cd /tmp && \
+  wget http://www.open-mpi.org/software/ompi/v1.10/downloads/openmpi-1.10.0.tar.gz && \
+  tar xzvf openmpi-1.10.0.tar.gz && \
+  cd /tmp/openmpi-1.10.0 && \
+  ./configure --with-cuda --with-threads && \
+  make && make install && \
+  cd / && \
+  rm -rf /tmp/openmpi-1.10.0 && \
+  rm /tmp/openmpi-1.10.0.tar.gz
+
+# Caffe2 requires zeromq 4.0 or above, manually install.
+# If you do not need zeromq, skip this step.
+RUN apt-get install -q -y autoconf libtool
+RUN mkdir /tmp/zeromq-build && \
+  cd /tmp/zeromq-build && \
+  wget https://github.com/zeromq/zeromq4-1/archive/v4.1.3.tar.gz && \
+  tar xzvf v4.1.3.tar.gz --strip 1 && \
+  ./autogen.sh && \
+  ./configure --without-libsodium && \
+  make && make install && \
+  cd / && \
+  rm -rf /tmp/zeromq-build
+
+# pip self upgrade
 RUN pip install --upgrade pip
-RUN pip install numpy protobuf
-RUN pip2 install numpy protobuf
+
+# Python dependencies
+RUN pip install \
+      matplotlib \
+      numpy \
+      protobuf
+
+RUN pip2 install \
+      matplotlib \
+      numpy \
+      protobuf
 
 # GPU Support CUDA 8.0
 # RUN apt-get update && sudo apt-get install wget -y --no-install-recommends
@@ -47,6 +86,7 @@ RUN pip2 install numpy protobuf
 
 # Optional Dependeincies
 RUN apt-get install -y --no-install-recommends \
+      gfortran \
       libgflags-dev \
       libgoogle-glog-dev \
       libgflags2 \
@@ -93,18 +133,20 @@ RUN pip2 install \
       python-nvd3 \
       pyyaml \
       requests \
-      scikit-image \
       scipy \
       setuptools \
       six \
       tornado
 
-# clone it
-RUN git clone --recursive https://github.com/caffe2/caffe2.git && \
-    pip install --upgrade pip && \
-    pip install numpy protobuf && \
-    pip2 install numpy protobuf
+# This is intentional. scikit-image has to be after scipy.
+RUN pip install \
+      scikit-image
 
+RUN pip2 install \
+      scikit-image
+
+# clone it
+RUN git clone --recursive https://github.com/caffe2/caffe2.git
 WORKDIR $HOME/caffe2
 RUN git checkout tags/${CAFFE2_VERSION}
 RUN make && cd build && make install
