@@ -10,6 +10,9 @@
 FROM grez72/deep-notebooks:ubuntu14.04-gpu-cuda8-cudnn5-base-notebook
 MAINTAINER Aaron Markham <aaronmarkham@fb.com>
 
+USER root
+WORKDIR $HOME
+
 # caffe2 install with gpu support
 
 ########## REQUIRED DEPENDENCIES ################
