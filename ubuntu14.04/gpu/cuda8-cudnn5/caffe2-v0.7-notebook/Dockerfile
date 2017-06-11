@@ -92,9 +92,6 @@ MAINTAINER George Alvarez <gre72@gmail.com, alvarez@wjh.harvard.edu>
 #  caffe2 install with gpu support
 # ==============================================================
 
-# run everything with python2
-ENV PATH /opt/conda/envs/python2:$PATH
-
 # RUN apt-get update && apt-get install -y --no-install-recommends \
 #     python-dev \
 #     python-pip \
