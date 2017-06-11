@@ -18,6 +18,8 @@ FROM grez72/deep-notebooks:ubuntu14.04-gpu-cuda8-cudnn5-base-notebook
 
 MAINTAINER George Alvarez <gre72@gmail.com, alvarez@wjh.harvard.edu>
 
+USER root
+
 # ==============================================================
 #  nvidia cuda8-cudnn5
 # ==============================================================
