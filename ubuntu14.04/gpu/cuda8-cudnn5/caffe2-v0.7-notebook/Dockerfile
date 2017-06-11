@@ -92,63 +92,63 @@ MAINTAINER George Alvarez <gre72@gmail.com, alvarez@wjh.harvard.edu>
 #  caffe2 install with gpu support
 # ==============================================================
 
-# RUN apt-get update && apt-get install -y --no-install-recommends \
-#     python-dev \
-#     python-pip \
-#     git \
-#     build-essential \
-#     cmake \
-#     libprotobuf-dev \
-#     protobuf-compiler \
-#     libgoogle-glog-dev
-#
-# RUN git clone --recursive https://github.com/caffe2/caffe2.git && \
-#     pip install --upgrade pip && \
-#     pip install numpy protobuf
-#
-# ########## OPTIONAL DEPENDENCIES ################
-#
-# RUN apt-get install -y --no-install-recommends \
-#     libgflags-dev \
-#     libgoogle-glog-dev \
-#     libgflags2 \
-#     libgtest-dev \
-#     libiomp-dev \
-#     libleveldb-dev \
-#     liblmdb-dev \
-#     libopencv-dev \
-#     libopenmpi-dev \
-#     libsnappy-dev \
-#     openmpi-bin \
-#     openmpi-doc \
-#     python-numpy \
-#     python-pydot \
-#     python-setuptools \
-#     python-scipy \
-#     wget
-#
-# RUN pip install \
-#     flask \
-#     graphviz \
-#     hypothesis \
-#     jupyter \
-#     matplotlib \
-#     pydot \
-#     python-nvd3 \
-#     pyyaml \
-#     requests \
-#     scikit-image \
-#     scipy \
-#     setuptools \
-#     tornado
-#
-# ########## INSTALLATION STEPS ###################
-# RUN cd caffe2 && make && cd build && make install
-# RUN pip install future
-#
-# ENV PYTHONPATH /usr/local
-# ENV LD_LIBRARY_PATH /usr/local/lib:$LD_LIBRARY_PATH
-# ENV LIBRARY_PATH /usr/local/lib:$LD_LIBRARY_PATH
+RUN /bin/bash -c "source activate python2 && apt-get update && apt-get install -y --no-install-recommends \
+    python-dev \
+    python-pip \
+    git \
+    build-essential \
+    cmake \
+    libprotobuf-dev \
+    protobuf-compiler \
+    libgoogle-glog-dev"
+
+RUN /bin/bash -c "source activate python2 && git clone --recursive https://github.com/caffe2/caffe2.git && \
+    pip install --upgrade pip && \
+    pip install numpy protobuf"
+
+########## OPTIONAL DEPENDENCIES ################
+
+RUN /bin/bash -c "source activate python2 && apt-get install -y --no-install-recommends \
+    libgflags-dev \
+    libgoogle-glog-dev \
+    libgflags2 \
+    libgtest-dev \
+    libiomp-dev \
+    libleveldb-dev \
+    liblmdb-dev \
+    libopencv-dev \
+    libopenmpi-dev \
+    libsnappy-dev \
+    openmpi-bin \
+    openmpi-doc \
+    python-numpy \
+    python-pydot \
+    python-setuptools \
+    python-scipy \
+    wget"
+
+RUN /bin/bash -c "source activate python2 && pip install \
+    flask \
+    graphviz \
+    hypothesis \
+    jupyter \
+    matplotlib \
+    pydot \
+    python-nvd3 \
+    pyyaml \
+    requests \
+    scikit-image \
+    scipy \
+    setuptools \
+    tornado"
+
+########## INSTALLATION STEPS ###################
+RUN /bin/bash -c "source activate python2 && cd caffe2 && make && cd build && make install"
+RUN /bin/bash -c "source activate python2 && pip install future"
+
+ENV PYTHONPATH /usr/local
+ENV LD_LIBRARY_PATH /usr/local/lib:$LD_LIBRARY_PATH
+ENV LIBRARY_PATH /usr/local/lib:$LD_LIBRARY_PATH
 # RUN python -c 'from caffe2.python import core' 2>/dev/null && echo "Success" || echo "Failure"
 
 ########## TROUBLESHOOTING ######################
