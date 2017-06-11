@@ -12,140 +12,147 @@
 # FROM debian@sha256:52af198afd8c264f1035206ca66a5c48e602afb32dc912ebf9e9478134601ec4
 
 # testing:
-FROM jupyter/minimal-notebook
+# FROM jupyter/minimal-notebook
+
+FROM grez72/deep-notebooks:ubuntu14.04-gpu-cuda8-cudnn5-base-notebook
+
+MAINTAINER George Alvarez <gre72@gmail.com, alvarez@wjh.harvard.edu>
 
 # ==============================================================
 #  nvidia cuda8-cudnn5
 # ==============================================================
 
-USER root
-
-LABEL com.nvidia.volumes.needed="nvidia_driver"
-
-RUN NVIDIA_GPGKEY_SUM=d1be581509378368edeec8c1eb2958702feedf3bc3d17011adbf24efacce4ab5 && \
-    NVIDIA_GPGKEY_FPR=ae09fe4bbd223a84b2ccfce3f60f4b3d7fa2af80 && \
-    apt-key adv --fetch-keys http://developer.download.nvidia.com/compute/cuda/repos/ubuntu1404/x86_64/7fa2af80.pub && \
-    apt-key adv --export --no-emit-version -a $NVIDIA_GPGKEY_FPR | tail -n +2 > cudasign.pub && \
-    echo "$NVIDIA_GPGKEY_SUM  cudasign.pub" | sha256sum -c --strict - && rm cudasign.pub && \
-    echo "deb http://developer.download.nvidia.com/compute/cuda/repos/ubuntu1404/x86_64 /" > /etc/apt/sources.list.d/cuda.list
-
-ENV CUDA_VERSION 8.0.61
-LABEL com.nvidia.cuda.version="${CUDA_VERSION}"
-
-ENV CUDA_PKG_VERSION 8-0=$CUDA_VERSION-1
-RUN apt-get update && apt-get install -y --no-install-recommends \
-        cuda-nvrtc-$CUDA_PKG_VERSION \
-        cuda-nvgraph-$CUDA_PKG_VERSION \
-        cuda-cusolver-$CUDA_PKG_VERSION \
-        cuda-cublas-8-0=8.0.61.1-1 \
-        cuda-cufft-$CUDA_PKG_VERSION \
-        cuda-curand-$CUDA_PKG_VERSION \
-        cuda-cusparse-$CUDA_PKG_VERSION \
-        cuda-npp-$CUDA_PKG_VERSION \
-        cuda-cudart-$CUDA_PKG_VERSION && \
-    ln -s cuda-8.0 /usr/local/cuda && \
-    rm -rf /var/lib/apt/lists/*
-
-RUN echo "/usr/local/cuda/lib64" >> /etc/ld.so.conf.d/cuda.conf && \
-    ldconfig
-
-RUN echo "/usr/local/nvidia/lib" >> /etc/ld.so.conf.d/nvidia.conf && \
-    echo "/usr/local/nvidia/lib64" >> /etc/ld.so.conf.d/nvidia.conf
-
-ENV PATH /usr/local/nvidia/bin:/usr/local/cuda/bin:${PATH}
-ENV LD_LIBRARY_PATH /usr/local/nvidia/lib:/usr/local/nvidia/lib64
-
-RUN apt-get update && apt-get install -y --no-install-recommends \
-        cuda-core-$CUDA_PKG_VERSION \
-        cuda-misc-headers-$CUDA_PKG_VERSION \
-        cuda-command-line-tools-$CUDA_PKG_VERSION \
-        cuda-nvrtc-dev-$CUDA_PKG_VERSION \
-        cuda-nvml-dev-$CUDA_PKG_VERSION \
-        cuda-nvgraph-dev-$CUDA_PKG_VERSION \
-        cuda-cusolver-dev-$CUDA_PKG_VERSION \
-        cuda-cublas-dev-8-0=8.0.61.1-1 \
-        cuda-cufft-dev-$CUDA_PKG_VERSION \
-        cuda-curand-dev-$CUDA_PKG_VERSION \
-        cuda-cusparse-dev-$CUDA_PKG_VERSION \
-        cuda-npp-dev-$CUDA_PKG_VERSION \
-        cuda-cudart-dev-$CUDA_PKG_VERSION \
-        cuda-driver-dev-$CUDA_PKG_VERSION && \
-    rm -rf /var/lib/apt/lists/*
-
-ENV LIBRARY_PATH /usr/local/cuda/lib64/stubs:${LIBRARY_PATH}
-
-RUN echo "deb http://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1404/x86_64 /" > /etc/apt/sources.list.d/nvidia-ml.list
-
-ENV CUDNN_VERSION 5.1.10
-LABEL com.nvidia.cudnn.version="${CUDNN_VERSION}"
-
-RUN apt-get update && apt-get install -y --no-install-recommends \
-            libcudnn5=$CUDNN_VERSION-1+cuda8.0 \
-            libcudnn5-dev=$CUDNN_VERSION-1+cuda8.0 && \
-    rm -rf /var/lib/apt/lists/*
+# USER root
+#
+# LABEL com.nvidia.volumes.needed="nvidia_driver"
+#
+# RUN NVIDIA_GPGKEY_SUM=d1be581509378368edeec8c1eb2958702feedf3bc3d17011adbf24efacce4ab5 && \
+#     NVIDIA_GPGKEY_FPR=ae09fe4bbd223a84b2ccfce3f60f4b3d7fa2af80 && \
+#     apt-key adv --fetch-keys http://developer.download.nvidia.com/compute/cuda/repos/ubuntu1404/x86_64/7fa2af80.pub && \
+#     apt-key adv --export --no-emit-version -a $NVIDIA_GPGKEY_FPR | tail -n +2 > cudasign.pub && \
+#     echo "$NVIDIA_GPGKEY_SUM  cudasign.pub" | sha256sum -c --strict - && rm cudasign.pub && \
+#     echo "deb http://developer.download.nvidia.com/compute/cuda/repos/ubuntu1404/x86_64 /" > /etc/apt/sources.list.d/cuda.list
+#
+# ENV CUDA_VERSION 8.0.61
+# LABEL com.nvidia.cuda.version="${CUDA_VERSION}"
+#
+# ENV CUDA_PKG_VERSION 8-0=$CUDA_VERSION-1
+# RUN apt-get update && apt-get install -y --no-install-recommends \
+#         cuda-nvrtc-$CUDA_PKG_VERSION \
+#         cuda-nvgraph-$CUDA_PKG_VERSION \
+#         cuda-cusolver-$CUDA_PKG_VERSION \
+#         cuda-cublas-8-0=8.0.61.1-1 \
+#         cuda-cufft-$CUDA_PKG_VERSION \
+#         cuda-curand-$CUDA_PKG_VERSION \
+#         cuda-cusparse-$CUDA_PKG_VERSION \
+#         cuda-npp-$CUDA_PKG_VERSION \
+#         cuda-cudart-$CUDA_PKG_VERSION && \
+#     ln -s cuda-8.0 /usr/local/cuda && \
+#     rm -rf /var/lib/apt/lists/*
+#
+# RUN echo "/usr/local/cuda/lib64" >> /etc/ld.so.conf.d/cuda.conf && \
+#     ldconfig
+#
+# RUN echo "/usr/local/nvidia/lib" >> /etc/ld.so.conf.d/nvidia.conf && \
+#     echo "/usr/local/nvidia/lib64" >> /etc/ld.so.conf.d/nvidia.conf
+#
+# ENV PATH /usr/local/nvidia/bin:/usr/local/cuda/bin:${PATH}
+# ENV LD_LIBRARY_PATH /usr/local/nvidia/lib:/usr/local/nvidia/lib64
+#
+# RUN apt-get update && apt-get install -y --no-install-recommends \
+#         cuda-core-$CUDA_PKG_VERSION \
+#         cuda-misc-headers-$CUDA_PKG_VERSION \
+#         cuda-command-line-tools-$CUDA_PKG_VERSION \
+#         cuda-nvrtc-dev-$CUDA_PKG_VERSION \
+#         cuda-nvml-dev-$CUDA_PKG_VERSION \
+#         cuda-nvgraph-dev-$CUDA_PKG_VERSION \
+#         cuda-cusolver-dev-$CUDA_PKG_VERSION \
+#         cuda-cublas-dev-8-0=8.0.61.1-1 \
+#         cuda-cufft-dev-$CUDA_PKG_VERSION \
+#         cuda-curand-dev-$CUDA_PKG_VERSION \
+#         cuda-cusparse-dev-$CUDA_PKG_VERSION \
+#         cuda-npp-dev-$CUDA_PKG_VERSION \
+#         cuda-cudart-dev-$CUDA_PKG_VERSION \
+#         cuda-driver-dev-$CUDA_PKG_VERSION && \
+#     rm -rf /var/lib/apt/lists/*
+#
+# ENV LIBRARY_PATH /usr/local/cuda/lib64/stubs:${LIBRARY_PATH}
+#
+# RUN echo "deb http://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1404/x86_64 /" > /etc/apt/sources.list.d/nvidia-ml.list
+#
+# ENV CUDNN_VERSION 5.1.10
+# LABEL com.nvidia.cudnn.version="${CUDNN_VERSION}"
+#
+# RUN apt-get update && apt-get install -y --no-install-recommends \
+#             libcudnn5=$CUDNN_VERSION-1+cuda8.0 \
+#             libcudnn5-dev=$CUDNN_VERSION-1+cuda8.0 && \
+#     rm -rf /var/lib/apt/lists/*
 
 # ==============================================================
 #  caffe2 install with gpu support
 # ==============================================================
 
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    python-dev \
-    python-pip \
-    git \
-    build-essential \
-    cmake \
-    libprotobuf-dev \
-    protobuf-compiler \
-    libgoogle-glog-dev
+# run everything with python2
+ENV PATH /opt/conda/envs/python2:$PATH
 
-RUN git clone --recursive https://github.com/caffe2/caffe2.git && \
-    pip install --upgrade pip && \
-    pip install numpy protobuf
-
-########## OPTIONAL DEPENDENCIES ################
-
-RUN apt-get install -y --no-install-recommends \
-    libgflags-dev \
-    libgoogle-glog-dev \
-    libgflags2 \
-    libgtest-dev \
-    libiomp-dev \
-    libleveldb-dev \
-    liblmdb-dev \
-    libopencv-dev \
-    libopenmpi-dev \
-    libsnappy-dev \
-    openmpi-bin \
-    openmpi-doc \
-    python-numpy \
-    python-pydot \
-    python-setuptools \
-    python-scipy \
-    wget
-
-RUN pip install \
-    flask \
-    graphviz \
-    hypothesis \
-    jupyter \
-    matplotlib \
-    pydot \
-    python-nvd3 \
-    pyyaml \
-    requests \
-    scikit-image \
-    scipy \
-    setuptools \
-    tornado
-
-########## INSTALLATION STEPS ###################
-RUN cd caffe2 && make && cd build && make install
-RUN pip install future
-
-ENV PYTHONPATH /usr/local
-ENV LD_LIBRARY_PATH /usr/local/lib:$LD_LIBRARY_PATH
-ENV LIBRARY_PATH /usr/local/lib:$LD_LIBRARY_PATH
-RUN python -c 'from caffe2.python import core' 2>/dev/null && echo "Success" || echo "Failure"
+# RUN apt-get update && apt-get install -y --no-install-recommends \
+#     python-dev \
+#     python-pip \
+#     git \
+#     build-essential \
+#     cmake \
+#     libprotobuf-dev \
+#     protobuf-compiler \
+#     libgoogle-glog-dev
+#
+# RUN git clone --recursive https://github.com/caffe2/caffe2.git && \
+#     pip install --upgrade pip && \
+#     pip install numpy protobuf
+#
+# ########## OPTIONAL DEPENDENCIES ################
+#
+# RUN apt-get install -y --no-install-recommends \
+#     libgflags-dev \
+#     libgoogle-glog-dev \
+#     libgflags2 \
+#     libgtest-dev \
+#     libiomp-dev \
+#     libleveldb-dev \
+#     liblmdb-dev \
+#     libopencv-dev \
+#     libopenmpi-dev \
+#     libsnappy-dev \
+#     openmpi-bin \
+#     openmpi-doc \
+#     python-numpy \
+#     python-pydot \
+#     python-setuptools \
+#     python-scipy \
+#     wget
+#
+# RUN pip install \
+#     flask \
+#     graphviz \
+#     hypothesis \
+#     jupyter \
+#     matplotlib \
+#     pydot \
+#     python-nvd3 \
+#     pyyaml \
+#     requests \
+#     scikit-image \
+#     scipy \
+#     setuptools \
+#     tornado
+#
+# ########## INSTALLATION STEPS ###################
+# RUN cd caffe2 && make && cd build && make install
+# RUN pip install future
+#
+# ENV PYTHONPATH /usr/local
+# ENV LD_LIBRARY_PATH /usr/local/lib:$LD_LIBRARY_PATH
+# ENV LIBRARY_PATH /usr/local/lib:$LD_LIBRARY_PATH
+# RUN python -c 'from caffe2.python import core' 2>/dev/null && echo "Success" || echo "Failure"
 
 ########## TROUBLESHOOTING ######################
 # this is added due to some issues that were found
