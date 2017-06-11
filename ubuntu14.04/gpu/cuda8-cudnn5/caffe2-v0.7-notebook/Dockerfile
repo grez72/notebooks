@@ -18,6 +18,8 @@ FROM jupyter/scipy-notebook
 #  nvidia cuda8-cudnn5
 # ==============================================================
 
+USER root
+
 LABEL com.nvidia.volumes.needed="nvidia_driver"
 
 RUN NVIDIA_GPGKEY_SUM=d1be581509378368edeec8c1eb2958702feedf3bc3d17011adbf24efacce4ab5 && \
