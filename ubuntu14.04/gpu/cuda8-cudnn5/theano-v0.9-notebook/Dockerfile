@@ -20,6 +20,9 @@ USER root
 
 WORKDIR $HOME
 
+# pip install --upgrade --no-deps git+git://github.com/Theano/Theano.git
+# pip2 install --upgrade --no-deps git+git://github.com/Theano/Theano.git
+
 # ==============================================================
 #  INSTALL THEANO
 # ==============================================================

@@ -25,6 +25,7 @@ https://developer.nvidia.com/deep-learning-frameworks
 * [NVCaffe](https://github.com/NVIDIA/caffe.git) (NVIDIA's fork of Caffe)
 * [Caffe](http://caffe.berkeleyvision.org/)
 
+[ ] - [Pytorch](http://pytorch.org/)
 [ ] - [Caffe2](https://caffe2.ai/)
 
 [ ] - [Theano](http://deeplearning.net/software/theano/) which can be used with or without [Keras](http://keras.io/) or [Lasagne](http://lasagne.readthedocs.io/en/latest/)
