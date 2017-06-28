@@ -1,4 +1,6 @@
 ## grez72/docker-jupyter-notebooks-gpu
+...This is a work in progress!
+
 A collection of Dockerfiles for building docker containers used to
 spawn single-user notebooks with DockerSpawner in JupyterHub. All notebooks are GPU enabled (CUDA 8.0, cuDNN v5.1), and there are different containers supporting several popular deep-learning frameworks (e.g., Tensorflow, Torch, Caffe, etc.).
 
