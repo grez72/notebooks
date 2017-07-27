@@ -1,96 +1,112 @@
 # base-notebook for fmri data analysis
 #
-# Modified nvidia-cuda-devel to work as single-user notebook with jupyterhub
-# Starting with jupyter/scipy-notebook, then incorporating the ubuntu14.04
-# cuda8 runtime and development Dockerfile instructions:
-# https://gitlab.com/nvidia/cuda/blob/ubuntu14.04/8.0/runtime/cudnn5/Dockerfile
-# https://gitlab.com/nvidia/cuda/blob/ubuntu14.04/8.0/devel/Dockerfile
-# ...then including opencv
+# This Dockerfile is based on miykael/nipype_course, which is based on the
+# dockerfile 'fmriprep' from the PoldrackLab (https://github.com/poldracklab/fmriprep).
+# The jupyter notebook foundation is based on jupyter/docker-stacks's base-notebook.
+#
+# This means that the same copyrights apply to this Dockerfile, as they do for
+# the above mentioned dockerfiles. For more information see:
+# https://github.com/miykael/nipype_env
 #
 # build it:
-# nvidia-docker build -t grez72/cuda-v8.0-gpu-notebook https://github.com/grez72/notebooks.git#master:cuda-v8.0-gpu-notebook
+# docker build -t grez72/nipype-cpu-scipy-notebook https://github.com/grez72/notebooks.git#master:nipype/cpu/scipy-notebook
 #
 # run it:
-# nvidia-docker run -it --rm -p 8888:8888 grez72/cuda-v8.0-gpu-notebook
-# nvidia-docker run --user root -it --rm -p 8888:8888 grez72/cuda-v8.0-gpu-notebook
+# docker run -it --rm -p 8888:8888 grez72/nipype-cpu-scipy-notebook
+# docker run --user root -it --rm -p 8888:8888 grez72/nipype-cpu-scipy-notebook
 
 FROM jupyter/scipy-notebook
+MAINTAINER George Alvarez <grez72@gmail.com, alvarez.wjh.harvard.edu>
 
-LABEL com.nvidia.volumes.needed="nvidia_driver"
-
+#---------------------------------------------
+# Update OS dependencies and setup neurodebian
+#---------------------------------------------
 USER root
+RUN apt-get update && \
+    apt-get install -yq --no-install-recommends bzip2 \
+                                                ca-certificates \
+                                                curl \
+                                                git \
+                                                tree \
+                                                unzip \
+                                                wget \
+                                                xvfb \
+                                                zip
+ENV NEURODEBIAN_URL http://neuro.debian.net/lists/jessie.de-md.full
+RUN curl -sSL $NEURODEBIAN_URL | sudo tee /etc/apt/sources.list.d/neurodebian.sources.list && \
+    apt-key adv --recv-keys --keyserver hkp://pgp.mit.edu:80 0xA5D32F012649A5A9 && \
+    apt-get update -qq
 
-RUN NVIDIA_GPGKEY_SUM=d1be581509378368edeec8c1eb2958702feedf3bc3d17011adbf24efacce4ab5 && \
-    NVIDIA_GPGKEY_FPR=ae09fe4bbd223a84b2ccfce3f60f4b3d7fa2af80 && \
-    apt-key adv --fetch-keys http://developer.download.nvidia.com/compute/cuda/repos/ubuntu1404/x86_64/7fa2af80.pub && \
-    apt-key adv --export --no-emit-version -a $NVIDIA_GPGKEY_FPR | tail -n +2 > cudasign.pub && \
-    echo "$NVIDIA_GPGKEY_SUM  cudasign.pub" | sha256sum -c --strict - && rm cudasign.pub && \
-    echo "deb http://developer.download.nvidia.com/compute/cuda/repos/ubuntu1404/x86_64 /" > /etc/apt/sources.list.d/cuda.list
-
-ENV CUDA_VERSION 8.0.61
-LABEL com.nvidia.cuda.version="${CUDA_VERSION}"
-
-ENV CUDA_PKG_VERSION 8-0=$CUDA_VERSION-1
-RUN apt-get update && apt-get install -y --no-install-recommends \
-        cuda-core-$CUDA_PKG_VERSION \
-        cuda-misc-headers-$CUDA_PKG_VERSION \
-        cuda-command-line-tools-$CUDA_PKG_VERSION \
-        cuda-nvrtc-dev-$CUDA_PKG_VERSION \
-        cuda-nvml-dev-$CUDA_PKG_VERSION \
-        cuda-nvgraph-dev-$CUDA_PKG_VERSION \
-        cuda-cusolver-dev-$CUDA_PKG_VERSION \
-        cuda-cublas-dev-8-0=8.0.61.1-1 \
-        cuda-cufft-dev-$CUDA_PKG_VERSION \
-        cuda-curand-dev-$CUDA_PKG_VERSION \
-        cuda-cusparse-dev-$CUDA_PKG_VERSION \
-        cuda-npp-dev-$CUDA_PKG_VERSION \
-        cuda-cudart-dev-$CUDA_PKG_VERSION \
-        cuda-driver-dev-$CUDA_PKG_VERSION && \
-    ln -s cuda-8.0 /usr/local/cuda && \
-    rm -rf /var/lib/apt/lists/*
-
-RUN echo "/usr/local/cuda/lib64" >> /etc/ld.so.conf.d/cuda.conf && \
-    ldconfig
-
-RUN echo "/usr/local/nvidia/lib" >> /etc/ld.so.conf.d/nvidia.conf && \
-    echo "/usr/local/nvidia/lib64" >> /etc/ld.so.conf.d/nvidia.conf
-
-ENV PATH /usr/local/nvidia/bin:/usr/local/cuda/bin:${PATH}
-ENV LD_LIBRARY_PATH /usr/local/nvidia/lib:/usr/local/nvidia/lib64
-
-LABEL maintainer "NVIDIA CORPORATION <cudatools@nvidia.com>"
-
-USER root
-
-RUN apt-key adv --fetch-keys http://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1404/x86_64/7fa2af80.pub
-RUN echo "deb http://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1404/x86_64 /" > /etc/apt/sources.list.d/nvidia-ml.list
-
-ENV CUDNN_VERSION 5.1.10
-LABEL com.nvidia.cudnn.version="${CUDNN_VERSION}"
-
-RUN apt-get update
-RUN apt-get install --force-yes -y --no-install-recommends cuda-samples-$CUDA_PKG_VERSION
-RUN apt-get install --force-yes -y --no-install-recommends libcudnn5=5.1.10-1+cuda8.0
-RUN apt-get install --force-yes -y --no-install-recommends libcudnn5-dev=5.1.10-1+cuda8.0
-RUN rm -rf /var/lib/apt/lists/*
-
-# make copies of cuDNN so tensorflow can find them when installing from source
-RUN cp -P /usr/lib/x86_64-linux-gnu/libcudnn* /usr/local/cuda/lib64
-RUN cp -P /usr/include/cudnn.h /usr/local/cuda/include
-
-# test devices
-WORKDIR /usr/local/cuda/samples/1_Utilities/deviceQuery
-
-RUN make -j"$(nproc)"
-
-# CMD defines the default command to be run in the container
-# CMD is overridden by supplying a command + arguments to
-# `docker run`, e.g. `nvcc --version` or `bash`
-# CMD ./deviceQuery
-
-RUN conda install opencv
-RUN /bin/bash -c "source activate python2 && conda install opencv"
-
-# setup for notebook use
-WORKDIR /home/$NB_USER/work/
+#----------------------------------------------------
+# Update and install conda dependencies for python2.7
+#----------------------------------------------------
 USER $NB_USER
+
+# Make sure that necessary packages are installed
+RUN conda create -yq -n python2 python=2.7 ipython \
+                                           cython \
+                                           dipy \
+                                           graphviz \
+                                           joblib \
+                                           jupyter \
+                                           matplotlib \
+                                           nb_conda \
+                                           nb_conda_kernels \
+                                           nilearn \
+                                           notebook \
+                                           pandas \
+                                           pip \
+                                           scikit-image \
+                                           seaborn && \
+    conda clean -tipsy
+
+# Make sure that Python2 is loaded before Python3
+ENV PATH=/opt/conda/envs/python2/bin:$PATH
+
+# Import matplotlib the first time to build the font cache.
+ENV XDG_CACHE_HOME /home/$NB_USER/.cache/
+RUN MPLBACKEND=Agg $CONDA_DIR/envs/python2/bin/python -c "import matplotlib.pyplot"
+
+# Activate ipywidgets extension in the environment that runs the notebook server
+RUN jupyter nbextension enable --py widgetsnbextension --sys-prefix
+
+# Install Python 2 kernel spec globally to avoid permission problems when NB_UID
+# switching at runtime and to allow the notebook server running out of the root
+# environment to find it. Also, activate the python2 environment upon kernel
+# launch.
+USER root
+RUN pip install kernda --no-cache && \
+    $CONDA_DIR/envs/python2/bin/python -m ipykernel install && \
+    kernda -o -y /usr/local/share/jupyter/kernels/python2/kernel.json && \
+    pip uninstall kernda -y
+
+#---------------------------------------------
+# Install graphviz and update pip dependencies
+#---------------------------------------------
+USER root
+RUN apt-get install -yq --no-install-recommends graphviz
+USER $NB_USER
+RUN pip install --upgrade --quiet pip && \
+    pip install --upgrade --quiet nipy \
+                                  rdflib \
+                                  pprocess \
+                --ignore-installed && \
+    rm -rf ~/.cache/pip
+
+#------------------------------------------
+# Install newest version of Nipype (github)
+#------------------------------------------
+USER $NB_USER
+# Install Nipype dependencies
+RUN conda install -yq -n python2 nipype
+
+# Remove Nipype and install newest version from github
+RUN conda remove -yq -n python2 nipype && \
+    easy_install --upgrade nipype
+
+#----------------------------------------
+# Clear apt cache and other empty folders
+#----------------------------------------
+USER root
+RUN apt-get clean && \
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /boot /media /mnt /srv
