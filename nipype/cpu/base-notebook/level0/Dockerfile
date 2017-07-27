@@ -104,9 +104,21 @@ RUN conda install -yq -n python2 nipype
 RUN conda remove -yq -n python2 nipype && \
     easy_install --upgrade nipype
 
+#------------------------------------------
+# Install paramiko
+#------------------------------------------
+RUN pip install paramiko
+
 #----------------------------------------
 # Clear apt cache and other empty folders
 #----------------------------------------
 USER root
 RUN apt-get clean && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /boot /media /mnt /srv
+
+#----------------------------------------
+# Prepare for notebook use
+#----------------------------------------
+
+WORKDIR /home/$NB_USER/work/
+USER $NB_USER
