@@ -1,4 +1,4 @@
-# base-notebook for fmri data analysis
+# level0-notebook for fmri data analysis: Nipype
 #
 # This Dockerfile is based on miykael/nipype_course, which is based on the
 # dockerfile 'fmriprep' from the PoldrackLab (https://github.com/poldracklab/fmriprep).
@@ -9,11 +9,11 @@
 # https://github.com/miykael/nipype_env
 #
 # build it:
-# docker build -t grez72/nipype-cpu-base-notebook https://github.com/grez72/notebooks.git#master:nipype/cpu/base-notebook
+# docker build -t grez72/nipype-cpu-base-notebook-level0 https://github.com/grez72/notebooks.git#master:nipype/cpu/base-notebook/level0
 #
 # run it:
-# docker run -it --rm -p 8888:8888 grez72/nipype-cpu-base-notebook
-# docker run --user root -it --rm -p 8888:8888 grez72/nipype-cpu-base-notebook
+# docker run -it --rm -p 8888:8888 grez72/nipype-cpu-base-notebook-level0
+# docker run --user root -it --rm -p 8888:8888 grez72/nipype-cpu-base-notebook-level0
 
 FROM jupyter/base-notebook
 MAINTAINER George Alvarez <grez72@gmail.com, alvarez.wjh.harvard.edu>

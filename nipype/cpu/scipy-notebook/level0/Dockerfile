@@ -9,11 +9,11 @@
 # https://github.com/miykael/nipype_env
 #
 # build it:
-# docker build -t grez72/nipype-cpu-scipy-notebook https://github.com/grez72/notebooks.git#master:nipype/cpu/scipy-notebook
+# docker build -t grez72/nipype-cpu-scipy-base-notebook https://github.com/grez72/notebooks.git#master:nipype/cpu/scipy/base-notebook
 #
 # run it:
-# docker run -it --rm -p 8888:8888 grez72/nipype-cpu-scipy-notebook
-# docker run --user root -it --rm -p 8888:8888 grez72/nipype-cpu-scipy-notebook
+# docker run -it --rm -p 8888:8888 grez72/nipype-cpu-scipy-base-notebook
+# docker run --user root -it --rm -p 8888:8888 grez72/nipype-cpu-scipy-base-notebook
 
 FROM jupyter/scipy-notebook
 MAINTAINER George Alvarez <grez72@gmail.com, alvarez.wjh.harvard.edu>
