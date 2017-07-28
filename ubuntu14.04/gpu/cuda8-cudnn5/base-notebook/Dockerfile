@@ -91,34 +91,17 @@ RUN make -j"$(nproc)"
 RUN conda install opencv
 RUN /bin/bash -c "source activate python2 && conda install opencv"
 
-# Various dependencies
-# RUN apt-get update && apt-get upgrade -y && apt-get install -y \
-#     unzip \
-#     wget \
-#     build-essential \
-# 		cmake \
-#     git \
-#     pkg-config \
-#     libswscale-dev \
-# 		libtbb2 \
-#     libtbb-dev \
-#     libjpeg-dev \
-# 		libpng-dev \
-#     libtiff-dev \
-#     libjasper-dev \
-#     qt5-default
-#
-# # opencv
-# RUN git clone --depth 1 https://github.com/opencv/opencv.git /root/opencv && \
-# 	cd /root/opencv && \
-# 	mkdir build && \
-# 	cd build && \
-# 	cmake -DWITH_QT=ON -DWITH_OPENGL=ON -DFORCE_VTK=ON -DWITH_TBB=ON -DWITH_GDAL=ON -DWITH_XINE=ON -DBUILD_EXAMPLES=ON -DCUDA_CUDA_LIBRARY=/usr/local/cuda/lib64/stubs/libcuda.so .. && \
-# 	make -j"$(nproc)"  && \
-# 	make install && \
-# 	ldconfig && \
-# 	echo 'ln /dev/null /dev/raw1394' >> ~/.bashrc
+#--------------------------------------
+# Install Packages
+#--------------------------------------
 
-# setup for notebook use
+# RUN yes | pip install --upgrade pip
+# RUN yes | pip install --upgrade pyDOE
+# RUN yes | pip2 install --upgrade pyDOE
+
+#--------------------------------------
+# Setup for notebook use
+#--------------------------------------
+
 WORKDIR /home/$NB_USER/work/
 USER $NB_USER
