@@ -16,11 +16,14 @@ MAINTAINER George Alvarez <grez72@gmail.com, alvarez.wjh.harvard.edu>
 # Install Python 2
 #--------------------------------------
 
+USER root
+RUN chown -R $NB_USER:users /home/$NB_USER
+
 USER jovyan
 
 # make these to avoid permission error
-RUN mkdir /home/$NB_USER/.jupyter && \
-    mkdir /home/$NB_USER/.local
+# RUN mkdir /home/$NB_USER/.jupyter && \
+#     mkdir /home/$NB_USER/.local
 
 # Install Python 2 packages
 RUN conda create -p $CONDA_DIR/envs/python2 python=2.7 \
@@ -49,7 +52,8 @@ USER root
 # switching at runtime.
 RUN $CONDA_DIR/envs/python2/bin/python \
     $CONDA_DIR/envs/python2/bin/ipython \
-    kernelspec install-self
+    ipython kernel install
+    # kernelspec install-self
 
 #--------------------------------------
 # Install R
