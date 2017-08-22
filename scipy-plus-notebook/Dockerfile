@@ -43,6 +43,7 @@ RUN conda create -p $CONDA_DIR/envs/python2 python=2.7 \
     'dill=0.2*' \
     'numba=0.20*' \
     'bokeh=0.9*' \
+    'libgfortran' \
     pyzmq \
     && conda clean -yt
 
