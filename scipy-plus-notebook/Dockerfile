@@ -58,7 +58,6 @@ USER root
 # RUN ipython kernel install
 
 RUN /bin/bash -c "source activate python2 && ipython kernel install"
-RUN /bin/bash -c "source activate python2 && ipython kernel install"
 
 #--------------------------------------
 # Install R
