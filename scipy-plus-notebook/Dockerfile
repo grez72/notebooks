@@ -52,8 +52,9 @@ USER root
 # switching at runtime.
 RUN $CONDA_DIR/envs/python2/bin/python \
     $CONDA_DIR/envs/python2/bin/ipython \
-    ipython kernel install
-    # kernelspec install-self
+    kernelspec install-self
+
+# ipython kernel install
 
 #--------------------------------------
 # Install R
