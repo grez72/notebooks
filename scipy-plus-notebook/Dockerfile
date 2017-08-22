@@ -3,11 +3,11 @@
 # A copy of scipy-notebook with additional packages installed:
 #
 # build it:
-# nvidia-docker build -t grez72/scipy-plus-notebook https://github.com/grez72/notebooks.git#master:scipy-plus-notebook
+# docker build -t grez72/scipy-plus-notebook https://github.com/grez72/notebooks.git#master:scipy-plus-notebook
 #
 # run it:
-# nvidia-docker run -it --rm -p 8888:8888 grez72/scipy-plus-notebook
-# nvidia-docker run --user root -it --rm -p 8888:8888 grez72/scipy-plus-notebook
+# docker run -it --rm -p 8888:8888 grez72/scipy-plus-notebook
+# docker run --user root -it --rm -p 8888:8888 grez72/scipy-plus-notebook
 
 FROM jupyter/scipy-notebook
 MAINTAINER George Alvarez <grez72@gmail.com, alvarez.wjh.harvard.edu>
@@ -16,7 +16,7 @@ MAINTAINER George Alvarez <grez72@gmail.com, alvarez.wjh.harvard.edu>
 # Install
 #--------------------------------------
 
-
+RUN pip2 install ipykernel
 
 #----------------------------------------
 # Clear apt cache and other empty folders
