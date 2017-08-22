@@ -43,7 +43,7 @@ RUN conda create -p $CONDA_DIR/envs/python2 python=2.7 \
     'dill=0.2*' \
     'numba=0.20*' \
     'bokeh=0.9*' \
-    'libgfortran=3.0*' \
+    'libgfortran=1.0.0' \
     pyzmq \
     && conda clean -yt
 
@@ -57,6 +57,7 @@ USER root
 
 # RUN ipython kernel install
 
+RUN /bin/bash -c "source activate python2 && ipython kernel install"
 RUN /bin/bash -c "source activate python2 && ipython kernel install"
 
 #--------------------------------------
