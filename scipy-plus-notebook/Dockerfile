@@ -50,11 +50,13 @@ USER root
 
 # Install Python 2 kernel spec globally to avoid permission problems when NB_UID
 # switching at runtime.
-RUN $CONDA_DIR/envs/python2/bin/python \
-    $CONDA_DIR/envs/python2/bin/ipython \
-    kernelspec install-self
+# RUN $CONDA_DIR/envs/python2/bin/python \
+#     $CONDA_DIR/envs/python2/bin/ipython \
+#     kernelspec install-self
 
-# ipython kernel install
+# RUN ipython kernel install
+
+RUN /bin/bash -c "source activate python2 && ipython kernel install"
 
 #--------------------------------------
 # Install R
