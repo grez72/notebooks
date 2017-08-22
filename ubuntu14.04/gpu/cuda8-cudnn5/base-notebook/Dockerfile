@@ -92,7 +92,7 @@ RUN conda install opencv
 RUN /bin/bash -c "source activate python2 && conda install opencv"
 
 #--------------------------------------
-# Install Packages
+# Packages to Enhance SciPi
 #--------------------------------------
 
 # RUN yes | pip install --upgrade pip
