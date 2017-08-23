@@ -74,7 +74,7 @@ USER $NB_USER
 RUN conda config --add channels r
 RUN conda install --yes \
     'r-base=3.2*' \
-    'r-irkernel=0.4*' \
+    'r-irkernel=0.5*' \
     'r-plyr=1.8*' \
     'r-devtools=1.8*' \
     'r-dplyr=0.4*' \
@@ -89,8 +89,7 @@ RUN conda install --yes \
     'r-nycflights13=0.1*' \
     'r-caret=6.0*' \
     'r-rcurl=1.95*' \
-    'r-randomforest=4.6*' \
-    'r-zeromq=4.0.5' && conda clean -yt
+    'r-randomforest=4.6*' && conda clean -yt
 
 #----------------------------------------
 # Clear apt cache and other empty folders
