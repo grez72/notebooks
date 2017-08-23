@@ -13,6 +13,12 @@ FROM jupyter/scipy-notebook
 MAINTAINER George Alvarez <grez72@gmail.com, alvarez.wjh.harvard.edu>
 
 #--------------------------------------
+# Install Python 3 extras
+#--------------------------------------
+
+# plotly, cufflinks
+
+#--------------------------------------
 # Install Python 2
 #--------------------------------------
 
@@ -83,7 +89,8 @@ RUN conda install --yes \
     'r-nycflights13=0.1*' \
     'r-caret=6.0*' \
     'r-rcurl=1.95*' \
-    'r-randomforest=4.6*' && conda clean -yt
+    'r-randomforest=4.6*' \
+    'r-zeromq=4.0.5' && conda clean -yt
 
 #----------------------------------------
 # Clear apt cache and other empty folders
