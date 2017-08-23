@@ -16,9 +16,6 @@ MAINTAINER George Alvarez <grez72@gmail.com, alvarez.wjh.harvard.edu>
 # Install Python 2
 #--------------------------------------
 
-USER root
-RUN chown -R $NB_USER:users /home/$NB_USER
-
 USER jovyan
 
 # make these to avoid permission error
@@ -49,52 +46,44 @@ RUN conda create -p $CONDA_DIR/envs/python2 python=2.7 \
 
 USER root
 
-# Install Python 2 kernel spec globally to avoid permission problems when NB_UID
-# switching at runtime.
-# RUN $CONDA_DIR/envs/python2/bin/python \
-#     $CONDA_DIR/envs/python2/bin/ipython \
-#     kernelspec install-self
-
-# RUN ipython kernel install
-
 RUN /bin/bash -c "source activate python2 && ipython kernel install"
 
 #--------------------------------------
 # Install R
 #--------------------------------------
 
-# USER root
-#
-# # R pre-requisites
-# RUN apt-get update && \
-#     apt-get install -y --no-install-recommends \
-#     libxrender1 \
-#     fonts-dejavu \
-#     gfortran \
-#     gcc && apt-get clean
-#
-# USER $NB_USER
-#
-# # R packages
-# RUN conda config --add channels r
-# RUN conda install --yes \
-#     'r-base=3.2*' \
-#     'r-irkernel=0.4*' \
-#     'r-plyr=1.8*' \
-#     'r-devtools=1.8*' \
-#     'r-dplyr=0.4*' \
-#     'r-ggplot2=1.0*' \
-#     'r-tidyr=0.2*' \
-#     'r-shiny=0.12*' \
-#     'r-rmarkdown=0.7*' \
-#     'r-forecast=5.8*' \
-#     'r-stringr=0.6*' \
-#     'r-rsqlite=1.0*' \
-#     'r-reshape2=1.4*' \
-#     'r-nycflights13=0.1*' \
-#     'r-caret=6.0*' \
-#     'r-rcurl=1.95*' \
-#     'r-randomforest=4.6*' && conda clean -yt
+USER root
+
+# R pre-requisites
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+    libxrender1 \
+    fonts-dejavu \
+    gfortran \
+    gcc && apt-get clean
+
+USER $NB_USER
+
+# R packages
+RUN conda config --add channels r
+RUN conda install --yes \
+    'r-base=3.2*' \
+    'r-irkernel=0.4*' \
+    'r-plyr=1.8*' \
+    'r-devtools=1.8*' \
+    'r-dplyr=0.4*' \
+    'r-ggplot2=1.0*' \
+    'r-tidyr=0.2*' \
+    'r-shiny=0.12*' \
+    'r-rmarkdown=0.7*' \
+    'r-forecast=5.8*' \
+    'r-stringr=0.6*' \
+    'r-rsqlite=1.0*' \
+    'r-reshape2=1.4*' \
+    'r-nycflights13=0.1*' \
+    'r-caret=6.0*' \
+    'r-rcurl=1.95*' \
+    'r-randomforest=4.6*' && conda clean -yt
 
 #----------------------------------------
 # Clear apt cache and other empty folders
@@ -109,6 +98,10 @@ RUN apt-get clean && \
 # Setup for notebook use
 #--------------------------------------
 
+USER root
+RUN chown -R $NB_USER:users /home/$NB_USER
+
 RUN ln -s /home/$NB_USER/work/data /data
+
 WORKDIR /home/$NB_USER/work/
 USER $NB_USER
