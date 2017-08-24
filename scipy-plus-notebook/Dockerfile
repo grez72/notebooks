@@ -97,6 +97,7 @@ RUN conda install --quiet --yes \
 # MATLAB
 #--------------------------------------
 
+USER root
 RUN pip install pymatbridge
 RUN pip install matlab_kernel
 RUN python -m matlab_kernel install
