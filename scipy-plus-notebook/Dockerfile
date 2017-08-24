@@ -6,8 +6,8 @@
 # docker build -t grez72/scipy-plus-notebook https://github.com/grez72/notebooks.git#master:scipy-plus-notebook
 #
 # run it:
-# docker run -it --rm -p 8888:8888 grez72/scipy-plus-notebook
-# docker run --user root -it --rm -p 8888:8888 grez72/scipy-plus-notebook
+# docker run -it --rm -v /Applications/MATLAB_R2017a.app/bin/matlab:/bin/matlab -p 8888:8888 grez72/scipy-plus-notebook
+# docker run --user root -it --rm -v /Applications/MATLAB_R2017a.app/bin/matlab:/bin/matlab -p 8888:8888 grez72/scipy-plus-notebook
 
 FROM jupyter/scipy-notebook
 MAINTAINER George Alvarez <grez72@gmail.com, alvarez.wjh.harvard.edu>
@@ -92,6 +92,15 @@ RUN conda install --quiet --yes \
 
 # consider adding:
 # ggExtra, jsonlite, xml2, stringr,
+
+#--------------------------------------
+# MATLAB
+#--------------------------------------
+
+RUN pip install pymatbridge
+RUN pip install matlab_kernel
+RUN python -m matlab_kernel install
+ENV MATLAB_EXECUTABLE=/bin/MATLAB
 
 #----------------------------------------
 # Clear apt cache and other empty folders
