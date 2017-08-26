@@ -6,7 +6,6 @@
 # This means that the same copyrights apply to this Dockerfile, as they do for
 # the above mentioned dockerfiles.
 #
-#
 # build it:
 # docker build -t grez72/nipype-cpu-base-notebook-level0 https://github.com/grez72/notebooks.git#master:nipype/cpu/nipype-notebook/base
 #
