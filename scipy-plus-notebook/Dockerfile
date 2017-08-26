@@ -6,8 +6,12 @@
 # docker build -t grez72/scipy-plus-notebook https://github.com/grez72/notebooks.git#master:scipy-plus-notebook
 #
 # run it:
-# docker run -it --rm -v /Applications/MATLAB_R2017a.app/bin/matlab:/bin/matlab -p 8888:8888 grez72/scipy-plus-notebook
+# docker run -it --rm -v /Applications/MATLAB_R2017b.app/bin/matlab:/bin/matlab -v /Applications/MATLAB_R2017b.app:/matlab -p 8888:8888 -v /anaconda/lib/python3.6/site-packages/matlab:/opt/conda/lib/python3.6/site-packages/matlab grez72/scipy-plus-notebook
+# docker run -it --rm -v /Applications/MATLAB_R2017b.app:/matlab -p 8888:8888 -v /anaconda/lib/python3.6/site-packages/matlab:/opt/conda/lib/python3.6/site-packages/matlab grez72/scipy-plus-notebook
 # docker run --user root -it --rm -v /Applications/MATLAB_R2017a.app/bin/matlab:/bin/matlab -p 8888:8888 grez72/scipy-plus-notebook
+# cd /matlab/extern/engines/python
+# python setup.py install
+# ln -s /matlab/bin/matlab /usr/local/bin/matlab
 
 FROM jupyter/scipy-notebook
 MAINTAINER George Alvarez <grez72@gmail.com, alvarez.wjh.harvard.edu>
@@ -101,7 +105,88 @@ USER root
 RUN pip install pymatbridge
 RUN pip install matlab_kernel
 RUN python -m matlab_kernel install
-ENV MATLAB_EXECUTABLE=/bin/MATLAB
+ENV MATLAB_EXECUTABLE=/bin/matlab
+
+#--------------------------------------
+# Inatall PHP and PHP Kernel
+#--------------------------------------
+
+# USER root
+# Install PHP7
+# RUN apt-get update
+# RUN apt-get install python-software-properties software-properties-common -y
+# RUN apt-get install build-essential libtool autoconf uuid-dev pkg-config git libsodium-dev -y
+# RUN LC_ALL=C.UTF-8 add-apt-repository ppa:ondrej/php -y
+# RUN apt-get update
+# RUN apt-get install php7.0 php7.0-dev php7.0-fpm php7.0-mysql -y
+#
+# # Install Composer
+# RUN curl -sS https://getcomposer.org/installer | sudo php -- --install-dir=/usr/local/bin --filename=composer
+#
+# # Install ZeroMQ
+# RUN apt-get install php-zmq
+#
+# # Jupyter-PHP kernel
+# RUN wget --quiet https://litipk.github.io/Jupyter-PHP-Installer/dist/jupyter-php-installer.signed.phar && \
+#     echo "a23fe19a4be460ceb993978c1d33ecd1314b1bd424cc1d1f1c360caba5642d65 jupyter-php-installer.signed.phar" | sha256sum -c
+# RUN wget --quiet https://litipk.github.io/Jupyter-PHP-Installer/dist/jupyter-php-installer.signed.phar.pubkey && \
+#     echo "aee84cbfb6fe0745c51f5069e989a2e062d5ca0167ca977b24de8bdb3c58853b jupyter-php-installer.signed.phar.pubkey" | sha256sum -c
+# RUN wget --quiet https://litipk.github.io/Jupyter-PHP-Installer/dist/jupyter-php-installer.phar && \
+#     echo "40226359b407409819b7636cfbee82d86adea57afef45fda4b2e3ddda5022844 jupyter-php-installer.phar" | sha256sum -c
+# RUN wget https://litipk.github.io/Jupyter-PHP-Installer/dist/jupyter-php-installer.phar
+# RUN php jupyter-php-installer.phar install
+
+# RUN wget https://litipk.github.io/Jupyter-PHP-Installer/dist/jupyter-php-installer.signed.phar
+# RUN wget https://litipk.github.io/Jupyter-PHP-Installer/dist/jupyter-php-installer.signed.phar.pubkey
+# RUN php jupyter-php-installer.signed.phar install
+
+#----------------------------------------
+# Install NodeJS and NodeJS Kernel
+#----------------------------------------
+
+USER root
+
+# inatall ijavascript
+# RUN apt-get install software-properties-common python-software-properties
+# RUN add-apt-repository ppa:chronitis/jupyter
+# RUN apt-get update
+# RUN apt-get install ijavascript
+
+# nodejs
+# RUN curl -sL https://deb.nodesource.com/setup_8.x | bash -
+# RUN apt-get install -y nodejs
+
+# jupyter-nodejs kernel
+# WORKDIR /tmp
+# RUN git clone https://github.com/notablemind/jupyter-nodejs.git
+# WORKDIR c
+# RUN mkdir -p ~/.ipython/kernels/nodejs/
+# RUN npm install && node install.js
+# RUN npm run build
+# RUN npm run build-ext
+
+# RUN mkdir -p  $HOME/.ipython/kernels/nodejs
+
+RUN apt-get update
+RUN apt-get install libtool pkg-config build-essential autoconf automake -y
+RUN apt-get install libzmq-dev -y
+
+WORKDIR /tmp
+RUN mkdir -p  $HOME/.ipython/kernels/nodejs
+RUN wget https://github.com/notablemind/jupyter-nodejs/releases/download/v1.1.0/jupyter-nodejs-1.1.0.tgz
+RUN tar xf jupyter-nodejs-1.1.0.tgz
+WORKDIR /tmp/package
+RUN npm install && node install.js
+RUN cp -R ~/.ipython/kernels/nodejs/ /usr/local/share/jupyter/kernels/
+
+# install jupyter-nodejs
+# RUN mkdir -p  $HOME/.ipython/kernels/nodejs
+# RUN wget https://github.com/notablemind/jupyter-nodejs/releases/download/v1.1.0/jupyter-nodejs-1.1.0.tgz
+# RUN tar xf jupyter-nodejs-1.1.0.tgz
+# WORKDIR /tmp/package
+# RUN npm install && node install.js
+
+# jupyter console --kernel nodejs
 
 #----------------------------------------
 # Clear apt cache and other empty folders
