@@ -15,7 +15,7 @@
 # python setup.py install
 # ln -s /matlab/bin/matlab /usr/local/bin/matlab
 
-FROM jupyter/minimal-notebook
+FROM jupyter/scipy-notebook
 MAINTAINER George Alvarez <grez72@gmail.com, alvarez.wjh.harvard.edu>
 
 #--------------------------------------
