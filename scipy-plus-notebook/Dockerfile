@@ -62,37 +62,37 @@ RUN /bin/bash -c "source activate python2 && ipython kernel install"
 # Install R
 #--------------------------------------
 
-USER root
-
-# R pre-requisites
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends \
-    libxrender1 \
-    fonts-dejavu \
-    gfortran \
-    gcc && apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
-
-USER $NB_USER
-
-# R packages
-# tidyverse contains ggplot2, dplyr, tidyr, readr, purrr, tibble
-RUN conda install --quiet --yes \
-    'r-base=3.3.2' \
-    'r-irkernel=0.7*' \
-    'r-plyr=1.8*' \
-    'r-devtools=1.12*' \
-    'r-tidyverse=1.0*' \
-    'r-shiny=0.14*' \
-    'r-rmarkdown=1.2*' \
-    'r-forecast=7.3*' \
-    'r-rsqlite=1.1*' \
-    'r-reshape2=1.4*' \
-    'r-nycflights13=0.2*' \
-    'r-caret=6.0*' \
-    'r-rcurl=1.95*' \
-    'r-crayon=1.3*' \
-    'r-randomforest=4.6*' && conda clean -tipsy
+# USER root
+#
+# # R pre-requisites
+# RUN apt-get update && \
+#     apt-get install -y --no-install-recommends \
+#     libxrender1 \
+#     fonts-dejavu \
+#     gfortran \
+#     gcc && apt-get clean && \
+#     rm -rf /var/lib/apt/lists/*
+#
+# USER $NB_USER
+#
+# # R packages
+# # tidyverse contains ggplot2, dplyr, tidyr, readr, purrr, tibble
+# RUN conda install --quiet --yes \
+#     'r-base=3.3.2' \
+#     'r-irkernel=0.7*' \
+#     'r-plyr=1.8*' \
+#     'r-devtools=1.12*' \
+#     'r-tidyverse=1.0*' \
+#     'r-shiny=0.14*' \
+#     'r-rmarkdown=1.2*' \
+#     'r-forecast=7.3*' \
+#     'r-rsqlite=1.1*' \
+#     'r-reshape2=1.4*' \
+#     'r-nycflights13=0.2*' \
+#     'r-caret=6.0*' \
+#     'r-rcurl=1.95*' \
+#     'r-crayon=1.3*' \
+#     'r-randomforest=4.6*' && conda clean -tipsy
 
 # consider adding:
 # ggExtra, jsonlite, xml2, stringr,
@@ -167,17 +167,17 @@ USER root
 
 # RUN mkdir -p  $HOME/.ipython/kernels/nodejs
 
-RUN apt-get update
-RUN apt-get install libtool pkg-config build-essential autoconf automake -y
-RUN apt-get install libzmq-dev -y
-
-WORKDIR /tmp
-RUN mkdir -p  $HOME/.ipython/kernels/nodejs
-RUN wget https://github.com/notablemind/jupyter-nodejs/releases/download/v1.1.0/jupyter-nodejs-1.1.0.tgz
-RUN tar xf jupyter-nodejs-1.1.0.tgz
-WORKDIR /tmp/package
-RUN npm install && node install.js
-RUN cp -R ~/.ipython/kernels/nodejs/ /usr/local/share/jupyter/kernels/
+# RUN apt-get update
+# RUN apt-get install libtool pkg-config build-essential autoconf automake -y
+# RUN apt-get install libzmq-dev -y
+#
+# WORKDIR /tmp
+# RUN mkdir -p  $HOME/.ipython/kernels/nodejs
+# RUN wget https://github.com/notablemind/jupyter-nodejs/releases/download/v1.1.0/jupyter-nodejs-1.1.0.tgz
+# RUN tar xf jupyter-nodejs-1.1.0.tgz
+# WORKDIR /tmp/package
+# RUN npm install && node install.js
+# RUN cp -R ~/.ipython/kernels/nodejs/ /usr/local/share/jupyter/kernels/
 
 # install jupyter-nodejs
 # RUN mkdir -p  $HOME/.ipython/kernels/nodejs
