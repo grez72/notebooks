@@ -58,10 +58,10 @@ ENV MATLAB_EXECUTABLE=/bin/matlab
 # Setup for notebook use
 #--------------------------------------
 
-USER root
-RUN chown -R $NB_USER:users /home/$NB_USER
+# USER root
+# RUN chown -R $NB_USER:users /home/$NB_USER
 
-RUN ln -s /home/$NB_USER/work/data /data
+# RUN ln -s /home/$NB_USER/work/data /data
 
 WORKDIR /home/$NB_USER/work/
 USER $NB_USER
