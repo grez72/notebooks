@@ -6,6 +6,7 @@
 # docker build -t grez72/matlab-notebook https://github.com/grez72/notebooks.git#master:matlab-notebook
 #
 # run it:
+# docker run -it --rm --user root -v ./usr/local/MATLAB/R2017b/:/bin/matlab -p 8888:8888 grez72/matlab-notebook
 # docker run -it --rm -v ./usr/local/MATLAB/R2017b/:/usr/local/MATLAB/from-host -v /home/george/matlab-docker:/var/log/matlab -p 8888:8888 --mac-address=38:d5:47:c9:33:fe grez72/matlab-notebook
 # docker run -it --rm -v ./usr/local/MATLAB/R2017b/bin/matlab:/bin/matlab -v /Applications/MATLAB_R2017b.app:/matlab -p 8888:8888 -v /anaconda/lib/python3.6/site-packages/matlab:/opt/conda/lib/python3.6/site-packages/matlab grez72/scipy-plus-notebook
 # docker run -it --rm -v /Applications/MATLAB_R2017b.app:/matlab -p 8888:8888 -v /anaconda/lib/python3.6/site-packages/matlab:/opt/conda/lib/python3.6/site-packages/matlab grez72/scipy-plus-notebook
@@ -21,11 +22,12 @@ MAINTAINER George Alvarez <grez72@gmail.com, alvarez.wjh.harvard.edu>
 # MATLAB
 #--------------------------------------
 
-# USER root
-# RUN pip install pymatbridge
-# RUN pip install matlab_kernel
-# RUN python -m matlab_kernel install
-# ENV MATLAB_EXECUTABLE=/bin/matlab
+USER root
+RUN pip install numpy
+RUN pip install pymatbridge
+RUN pip install matlab_kernel
+RUN python -m matlab_kernel install
+ENV MATLAB_EXECUTABLE=/bin/matlab
 
 # Matlab and Python dependencies
 # RUN apt-get update && apt-get install -y \
