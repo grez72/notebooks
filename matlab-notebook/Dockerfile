@@ -23,11 +23,11 @@ MAINTAINER George Alvarez <grez72@gmail.com, alvarez.wjh.harvard.edu>
 #--------------------------------------
 
 USER root
-RUN pip install numpy
-RUN pip install pymatbridge
-RUN pip install matlab_kernel
-RUN python -m matlab_kernel install
-ENV MATLAB_EXECUTABLE=/bin/matlab
+# RUN pip install numpy
+# RUN pip install pymatbridge
+# RUN pip install matlab_kernel
+# RUN python -m matlab_kernel install
+# ENV MATLAB_EXECUTABLE=/bin/matlab
 
 # Matlab and Python dependencies
 # RUN apt-get update && apt-get install -y \
