@@ -29,6 +29,7 @@ RUN mkdir /home/$NB_USER/.jupyter && \
     mkdir /home/$NB_USER/.local
 
 # USER root
+RUN pip install --upgrade pip
 RUN pip install numpy
 RUN pip install pymatbridge
 RUN pip install matlab_kernel
@@ -60,8 +61,8 @@ ENV MATLAB_EXECUTABLE=/bin/matlab
 # Setup for notebook use
 #--------------------------------------
 
-# USER root
-# RUN chown -R $NB_USER:users /home/$NB_USER
+USER root
+RUN chown -R $NB_USER:users /home/$NB_USER
 
 # RUN ln -s /home/$NB_USER/work/data /data
 
