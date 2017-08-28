@@ -20,11 +20,11 @@ MAINTAINER George Alvarez <grez72@gmail.com, alvarez.wjh.harvard.edu>
 # MATLAB
 #--------------------------------------
 
-USER root
-RUN pip install pymatbridge
-RUN pip install matlab_kernel
-RUN python -m matlab_kernel install
-ENV MATLAB_EXECUTABLE=/bin/matlab
+# USER root
+# RUN pip install pymatbridge
+# RUN pip install matlab_kernel
+# RUN python -m matlab_kernel install
+# ENV MATLAB_EXECUTABLE=/bin/matlab
 
 #--------------------------------------
 # Setup for notebook use
