@@ -26,7 +26,7 @@ USER $NB_USER
 
 # make these to avoid permission error
 RUN mkdir /home/$NB_USER/.jupyter && \
-    mkdir /home/$NB_USER/.local
+    mkdir -p /home/jovyan/.local/share/jupyter
 
 # USER root
 RUN pip install --upgrade pip
