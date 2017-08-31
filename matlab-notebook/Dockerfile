@@ -1,19 +1,26 @@
-# matlab-notebook
+# grez72/matlab-notebook
 #
 # jupyter/minimal-notebook with matlab kernel installed
+# This notebook requires that the host has a licensed copy of MATLAB installed,
+# and python engine installed.
 #
-# build it:
+# install python engine on the host:
+# cd /usr/local/MATLAB/R2017b/extern/engines/python
+# python setup.py install
+#
+# for pre R2017b MATLAB, see https://gist.github.com/dangom/303879ca649f7a3fe113912d7ffa62d4
+#
+# build docker image:
 # docker build -t grez72/matlab-notebook https://github.com/grez72/notebooks.git#master:matlab-notebook
 #
 # run it:
-# docker run -it --rm -v ./usr/local/MATLAB/R2017b/:/bin/matlab -p 3000:8888 grez72/matlab-notebook
-# docker run -it --rm -v ./usr/local/MATLAB/R2017b/:/usr/local/MATLAB/from-host -v /home/george/matlab-docker:/var/log/matlab -p 8888:8888 --mac-address=38:d5:47:c9:33:fe grez72/matlab-notebook
-# docker run -it --rm -v ./usr/local/MATLAB/R2017b/bin/matlab:/bin/matlab -v /Applications/MATLAB_R2017b.app:/matlab -p 8888:8888 -v /anaconda/lib/python3.6/site-packages/matlab:/opt/conda/lib/python3.6/site-packages/matlab grez72/scipy-plus-notebook
-# docker run -it --rm -v /Applications/MATLAB_R2017b.app:/matlab -p 8888:8888 -v /anaconda/lib/python3.6/site-packages/matlab:/opt/conda/lib/python3.6/site-packages/matlab grez72/scipy-plus-notebook
-# docker run --user root -it --rm -v /Applications/MATLAB_R2017a.app/bin/matlab:/bin/matlab -p 8888:8888 grez72/scipy-plus-notebook
+# docker run -it --rm -v /home/george/anaconda3/lib/python3.6/site-packages/matlab:/opt/conda/lib/python3.6/site-packages/matlab -v /usr/local/MATLAB/R2017b:/usr/local/MATLAB/R2017b -p 3000:8888 --mac-address=$(ifconfig eth0 | awk '/^[a-z]/ { iface=$1; mac=$NF; next } /inet addr:/ { print mac }') grez72/matlab-notebook
+# docker run -it --rm -v /home/george/anaconda3/lib/python3.6/site-packages/matlab:/opt/conda/lib/python3.6/site-packages/matlab -v /usr/local/MATLAB/R2017b:/usr/local/MATLAB/R2017b -v /usr/local/MATLAB/R2017b/bin/matlab:/bin/matlab -p 3000:8888 --mac-address=$(ifconfig eth0 | awk '/^[a-z]/ { iface=$1; mac=$NF; next } /inet addr:/ { print mac }') grez72/matlab-notebook
+#
+# this one works, but I have to complie python engine after the container starts:
+# docker run -it --rm -v /usr/local/MATLAB/R2017b:/MATLAB -v /usr/local/MATLAB/R2017b/bin/matlab:/bin/matlab -p 3000:8888 --mac-address=$(ifconfig eth0 | awk '/^[a-z]/ { iface=$1; mac=$NF; next } /inet addr:/ { print mac }') grez72/matlab-notebook
 # cd /matlab/extern/engines/python
 # python setup.py install
-# ln -s /matlab/bin/matlab /usr/local/bin/matlab
 
 FROM jupyter/scipy-notebook
 MAINTAINER George Alvarez <grez72@gmail.com, alvarez.wjh.harvard.edu>
@@ -28,7 +35,6 @@ USER $NB_USER
 RUN mkdir /home/$NB_USER/.jupyter && \
     mkdir -p /home/jovyan/.local/share/jupyter
 
-# USER root
 RUN pip install --upgrade pip
 RUN pip install numpy
 RUN pip install pymatbridge
@@ -36,26 +42,7 @@ RUN pip install matlab_kernel
 
 USER root
 RUN python -m matlab_kernel install
-ENV MATLAB_EXECUTABLE=/bin/matlab
-
-# Matlab and Python dependencies
-# RUN apt-get update && apt-get install -y \
-#     libpng12-dev libfreetype6-dev \
-#     libblas-dev liblapack-dev gfortran build-essential xorg xorg-dev python-dev pkg-config
-#
-# # Python libs
-# RUN pip install pyzmq \
-#     && pip install matplotlib \
-#     && pip install numpy \
-#     && pip install scipy \
-#     && pip install nibabel \
-#     && pip install pymatbridge \
-#     && pip install jupyter \
-#     && pip install jupyter_client \
-#     && pip install matlab_kernel \
-#     && python -m matlab_kernel.install
-#
-# RUN ln -s /usr/local/MATLAB/from-host/bin/matlab /usr/local/bin/matlab
+ENV MATLAB_EXECUTABLE=/usr/local/MATLAB/R2017b/bin/matlab
 
 #--------------------------------------
 # Setup for notebook use
