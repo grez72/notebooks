@@ -1,8 +1,9 @@
 # grez72/matlab-notebook
 #
-# jupyter/minimal-notebook with matlab kernel installed
+# jupyter/scipy-notebook with matlab kernel installed
 # This notebook requires that the host has a licensed copy of MATLAB installed,
-# and python engine installed.
+# and python engine installed with the same version of python as the docker
+# container (in this case python=3.6 for latest scipy-notebook).
 #
 # install python engine on the host:
 # cd /usr/local/MATLAB/R2017b/extern/engines/python
@@ -13,14 +14,13 @@
 # build docker image:
 # docker build -t grez72/matlab-notebook https://github.com/grez72/notebooks.git#master:matlab-notebook
 #
-# run it:
-# docker run -it --rm -v /home/george/anaconda3/lib/python3.6/site-packages/matlab:/opt/conda/lib/python3.6/site-packages/matlab -v /usr/local/MATLAB/R2017b:/usr/local/MATLAB/R2017b -p 3000:8888 --mac-address=$(ifconfig eth0 | awk '/^[a-z]/ { iface=$1; mac=$NF; next } /inet addr:/ { print mac }') grez72/matlab-notebook
-# docker run -it --rm -v /home/george/anaconda3/lib/python3.6/site-packages/matlab:/opt/conda/lib/python3.6/site-packages/matlab -v /usr/local/MATLAB/R2017b:/usr/local/MATLAB/R2017b -v /usr/local/MATLAB/R2017b/bin/matlab:/bin/matlab -p 3000:8888 --mac-address=$(ifconfig eth0 | awk '/^[a-z]/ { iface=$1; mac=$NF; next } /inet addr:/ { print mac }') grez72/matlab-notebook
+# To run the image, we have to map volumes from the host to the container:
+#   MATLAB app:           -v /usr/local/MATLAB/R2017b:/usr/local/MATLAB/R2017b
+#   MATLAB python engine: -v /home/george/anaconda3/lib/python3.6/site-packages/matlab:/opt/conda/lib/python3.6/site-packages/matlab
+#   eth0 MAC address:     --mac-address=$(ifconfig eth0 | awk '/^[a-z]/ { iface=$1; mac=$NF; next } /inet addr:/ { print mac }')
 #
-# this one works, but I have to complie python engine after the container starts:
-# docker run -it --rm -v /usr/local/MATLAB/R2017b:/MATLAB -v /usr/local/MATLAB/R2017b/bin/matlab:/bin/matlab -p 3000:8888 --mac-address=$(ifconfig eth0 | awk '/^[a-z]/ { iface=$1; mac=$NF; next } /inet addr:/ { print mac }') grez72/matlab-notebook
-# cd /matlab/extern/engines/python
-# python setup.py install
+# run it
+# docker run -it --rm -v /home/george/anaconda3/lib/python3.6/site-packages/matlab:/opt/conda/lib/python3.6/site-packages/matlab -v /usr/local/MATLAB/R2017b:/usr/local/MATLAB/R2017b --mac-address=$(ifconfig eth0 | awk '/^[a-z]/ { iface=$1; mac=$NF; next } /inet addr:/ { print mac }') -p 8888:8888 grez72/matlab-notebook
 
 FROM jupyter/scipy-notebook
 MAINTAINER George Alvarez <grez72@gmail.com, alvarez.wjh.harvard.edu>
