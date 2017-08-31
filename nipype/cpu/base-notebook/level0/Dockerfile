@@ -15,7 +15,7 @@
 # docker run -it --rm -p 8888:8888 grez72/nipype-cpu-base-notebook-level0
 # docker run --user root -it --rm -p 8888:8888 grez72/nipype-cpu-base-notebook-level0
 
-FROM jupyter/base-notebook
+FROM jupyter/base-notebook:b4dd11e16ae4
 MAINTAINER George Alvarez <grez72@gmail.com, alvarez.wjh.harvard.edu>
 
 #---------------------------------------------
