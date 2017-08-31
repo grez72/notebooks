@@ -20,7 +20,7 @@
 #   eth0 MAC address:     --mac-address=$(ifconfig eth0 | awk '/^[a-z]/ { iface=$1; mac=$NF; next } /inet addr:/ { print mac }')
 #
 # run it
-# docker run -it --rm -v /home/george/anaconda3/lib/python3.6/site-packages/matlab:/opt/conda/lib/python3.6/site-packages/matlab -v /usr/local/MATLAB/R2017b:/usr/local/MATLAB/R2017b --mac-address=$(ifconfig eth0 | awk '/^[a-z]/ { iface=$1; mac=$NF; next } /inet addr:/ { print mac }') -p 8888:8888 grez72/matlab-notebook
+# docker run -it --rm -v /home/george/anaconda3/lib/python3.6/site-packages/matlab:/opt/conda/lib/python3.6/site-packages/matlab -v /usr/local/MATLAB/R2017b:/usr/local/MATLAB/R2017b -p 3000:8888 --mac-address=$(ifconfig eth0 | awk '/^[a-z]/ { iface=$1; mac=$NF; next } /inet addr:/ { print mac }') grez72/matlab-notebook
 
 FROM jupyter/scipy-notebook
 MAINTAINER George Alvarez <grez72@gmail.com, alvarez.wjh.harvard.edu>
