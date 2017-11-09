@@ -27,6 +27,8 @@ RUN /bin/bash -c "source activate python2 && pip install --upgrade pip"
 RUN /bin/bash -c "source activate python2 && pip install numpy --upgrade"
 RUN /bin/bash -c "source activate python2 && conda install -y pytorch torchvision cuda80 -c soumith"
 
+RUN conda update conda
+
 # RUN pip install http://download.pytorch.org/whl/cu80/torch-${PYTORCH_VERSION}.post3-cp35-cp35m-manylinux1_x86_64.whl
 # RUN pip install torchvision
 
