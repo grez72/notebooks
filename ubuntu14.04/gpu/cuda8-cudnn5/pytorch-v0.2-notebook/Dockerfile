@@ -3,7 +3,7 @@
 # Pytorch jupyter notebook with gpu suppport (nvidia CUDA cuDNN).
 #
 # sudo nvidia-docker build -t grez72/deep-notebooks:ubuntu14.04-gpu-cuda8-cudnn5-pytorch-v0.2-notebook https://github.com/grez72/notebooks.git#master:ubuntu14.04/gpu/cuda8-cudnn5/pytorch-v0.2-notebook
-# nvidia-docker run -it --rm -p 8888:8888 grez72/deep-notebooks:ubuntu14.04-gpu-cuda8-cudnn5-pytorch-v0.2-notebook
+# nvidia-docker run -it --rm --shm-size=512m -p 8888:8888 grez72/deep-notebooks:ubuntu14.04-gpu-cuda8-cudnn5-pytorch-v0.2-notebook
 
 FROM grez72/deep-notebooks:ubuntu14.04-gpu-cuda8-cudnn5-base-notebook
 
