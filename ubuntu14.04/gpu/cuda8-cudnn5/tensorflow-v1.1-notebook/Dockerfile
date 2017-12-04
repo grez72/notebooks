@@ -39,7 +39,7 @@ RUN echo "deb [arch=amd64] http://storage.googleapis.com/bazel-apt stable jdk1.8
 RUN curl https://storage.googleapis.com/bazel-apt/doc/apt-key.pub.gpg | sudo apt-key add -
 RUN apt-get update
 RUN apt-get install -y bazel=0.5.4
-# RUN apt-get upgrade -y bazel
+RUN apt-get upgrade -y bazel
 
 # install tensorflow
 RUN git clone https://github.com/tensorflow/tensorflow
