@@ -38,13 +38,10 @@ RUN apt-get install -y curl git python-dev python3-dev build-essential python-pi
 
 # install BAZEL
 WORKDIR $HOME
-RUN mkdir bazel
-RUN cd bazel
-    # && wget https://github.com/bazelbuild/bazel/releases/download/0.7.0/bazel-0.7.0-installer-linux-x86_64.sh \
-    # && chmod +x bazel-0.7.0-installer-linux-x86_64.sh \
-    # && ./bazel-0.5.4-installer-linux-x86_64.sh \
-    # && export PATH=`pwd`/output:$PATH \
-    # && bazel
+RUN wget https://github.com/bazelbuild/bazel/releases/download/0.7.0/bazel-0.7.0-installer-linux-x86_64.sh \
+    && chmod +x bazel-0.7.0-installer-linux-x86_64.sh \
+    && ./bazel-0.7.0-installer-linux-x86_64.sh \
+    && bazel
 
 # RUN echo "deb [arch=amd64] http://storage.googleapis.com/bazel-apt stable jdk1.8" | sudo tee /etc/apt/sources.list.d/bazel.list
 # RUN curl https://storage.googleapis.com/bazel-apt/doc/apt-key.pub.gpg | sudo apt-key add -
