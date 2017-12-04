@@ -14,6 +14,7 @@ ARG TENSORFLOW_VERSION=1.2
 ARG KERAS_VERSION=2.0.4
 ARG TFLEARN_VERSION=0.3.1
 ARG DEFAULT_PYTHON_VERSION=3.5
+ARG BAZEL_VERSION=0.5.4
 
 USER root
 
@@ -36,10 +37,15 @@ RUN apt-get update
 RUN apt-get install -y curl git python-dev python3-dev build-essential python-pip python3-pip python-virtualenv swig python-wheel libcurl3-dev
 
 # install BAZEL
+WORKDIR $HOME
 RUN echo "deb [arch=amd64] http://storage.googleapis.com/bazel-apt stable jdk1.8" | sudo tee /etc/apt/sources.list.d/bazel.list
 RUN curl https://storage.googleapis.com/bazel-apt/doc/apt-key.pub.gpg | sudo apt-key add -
 RUN apt-get update
-RUN apt-get install -y bazel=0.5.4
+RUN apt-get update
+RUN wget https://github.com/bazelbuild/bazel/releases/download/$BAZEL_VERSION/bazel-${BAZEL_VERSION}-installer-linux-x86_64.sh
+RUN chmod +x bazel-bazel-${BAZEL_VERSION}-installer-linux-x86_64.sh \
+    ./bazel-<version>-installer-linux-x86_64.sh --user
+# RUN apt-get install -y bazel
 # RUN apt-get upgrade -y bazel
 
 # install tensorflow
