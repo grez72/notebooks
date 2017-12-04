@@ -14,6 +14,8 @@
 # nvidia-docker run -it --rm -p 8888:8888 grez72/cuda-v8.0-gpu-notebook
 # nvidia-docker run --user root -it --rm -p 8888:8888 grez72/cuda-v8.0-gpu-notebook
 
+# starting with an older version of scipy-notebook, before the update to Ubuntu 16,
+# which caused issues with the checksum for NVIDIA that I couldn't fix.
 FROM jupyter/scipy-notebook:0c68990e9304
 
 LABEL com.nvidia.volumes.needed="nvidia_driver"
@@ -88,20 +90,24 @@ RUN make -j"$(nproc)"
 # `docker run`, e.g. `nvcc --version` or `bash`
 # CMD ./deviceQuery
 
-# RUN conda install opencv
-# RUN /bin/bash -c "source activate python2 && conda install opencv"
-#
-# #--------------------------------------
-# # Packages to Enhance SciPi
-# #--------------------------------------
-#
-# # RUN yes | pip install --upgrade pip
-# # RUN yes | pip install --upgrade pyDOE
-# # RUN yes | pip2 install --upgrade pyDOE
-#
-# #--------------------------------------
-# # Setup for notebook use
-# #--------------------------------------
-#
-# WORKDIR /home/$NB_USER/work/
-# USER $NB_USER
+#--------------------------------------
+# Install OpenCV
+#--------------------------------------
+
+RUN conda install opencv
+RUN /bin/bash -c "source activate python2 && conda install opencv"
+
+#--------------------------------------
+# Packages to Enhance SciPi
+#--------------------------------------
+
+# RUN yes | pip install --upgrade pip
+# RUN yes | pip install --upgrade pyDOE
+# RUN yes | pip2 install --upgrade pyDOE
+
+#--------------------------------------
+# Setup for notebook use
+#--------------------------------------
+
+WORKDIR /home/$NB_USER/work/
+USER $NB_USER
