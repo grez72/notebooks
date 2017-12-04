@@ -16,7 +16,8 @@
 
 # starting with an older version of scipy-notebook, before the update to Ubuntu 16,
 # which caused issues with the checksum for NVIDIA that I couldn't fix.
-FROM jupyter/scipy-notebook:0c68990e9304
+# FROM jupyter/scipy-notebook:0c68990e9304
+FROM jupyter/scipy-notebook:9e056d61b7a5
 
 LABEL com.nvidia.volumes.needed="nvidia_driver"
 
