@@ -38,18 +38,26 @@ RUN apt-get install -y curl git python-dev python3-dev build-essential python-pi
 
 # install BAZEL
 WORKDIR $HOME
-RUN echo "deb [arch=amd64] http://storage.googleapis.com/bazel-apt stable jdk1.8" | sudo tee /etc/apt/sources.list.d/bazel.list
-RUN curl https://storage.googleapis.com/bazel-apt/doc/apt-key.pub.gpg | sudo apt-key add -
-RUN apt-get update
+RUN mkdir bazel
+RUN cd bazel \
+    && wget https://github.com/bazelbuild/bazel/releases/download/0.7.0/bazel-0.7.0-dist.zip \
+    && unzip bazel-0.7.0-dist.zip \
+    && bash ./compile.sh \
+    && export PATH=`pwd`/output:$PATH \
+    && bazel
+
+# RUN echo "deb [arch=amd64] http://storage.googleapis.com/bazel-apt stable jdk1.8" | sudo tee /etc/apt/sources.list.d/bazel.list
+# RUN curl https://storage.googleapis.com/bazel-apt/doc/apt-key.pub.gpg | sudo apt-key add -
+# RUN apt-get update
 # RUN wget https://github.com/bazelbuild/bazel/releases/download/0.5.4/bazel-0.5.4-installer-linux-x86_64.sh
 # RUN chmod +x bazel-0.5.4-installer-linux-x86_64.sh
 # RUN ./bazel-0.5.4-installer-linux-x86_64.sh
 # RUN bazel
 # RUN cp /usr/local/lib/bazel/bin/bazel-complete.bash /etc/bash_completion.d/bazel-complete.sh
 # RUN /bin/bash -c "source /etc/bash_completion.d/bazel-complete.sh"
-RUN apt-get install -y bazel
-RUN apt-get upgrade -y bazel
-RUN bazel
+# RUN apt-get install -y bazel
+# RUN apt-get upgrade -y bazel
+# RUN bazel
 
 # install tensorflow
 WORKDIR $HOME
