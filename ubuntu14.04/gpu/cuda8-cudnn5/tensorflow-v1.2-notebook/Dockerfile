@@ -14,7 +14,7 @@ ARG TENSORFLOW_VERSION=1.2
 ARG KERAS_VERSION=2.0.4
 ARG TFLEARN_VERSION=0.3.1
 ARG DEFAULT_PYTHON_VERSION=3.5
-ARG BAZEL_VERSION=0.5.4
+ARG BAZEL_VERSION=0.7.0
 
 USER root
 
@@ -34,7 +34,7 @@ RUN apt-get install -y oracle-java8-installer
 
 # install other dependencies
 RUN apt-get update
-RUN apt-get install -y curl git python-dev python3-dev build-essential python-pip python3-pip python-virtualenv swig python-wheel libcurl3-dev
+RUN apt-get install -y curl git python-dev python3-dev build-essential python-pip python3-pip python-virtualenv swig python-wheel libcurl3-dev unzip
 
 # install BAZEL
 WORKDIR $HOME
