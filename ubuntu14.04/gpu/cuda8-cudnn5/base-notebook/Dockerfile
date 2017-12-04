@@ -11,8 +11,8 @@
 # nvidia-docker build -t grez72/deep-notebooks:ubuntu14.04-gpu-cuda8-cudnn5-base-notebook https://github.com/grez72/notebooks.git#master:ubuntu14.04/gpu/cuda8-cudnn5/base-notebook
 #
 # run it:
-# nvidia-docker run -it --rm -p 8888:8888 grez72/cuda-v8.0-gpu-notebook
-# nvidia-docker run --user root -it --rm -p 8888:8888 grez72/cuda-v8.0-gpu-notebook
+# nvidia-docker run -it --rm -p 8888:8888 grez72/deep-notebooks:ubuntu14.04-gpu-cuda8-cudnn5-base-notebook
+# nvidia-docker run --user root -it --rm -p 8888:8888 grez72/deep-notebooks:ubuntu14.04-gpu-cuda8-cudnn5-base-notebook
 
 # starting with an older version of scipy-notebook, before the update to Ubuntu 16,
 # which caused issues with the checksum for NVIDIA that I couldn't fix.
