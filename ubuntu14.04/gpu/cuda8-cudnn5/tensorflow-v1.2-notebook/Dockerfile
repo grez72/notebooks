@@ -42,7 +42,7 @@ RUN echo "deb [arch=amd64] http://storage.googleapis.com/bazel-apt stable jdk1.8
 RUN curl https://storage.googleapis.com/bazel-apt/doc/apt-key.pub.gpg | sudo apt-key add -
 RUN apt-get update
 RUN wget https://github.com/bazelbuild/bazel/releases/download/$BAZEL_VERSION/bazel-${BAZEL_VERSION}-installer-linux-x86_64.sh
-RUN chmod +x bazel-bazel-${BAZEL_VERSION}-installer-linux-x86_64.sh \
+RUN chmod +x bazel-${BAZEL_VERSION}-installer-linux-x86_64.sh \
     ./bazel-<version>-installer-linux-x86_64.sh --user
 # RUN apt-get install -y bazel
 # RUN apt-get upgrade -y bazel
