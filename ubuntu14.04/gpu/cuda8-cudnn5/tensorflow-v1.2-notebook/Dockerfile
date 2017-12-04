@@ -46,7 +46,7 @@ RUN chmod +x bazel-0.5.4-installer-linux-x86_64.sh
 RUN ./bazel-0.5.4-installer-linux-x86_64.sh
 RUN bazel
 RUN cp /usr/local/lib/bazel/bin/bazel-complete.bash /etc/bash_completion.d/bazel-complete.sh
-RUN source /etc/bash_completion.d/bazel-complete.sh
+RUN /bin/bash -c "source /etc/bash_completion.d/bazel-complete.sh"
 
 # RUN apt-get install -y bazel
 # RUN apt-get upgrade -y bazel
