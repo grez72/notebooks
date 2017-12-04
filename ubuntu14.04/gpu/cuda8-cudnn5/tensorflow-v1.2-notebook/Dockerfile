@@ -13,6 +13,7 @@ MAINTAINER George Alvarez <gre72@gmail.com, alvarez@wjh.harvard.edu>
 ARG TENSORFLOW_VERSION=1.2
 ARG KERAS_VERSION=2.0.4
 ARG TFLEARN_VERSION=0.3.1
+ARG DEFAULT_PYTHON_VERSION=3.6
 
 USER root
 
@@ -56,7 +57,7 @@ RUN git checkout remotes/origin/r${TENSORFLOW_VERSION}
 # https://github.com/tensorflow/tensorflow/blob/master/configure
 
 ENV PYTHON_BIN_PATH=/opt/conda/bin/python
-ENV PYTHON_LIB_PATH=/opt/conda/lib/python3.5/site-packages
+ENV PYTHON_LIB_PATH=/opt/conda/lib/python${DEFAULT_PYTHON_VERSION}/site-packages
 ENV TF_NEED_CUDA=1
 ENV TF_NEED_GCP=0
 ENV TF_NEED_OPENCL=0
