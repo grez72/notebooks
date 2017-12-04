@@ -8,7 +8,7 @@
 # ...then including opencv
 #
 # build it:
-# nvidia-docker build -t grez72/cuda-v8.0-gpu-notebook https://github.com/grez72/notebooks.git#master:ubuntu14.04/gpu/cuda8-cudnn5/base-notebook
+# nvidia-docker build -t grez72/deep-notebooks:ubuntu14.04-gpu-cuda8-cudnn5-base-notebook https://github.com/grez72/notebooks.git#master:ubuntu14.04/gpu/cuda8-cudnn5/base-notebook
 #
 # run it:
 # nvidia-docker run -it --rm -p 8888:8888 grez72/cuda-v8.0-gpu-notebook
