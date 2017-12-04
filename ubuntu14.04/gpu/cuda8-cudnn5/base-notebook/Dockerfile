@@ -14,7 +14,7 @@
 # nvidia-docker run -it --rm -p 8888:8888 grez72/cuda-v8.0-gpu-notebook
 # nvidia-docker run --user root -it --rm -p 8888:8888 grez72/cuda-v8.0-gpu-notebook
 
-FROM debian:jessie
+FROM jupyter/scipy-notebook:0c68990e9304
 
 LABEL com.nvidia.volumes.needed="nvidia_driver"
 
