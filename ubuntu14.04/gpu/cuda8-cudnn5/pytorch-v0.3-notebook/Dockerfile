@@ -21,7 +21,6 @@ WORKDIR $HOME
 
 RUN pip install --upgrade pip
 RUN pip install numpy --upgrade
-RUN conda uninstall gcc
 RUN conda install -y pytorch=${PYTORCH_VERSION} torchvision cuda80 -c pytorch
 
 RUN /bin/bash -c "source activate python2 && pip install --upgrade pip"
