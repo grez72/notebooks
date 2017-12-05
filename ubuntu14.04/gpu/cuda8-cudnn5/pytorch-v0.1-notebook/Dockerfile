@@ -19,11 +19,21 @@ WORKDIR $HOME
 #  INSTALL PYTORCH
 # ==============================================================
 
-RUN pip install http://download.pytorch.org/whl/cu80/torch-${PYTORCH_VERSION}.post2-cp35-cp35m-linux_x86_64.whl
-RUN pip install torchvision
+RUN pip install --upgrade pip
+RUN pip install numpy --upgrade
+RUN conda install -y pytorch=${PYTORCH_VERSION} torchvision cuda80 -c pytorch
 
-RUN pip2 install http://download.pytorch.org/whl/cu80/torch-${PYTORCH_VERSION}.post2-cp27-none-linux_x86_64.whl
-RUN pip2 install torchvision
+RUN /bin/bash -c "source activate python2 && pip install --upgrade pip"
+RUN /bin/bash -c "source activate python2 && pip install numpy --upgrade"
+RUN /bin/bash -c "source activate python2 && conda install -y pytorch=${PYTORCH_VERSION} torchvision cuda80 -c pytorch"
+
+RUN conda update -y conda
+
+# RUN pip install http://download.pytorch.org/whl/cu80/torch-${PYTORCH_VERSION}.post2-cp35-cp35m-linux_x86_64.whl
+# RUN pip install torchvision
+#
+# RUN pip2 install http://download.pytorch.org/whl/cu80/torch-${PYTORCH_VERSION}.post2-cp27-none-linux_x86_64.whl
+# RUN pip2 install torchvision
 
 # ==============================================================
 #  set workdir and user for jupyter notebook use
