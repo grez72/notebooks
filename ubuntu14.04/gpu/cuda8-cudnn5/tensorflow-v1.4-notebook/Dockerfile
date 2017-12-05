@@ -15,6 +15,7 @@ ARG KERAS_VERSION=2.0.4
 ARG TFLEARN_VERSION=0.3.1
 ARG DEFAULT_PYTHON_VERSION=3.5
 ARG BAZEL_VERSION=0.5.4
+ARG TENSORFLOW_COMMIT=2ff37a4ff2bfa25c4aae5740cb4ff61f9bce536e
 
 USER root
 
@@ -54,7 +55,8 @@ RUN bazel
 WORKDIR $HOME
 RUN git clone https://github.com/tensorflow/tensorflow
 WORKDIR $HOME/tensorflow
-RUN git checkout remotes/origin/r${TENSORFLOW_VERSION}
+# RUN git checkout remotes/origin/r${TENSORFLOW_VERSION}
+RUN git checkout $TENSORFLOW_COMMIT
 
 # Next we configure the installation
 # Normally we call ./configure, and do an interactive setup
