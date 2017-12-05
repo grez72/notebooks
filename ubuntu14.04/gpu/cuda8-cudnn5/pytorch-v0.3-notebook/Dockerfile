@@ -5,7 +5,7 @@
 # sudo nvidia-docker build -t grez72/deep-notebooks:ubuntu14.04-gpu-cuda8-cudnn5-pytorch-v0.3-notebook https://github.com/grez72/notebooks.git#master:ubuntu14.04/gpu/cuda8-cudnn5/pytorch-v0.3-notebook
 # nvidia-docker run -it --rm --shm-size=512m -p 8888:8888 grez72/deep-notebooks:ubuntu14.04-gpu-cuda8-cudnn5-pytorch-v0.3-notebook
 
-FROM grez72/cuda-v8.0-gpu-notebook:ubuntu14.04-gpu-cuda8-cudnn5-base-notebook
+FROM grez72/deep-notebooks:ubuntu14.04-gpu-cuda8-cudnn5-base-notebook
 
 MAINTAINER George Alvarez <gre72@gmail.com, alvarez@wjh.harvard.edu>
 
