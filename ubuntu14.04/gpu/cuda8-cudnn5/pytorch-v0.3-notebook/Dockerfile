@@ -22,12 +22,12 @@ WORKDIR $HOME
 RUN pip install --upgrade pip
 RUN pip install numpy --upgrade
 RUN conda install -y pytorch torchvision cuda80 -c soumith
-RUN conda update -y conda pytorch torchvision
+# RUN conda update -y conda pytorch torchvision
 
 RUN /bin/bash -c "source activate python2 && pip install --upgrade pip"
 RUN /bin/bash -c "source activate python2 && pip install numpy --upgrade"
 RUN /bin/bash -c "source activate python2 && conda install -y pytorch torchvision cuda80 -c soumith"
-RUN /bin/bash -c "source activate python2 && conda update -y conda pytorch torchvision"
+# RUN /bin/bash -c "source activate python2 && conda update -y conda pytorch torchvision"
 
 # RUN pip install --upgrade pip
 # RUN pip install http://download.pytorch.org/whl/cu80/torch-${PYTORCH_VERSION}.post3-cp35-cp35m-manylinux1_x86_64.whl
