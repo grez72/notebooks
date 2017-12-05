@@ -21,8 +21,8 @@ WORKDIR $HOME
 
 RUN pip install --upgrade pip
 RUN pip install numpy --upgrade
-RUN conda install -y pytorch=${PYTORCH_VERSION} torchvision cuda80 -c pytorch
-# RUN conda update -y conda pytorch torchvision
+RUN conda install -y pytorch torchvision cuda80 -c pytorch
+RUN conda update -y conda pytorch=${PYTORCH_VERSION} torchvision
 
 RUN /bin/bash -c "source activate python2 && pip install --upgrade pip"
 RUN /bin/bash -c "source activate python2 && pip install numpy --upgrade"
