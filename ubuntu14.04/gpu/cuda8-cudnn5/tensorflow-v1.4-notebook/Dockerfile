@@ -13,6 +13,8 @@ MAINTAINER George Alvarez <gre72@gmail.com, alvarez@wjh.harvard.edu>
 ARG TENSORFLOW_VERSION=1.4
 ARG KERAS_VERSION=2.0.4
 ARG TFLEARN_VERSION=0.3.1
+ARG DEFAULT_PYTHON_VERSION=3.5
+ARG BAZEL_VERSION=0.4.5
 
 USER root
 
@@ -35,11 +37,17 @@ RUN apt-get update
 RUN apt-get install -y curl git python-dev python3-dev build-essential python-pip python3-pip python-virtualenv swig python-wheel libcurl3-dev
 
 # install BAZEL
-RUN echo "deb [arch=amd64] http://storage.googleapis.com/bazel-apt stable jdk1.8" | sudo tee /etc/apt/sources.list.d/bazel.list
-RUN curl https://storage.googleapis.com/bazel-apt/doc/apt-key.pub.gpg | sudo apt-key add -
-RUN apt-get update
-RUN apt-get install -y bazel
-RUN apt-get upgrade -y bazel
+WORKDIR $HOME
+RUN wget https://github.com/bazelbuild/bazel/releases/download/${BAZEL_VERSION}/bazel-${BAZEL_VERSION}-installer-linux-x86_64.sh \
+    && chmod +x bazel-${BAZEL_VERSION}-installer-linux-x86_64.sh \
+    && ./bazel-${BAZEL_VERSION}-installer-linux-x86_64.sh \
+    && bazel
+
+# RUN echo "deb [arch=amd64] http://storage.googleapis.com/bazel-apt stable jdk1.8" | sudo tee /etc/apt/sources.list.d/bazel.list
+# RUN curl https://storage.googleapis.com/bazel-apt/doc/apt-key.pub.gpg | sudo apt-key add -
+# RUN apt-get update
+# RUN apt-get install -y bazel
+# RUN apt-get upgrade -y bazel
 
 # install tensorflow
 WORKDIR $HOME
