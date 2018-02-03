@@ -1,24 +1,18 @@
-# grez72/deep-notebooks:ubuntu14.04-gpu-cuda8-cudnn5-caffe2-v0.7-notebook
+# grez72/deep-notebooks:ubuntu14.04-gpu-cuda8-cudnn5-caffe2-v0.8.1-notebook
 #
 # Caffe2 jupyter notebook with gpu suppport (nvidia CUDA cuDNN).
 #
-# sudo nvidia-docker build -t grez72/deep-notebooks:ubuntu14.04-gpu-cuda8-cudnn5-caffe2-v0.7-notebook https://github.com/grez72/notebooks.git#master:ubuntu14.04/gpu/cuda8-cudnn5/caffe2-v0.7-notebook
-# nvidia-docker run -it --rm -p 8888:8888 grez72/deep-notebooks:ubuntu14.04-gpu-cuda8-cudnn5-caffe2-v0.7-notebook
-# nvidia-docker run -it grez72/deep-notebooks:ubuntu14.04-gpu-cuda8-cudnn5-caffe2-v0.7-notebook python -m caffe2.python.operator_test.relu_op_test
-
-# these work
-# FROM nvidia/cuda:8.0-cudnn5-devel-ubuntu14.04
-# FROM grez72/deep-notebooks:ubuntu14.04-gpu-cuda8-cudnn5-devel
-# FROM debian@sha256:52af198afd8c264f1035206ca66a5c48e602afb32dc912ebf9e9478134601ec4
-
-# testing:
-# FROM jupyter/minimal-notebook
+# sudo nvidia-docker build -t grez72/deep-notebooks:ubuntu14.04-gpu-cuda8-cudnn5-caffe2-v0.8.1-notebook https://github.com/grez72/notebooks.git#master:ubuntu14.04/gpu/cuda8-cudnn5/caffe2-v0.8.1-notebook
+# nvidia-docker run -it --rm -p 8888:8888 grez72/deep-notebooks:ubuntu14.04-gpu-cuda8-cudnn5-caffe2-v0.8.1-notebook
+# nvidia-docker run -it grez72/deep-notebooks:ubuntu14.04-gpu-cuda8-cudnn5-caffe2-v0.8.1-notebook python -m caffe2.python.operator_test.relu_op_test
 
 FROM grez72/deep-notebooks:ubuntu14.04-gpu-cuda8-cudnn5-base-notebook
 
 MAINTAINER George Alvarez <gre72@gmail.com, alvarez@wjh.harvard.edu>
 
 USER root
+
+ARG CAFFE2_VERSION=0.8.0
 
 # ==============================================================
 #  nvidia cuda8-cudnn5
@@ -95,22 +89,28 @@ USER root
 # ==============================================================
 
 RUN /bin/bash -c "source activate python2 && apt-get update && apt-get install -y --no-install-recommends \
-    python-dev \
-    python-pip \
-    git \
     build-essential \
     cmake \
+    git \
+    python-dev \
+    python-numpy \
+    python-pip \
+    python-pydot \
+    python-setuptools \
+    python-scipy \
     libprotobuf-dev \
     protobuf-compiler \
-    libgoogle-glog-dev"
+    libgoogle-glog-dev \
+    wget \
+    && rm -rf /var/lib/apt/lists/*"
 
-RUN /bin/bash -c "source activate python2 && git clone --recursive https://github.com/caffe2/caffe2.git && \
-    pip install --upgrade pip && \
-    pip install numpy protobuf"
+# RUN /bin/bash -c "source activate python2 && git clone --recursive https://github.com/caffe2/caffe2.git && \
+#     pip install --upgrade pip && \
+#     pip install numpy protobuf"
 
 ########## OPTIONAL DEPENDENCIES ################
 
-RUN /bin/bash -c "source activate python2 && apt-get install -y --no-install-recommends \
+RUN /bin/bash -c "source activate python2 && apt-get update && apt-get install -y --no-install-recommends \
     libgflags-dev \
     libgoogle-glog-dev \
     libgflags2 \
@@ -129,12 +129,14 @@ RUN /bin/bash -c "source activate python2 && apt-get install -y --no-install-rec
     python-scipy \
     wget"
 
-RUN /bin/bash -c "source activate python2 && pip install \
+RUN /bin/bash -c "source activate python2 && pip install --upgrade pip && pip install \
     flask \
     graphviz \
     hypothesis \
     jupyter \
     matplotlib \
+    numpy \
+    protobuf \
     pydot \
     python-nvd3 \
     pyyaml \
@@ -145,12 +147,14 @@ RUN /bin/bash -c "source activate python2 && pip install \
     tornado"
 
 ########## INSTALLATION STEPS ###################
-RUN /bin/bash -c 'source activate python2 && cd caffe2 && make -j"$(nproc)" && cd build && make -j"$(nproc)" install'
-RUN /bin/bash -c "source activate python2 && pip install future"
+# RUN git clone --branch v0.8.0 --recursive https://github.com/caffe2/caffe2.git
+# RUN cd caffe2 \
+#   && make -j"$(nproc)" \
+#   && cd build \
+#   && make -j"$(nproc)" install
 
-# export PYTHONPATH=/usr/local
-# export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
-# export LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
+RUN /bin/bash -c "source activate python2 && cd caffe2 && make -j'$(nproc)' && cd build && make -j'$(nproc)' install"
+RUN /bin/bash -c "source activate python2 && pip install future"
 
 ENV PYTHONPATH /usr/local
 ENV LD_LIBRARY_PATH /usr/local/lib:$LD_LIBRARY_PATH
