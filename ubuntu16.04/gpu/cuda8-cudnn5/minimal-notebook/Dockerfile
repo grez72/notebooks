@@ -18,10 +18,6 @@ MAINTAINER George Alvarez <grez72@gmail.com, alvarez.wjh.harvard.edu>
 
 USER jovyan
 
-# make these to avoid permission error
-# RUN mkdir /home/$NB_USER/.jupyter && \
-#     mkdir /home/$NB_USER/.local
-
 # Install Python 2 packages
 RUN conda create -p $CONDA_DIR/envs/python2 python=2.7 \
     'ipython=4.0*' \
