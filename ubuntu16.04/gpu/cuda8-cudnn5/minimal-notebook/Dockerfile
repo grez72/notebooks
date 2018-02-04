@@ -60,21 +60,21 @@ RUN apt-get install -y libjpeg8-dev libtiff5-dev libjasper-dev libpng12-dev \
   libhdf5-serial-dev \
   python2.7-dev
 
-RUN cd ~/ \
-  && git clone https://github.com/Itseez/opencv.git \
-  && cd opencv \
-  && mkdir build \
-  && cd build/ \
-  && cmake -D CMAKE_BUILD_TYPE=RELEASE \
-    -D CMAKE_INSTALL_PREFIX=/usr/local \
-    -D WITH_CUDA=ON \
-    -D ENABLE_FAST_MATH=1 \
-    -D CUDA_FAST_MATH=1 \
-    -D WITH_CUBLAS=1 \
-    -D INSTALL_PYTHON_EXAMPLES=ON \
-    -D BUILD_EXAMPLES=ON .. \
-  && make -j$(nproc) && sudo make install \
-  && ldconfig
+# WORKDIR ~/
+# RUN git clone https://github.com/Itseez/opencv.git \
+#   && cd opencv \
+#   && mkdir build \
+#   && cd build/ \
+#   && cmake -D CMAKE_BUILD_TYPE=RELEASE \
+#     -D CMAKE_INSTALL_PREFIX=/usr/local \
+#     -D WITH_CUDA=ON \
+#     -D ENABLE_FAST_MATH=1 \
+#     -D CUDA_FAST_MATH=1 \
+#     -D WITH_CUBLAS=1 \
+#     -D INSTALL_PYTHON_EXAMPLES=ON \
+#     -D BUILD_EXAMPLES=ON .. \
+#   && make -j$(nproc) && sudo make install \
+#   && ldconfig
 
 #--------------------------------------
 # Install Additional Packages
