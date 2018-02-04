@@ -96,23 +96,26 @@ ENV CUDNN_VERSION 5.1.10
 LABEL com.nvidia.cudnn.version="${CUDNN_VERSION}"
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
+            cuda-samples-$CUDA_PKG_VERSION \
             libcudnn5=$CUDNN_VERSION-1+cuda8.0 \
             libcudnn5-dev=$CUDNN_VERSION-1+cuda8.0 && \
     rm -rf /var/lib/apt/lists/*
 
-# # make copies of cuDNN so tensorflow can find them when installing from source
-# RUN cp -P /usr/lib/x86_64-linux-gnu/libcudnn* /usr/local/cuda/lib64
-# RUN cp -P /usr/include/cudnn.h /usr/local/cuda/include
-#
-# # test devices
-# WORKDIR /usr/local/cuda/samples/1_Utilities/deviceQuery
-#
-# RUN make -j"$(nproc)"
-#
-# # CMD defines the default command to be run in the container
-# # CMD is overridden by supplying a command + arguments to
-# # `docker run`, e.g. `nvcc --version` or `bash`
-# # CMD ./deviceQuery
+cuda-samples-$CUDA_PKG_VERSION
+
+# make copies of cuDNN so tensorflow can find them when installing from source
+RUN cp -P /usr/lib/x86_64-linux-gnu/libcudnn* /usr/local/cuda/lib64
+RUN cp -P /usr/include/cudnn.h /usr/local/cuda/include
+
+# test devices
+WORKDIR /usr/local/cuda/samples/1_Utilities/deviceQuery
+
+RUN make -j"$(nproc)"
+
+# CMD defines the default command to be run in the container
+# CMD is overridden by supplying a command + arguments to
+# `docker run`, e.g. `nvcc --version` or `bash`
+# CMD ./deviceQuery
 
 # LABEL com.nvidia.volumes.needed="nvidia_driver"
 #
