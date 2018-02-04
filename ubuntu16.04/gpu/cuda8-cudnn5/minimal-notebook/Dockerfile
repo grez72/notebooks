@@ -49,6 +49,10 @@ USER root
 RUN /bin/bash -c "source activate python2 && ipython kernel install"
 
 #--------------------------------------
+# Install OpenCV with CUDA Support
+#--------------------------------------
+
+#--------------------------------------
 # Install Additional Packages
 #--------------------------------------
 
