@@ -82,6 +82,22 @@ RUN git clone https://github.com/Itseez/opencv.git \
   && make -j$(nproc) && sudo make install \
   && ldconfig
 
+
+#--------------------------------------
+# Utilities for optimizing python code:
+#--------------------------------------
+
+# Cupy, PyCuda, Numba
+RUN conda install -y -c lukepfister pycuda \
+  && /bin/bash -c "source activate python2 \
+  && conda install -y -c lukepfister pycuda" \
+  && pip install cupy \
+  && /bin/bash -c "source activate python2 \
+  && pip install cupy"
+  && conda install -y numba \
+  && /bin/bash -c "source activate python2 \
+  && conda install -y numba"
+
 #--------------------------------------
 # Install Video and Image Utilities
 #--------------------------------------
@@ -89,10 +105,10 @@ RUN git clone https://github.com/Itseez/opencv.git \
 # Installing all of these dependencies together in one RUN command
 # to avoid limit on number of layers in docker image
 RUN conda install -y -c conda-forge av trackpy ipywidgets \
-  && conda install -y filterpy numba \
+  && conda install -y filterpy \
   && /bin/bash -c "source activate python2 \
   && conda install -y -c conda-forge av trackpy ipywidgets \
-  && conda install -y filterpy numba" \
+  && conda install -y filterpy" \
   && jupyter nbextension enable --py --sys-prefix widgetsnbextension \
   && pip install --upgrade pip \
   && pip install \
