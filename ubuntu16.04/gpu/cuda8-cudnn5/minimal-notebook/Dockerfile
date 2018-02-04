@@ -52,6 +52,7 @@ RUN /bin/bash -c "source activate python2 && ipython kernel install"
 # Install OpenCV with CUDA Support
 #--------------------------------------
 
+RUN apt-get update
 RUN apt-get install libjpeg8-dev libtiff5-dev libjasper-dev libpng12-dev \
   libgtk2.0-dev \
   libavcodec-dev libavformat-dev libswscale-dev libv4l-dev \
