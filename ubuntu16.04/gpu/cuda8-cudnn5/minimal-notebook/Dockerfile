@@ -240,6 +240,7 @@ RUN git clone https://github.com/Itseez/opencv.git \
   && cmake -D CMAKE_BUILD_TYPE=RELEASE \
     -D CMAKE_INSTALL_PREFIX=/usr/local \
     -D WITH_CUDA=ON \
+    -D CMAKE_LIBRARY_PATH=/usr/local/cuda/lib64/stubs \
     -D ENABLE_FAST_MATH=1 \
     -D CUDA_FAST_MATH=1 \
     -D WITH_CUBLAS=1 \
