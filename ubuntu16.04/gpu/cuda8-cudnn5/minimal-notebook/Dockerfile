@@ -83,13 +83,48 @@ RUN git clone https://github.com/Itseez/opencv.git \
   && ldconfig
 
 #--------------------------------------
+# Install Video and Image Utilities
+#--------------------------------------
+
+# Installing all of these dependencies together in one RUN command
+# to avoid limit on number of layers in docker image
+RUN conda install -y -c conda-forge av trackpy ipywidgets \
+  && conda install -y filterpy numba \
+  && /bin/bash -c "source activate python2 \
+  && conda install -y -c conda-forge av trackpy ipywidgets \
+  && conda install -y filterpy numba" \
+  && jupyter nbextension enable --py --sys-prefix widgetsnbextension \
+  && pip install --upgrade pip \
+  && pip install \
+    ffmpeg-python \
+    image-attendant \
+    imutils \
+    pims \
+    tqdm \
+  && cd $HOME \
+  && git clone https://github.com/DheerendraRathor/ffprobe3 \
+  && cd $HOME/ffprobe3 \
+  && python setup.py install \
+  && pip2 install --upgrade pip \
+  && pip2 install \
+    ffmpeg-python \
+    ffprobe \
+    image-attendant \
+    imutils \
+    pims \
+    simplejson \
+    tqdm \
+  && cd $HOME \
+  && git clone https://github.com/jfrelinger/cython-munkres-wrapper \
+  && cd $HOME/cython-munkres-wrapper \
+  && python setup.py install \
+  && /bin/bash -c "source activate python2 && cd $HOME/cython-munkres-wrapper && python setup.py install"
+
+#--------------------------------------
 # Install Additional Packages
 #--------------------------------------
 
 # plotly, cufflinks
-
-# python2
-# RUN /bin/bash -c "source activate python2 && ipython kernel install"
 
 #--------------------------------------
 # Setup for notebook use
