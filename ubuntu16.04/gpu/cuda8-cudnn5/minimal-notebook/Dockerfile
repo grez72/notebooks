@@ -52,6 +52,12 @@ RUN /bin/bash -c "source activate python2 && ipython kernel install"
 # Install OpenCV with CUDA Support
 #--------------------------------------
 
+# do we need to set these?
+# export PATH=/usr/local/cuda/bin:$PATH
+# export LPATH=/usr/local/nvidia/lib64:$LPATH
+# export LIBRARY_PATH=/usr/local/nvidia:$LIBRARY_PATH
+# export LD_LIBRARY_PATH=/usr/local/nvidia/lib64:/usr/local/cuda/lib64:/usr/local/cuda/lib:$LD_LIBRARY_PATH
+
 RUN apt-get update
 RUN apt-get install -y cmake \
   libjpeg8-dev libtiff5-dev libjasper-dev libpng12-dev \
@@ -71,32 +77,46 @@ RUN git clone https://github.com/Itseez/opencv.git \
   && mkdir build \
   && cd build/ \
   && cmake -D CMAKE_BUILD_TYPE=RELEASE \
+    -D PYTHON2_EXECUTABLE:FILEPATH=/opt/conda/envs/python2/bin/python2.7 \
+    -D PYTHON2_INCLUDE_DIR:PATH=/opt/conda/envs/python2/include/python2.7 \
+    -D PYTHON2_NUMPY_INCLUDE_DIRS:PATH=/opt/conda/envs/python2/lib/python2.7/site-packages/numpy/core/include \
+    -D PYTHON2_PACKAGES_PATH:PATH=/opt/conda/envs/python2/lib/python2.7/site-packages \
+    -D PYTHON3_EXECUTABLE:FILEPATH=/opt/conda/bin/python3.6 \
+    -D PYTHON3_INCLUDE_DIR:PATH=/opt/conda/include/python3.6m \
+    -D PYTHON3_NUMPY_INCLUDE_DIRS:PATH=/opt/conda/lib/python3.6/site-packages/numpy/core/include \
+    -D PYTHON3_PACKAGES_PATH:PATH=/opt/conda/lib/python3.6/site-packages \
     -D CMAKE_INSTALL_PREFIX=/usr/local \
     -D WITH_CUDA=ON \
-    -D CMAKE_LIBRARY_PATH=/usr/local/cuda/lib64/stubs \
+    -D FORCE_VTK=ON \
+    -D WITH_TBB=ON \
+    -D WITH_V4L=ON \
+    -D WITH_OPENGL=ON \
     -D ENABLE_FAST_MATH=1 \
     -D CUDA_FAST_MATH=1 \
     -D WITH_CUBLAS=1 \
     -D INSTALL_PYTHON_EXAMPLES=ON \
-    -D BUILD_EXAMPLES=ON .. \
+    -D BUILD_EXAMPLES=OFF .. \
   && make -j$(nproc) && sudo make install \
   && ldconfig
 
+# -D PYTHON3_LIBRARY:FILEPATH=/usr/lib/libpython3.6m.so \
+# -D CMAKE_LIBRARY_PATH=/usr/local/cuda/lib64/stubs \
+# -D WITH_QT=ON \
 
 #--------------------------------------
 # Utilities for optimizing python code:
 #--------------------------------------
 
 # Cupy, PyCuda, Numba
-RUN conda install -y -c lukepfister pycuda \
-  && /bin/bash -c "source activate python2 \
-  && conda install -y -c lukepfister pycuda" \
-  && pip install cupy \
-  && /bin/bash -c "source activate python2 \
-  && pip install cupy"
-  && conda install -y numba \
-  && /bin/bash -c "source activate python2 \
-  && conda install -y numba"
+# RUN conda install -y -c lukepfister pycuda \
+#   && /bin/bash -c "source activate python2 \
+#   && conda install -y -c lukepfister pycuda" \
+#   && pip install cupy \
+#   && /bin/bash -c "source activate python2 \
+#   && pip install cupy"
+#   && conda install -y numba \
+#   && /bin/bash -c "source activate python2 \
+#   && conda install -y numba"
 
 #--------------------------------------
 # Install Video and Image Utilities
@@ -104,37 +124,37 @@ RUN conda install -y -c lukepfister pycuda \
 
 # Installing all of these dependencies together in one RUN command
 # to avoid limit on number of layers in docker image
-RUN conda install -y -c conda-forge av trackpy ipywidgets \
-  && conda install -y filterpy \
-  && /bin/bash -c "source activate python2 \
-  && conda install -y -c conda-forge av trackpy ipywidgets \
-  && conda install -y filterpy" \
-  && jupyter nbextension enable --py --sys-prefix widgetsnbextension \
-  && pip install --upgrade pip \
-  && pip install \
-    ffmpeg-python \
-    image-attendant \
-    imutils \
-    pims \
-    tqdm \
-  && cd $HOME \
-  && git clone https://github.com/DheerendraRathor/ffprobe3 \
-  && cd $HOME/ffprobe3 \
-  && python setup.py install \
-  && pip2 install --upgrade pip \
-  && pip2 install \
-    ffmpeg-python \
-    ffprobe \
-    image-attendant \
-    imutils \
-    pims \
-    simplejson \
-    tqdm \
-  && cd $HOME \
-  && git clone https://github.com/jfrelinger/cython-munkres-wrapper \
-  && cd $HOME/cython-munkres-wrapper \
-  && python setup.py install \
-  && /bin/bash -c "source activate python2 && cd $HOME/cython-munkres-wrapper && python setup.py install"
+# RUN conda install -y -c conda-forge av trackpy ipywidgets \
+#   && conda install -y filterpy \
+#   && /bin/bash -c "source activate python2 \
+#   && conda install -y -c conda-forge av trackpy ipywidgets \
+#   && conda install -y filterpy" \
+#   && jupyter nbextension enable --py --sys-prefix widgetsnbextension \
+#   && pip install --upgrade pip \
+#   && pip install \
+#     ffmpeg-python \
+#     image-attendant \
+#     imutils \
+#     pims \
+#     tqdm \
+#   && cd $HOME \
+#   && git clone https://github.com/DheerendraRathor/ffprobe3 \
+#   && cd $HOME/ffprobe3 \
+#   && python setup.py install \
+#   && pip2 install --upgrade pip \
+#   && pip2 install \
+#     ffmpeg-python \
+#     ffprobe \
+#     image-attendant \
+#     imutils \
+#     pims \
+#     simplejson \
+#     tqdm \
+#   && cd $HOME \
+#   && git clone https://github.com/jfrelinger/cython-munkres-wrapper \
+#   && cd $HOME/cython-munkres-wrapper \
+#   && python setup.py install \
+#   && /bin/bash -c "source activate python2 && cd $HOME/cython-munkres-wrapper && python setup.py install"
 
 #--------------------------------------
 # Install Additional Packages
