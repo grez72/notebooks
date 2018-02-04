@@ -101,8 +101,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
             libcudnn5-dev=$CUDNN_VERSION-1+cuda8.0 && \
     rm -rf /var/lib/apt/lists/*
 
-cuda-samples-$CUDA_PKG_VERSION
-
 # make copies of cuDNN so tensorflow can find them when installing from source
 RUN cp -P /usr/lib/x86_64-linux-gnu/libcudnn* /usr/local/cuda/lib64
 RUN cp -P /usr/include/cudnn.h /usr/local/cuda/include
