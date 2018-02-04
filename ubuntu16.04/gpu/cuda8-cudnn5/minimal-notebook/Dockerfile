@@ -9,7 +9,7 @@
 # run it:
 # nvidia-docker run -it --rm -p 8888:8888 grez72/deep-notebooks:ubuntu16.04-gpu-cuda8-cudnn5-base-notebook
 
-FROM grez72/deep-notebooks:ubuntu16.04-gpu-cuda8-cudnn5-minimal-notebook
+FROM grez72/deep-notebooks:ubuntu16.04-gpu-cuda8-cudnn5-base-notebook
 MAINTAINER George Alvarez <grez72@gmail.com, alvarez.wjh.harvard.edu>
 
 #--------------------------------------
