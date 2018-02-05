@@ -39,7 +39,7 @@ RUN /bin/bash -c "source activate python2 && apt-get update && apt-get install -
 RUN /bin/bash -c "source activate python2 && apt-get update && apt-get install -y --no-install-recommends \
     libgflags-dev \
     libgoogle-glog-dev \
-    libgflags2 \
+    libgflags-dev \
     libgtest-dev \
     libiomp-dev \
     libleveldb-dev \
