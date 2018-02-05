@@ -11,7 +11,7 @@ MAINTAINER George Alvarez <gre72@gmail.com, alvarez@wjh.harvard.edu>
 
 USER root
 
-ENV CAFFE2_VERSION=0.8.1
+ENV CAFFE2_VERSION=v0.8.1
 
 # ==============================================================
 #  caffe2 dependencies
@@ -76,7 +76,7 @@ RUN /bin/bash -c "source activate python2 && pip install --upgrade pip && pip in
 # ==============================================================
 
 WORKDIR $HOME
-RUN git clone --branch v${CAFFE2_VERSION} --recursive https://github.com/caffe2/caffe2.git
+RUN git clone --branch ${CAFFE2_VERSION} --recursive https://github.com/caffe2/caffe2.git
 RUN /bin/bash -c "source activate python2 && cd caffe2 && make -j'$(nproc)' && cd build && make -j'$(nproc)' install"
 RUN /bin/bash -c "source activate python2 && pip install future"
 
