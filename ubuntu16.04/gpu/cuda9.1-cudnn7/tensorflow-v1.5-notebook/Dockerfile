@@ -167,34 +167,34 @@ RUN pip install /tmp/tensorflow_pkg/*
 # ==============================================================
 
 # python2 dependencies
-# RUN apt-get update && sudo apt-get install -y \
-#         build-essential \
-#         curl \
-#         libcurl3-dev \
-#         git \
-#         libfreetype6-dev \
-#         libpng12-dev \
-#         libzmq3-dev \
-#         pkg-config \
-#         python-dev \
-#         python-numpy \
-#         python-pip \
-#         software-properties-common \
-#         swig \
-#         zip \
-#         zlib1g-dev
-#
-# # update config
-# # /usr/bin/python2
-# # /usr/local/lib/python2.7/dist-packages
-# ENV PYTHON_BIN_PATH=/usr/bin/python2
-# ENV PYTHON_LIB_PATH=/usr/local/lib/python2.7/dist-packages
-# RUN ./configure
-#
-# RUN bazel build --verbose_failures -c opt --config=opt --config=cuda //tensorflow/tools/pip_package:build_pip_package
-# RUN bazel-bin/tensorflow/tools/pip_package/build_pip_package /tmp/tensorflow_pkg
-# RUN pip2 install /tmp/tensorflow_pkg/*27*
-# RUN rm -R tensorflow
+RUN apt-get update && sudo apt-get install -y \
+        build-essential \
+        curl \
+        libcurl3-dev \
+        git \
+        libfreetype6-dev \
+        libpng12-dev \
+        libzmq3-dev \
+        pkg-config \
+        python-dev \
+        python-numpy \
+        python-pip \
+        software-properties-common \
+        swig \
+        zip \
+        zlib1g-dev
+
+# update config
+# /usr/bin/python2
+# /usr/local/lib/python2.7/dist-packages
+ENV PYTHON_BIN_PATH=/opt/conda/envs/python2/bin/python
+ENV PYTHON_LIB_PATH=/opt/conda/envs/python2/lib/python2.7/site-packages
+RUN ./configure
+
+RUN bazel build --verbose_failures -c opt --config=opt --config=cuda //tensorflow/tools/pip_package:build_pip_package
+RUN bazel-bin/tensorflow/tools/pip_package/build_pip_package /tmp/tensorflow_pkg
+RUN /bin/bash -c "source activate python2 && pip install /tmp/tensorflow_pkg/*27* \
+  && rm -R tensorflow"
 
 # ==============================================================
 #  install tflearn
@@ -208,10 +208,9 @@ RUN pip install /tmp/tensorflow_pkg/*
 # COPY keras.json $HOME/.keras/keras.json
 
 # install tflearn
-# RUN pip install git+https://github.com/tflearn/tflearn.git
-# RUN pip2 install git+https://github.com/tflearn/tflearn.git
-RUN pip install tflearn==${TFLEARN_VERSION}
-RUN pip2 install tflearn==${TFLEARN_VERSION}
+RUN pip install tflearn==${TFLEARN_VERSION} \
+  && /bin/bash -c "source activate python2 \
+  && pip install tflearn==${TFLEARN_VERSION}"
 
 # ==============================================================
 #  downgrade anaconda's hdf5 to resolve error
