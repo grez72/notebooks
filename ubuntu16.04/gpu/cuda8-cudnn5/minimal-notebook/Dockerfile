@@ -135,15 +135,16 @@ RUN conda install -y -c conda-forge av trackpy ipywidgets \
   && git clone https://github.com/DheerendraRathor/ffprobe3 \
   && cd $HOME/ffprobe3 \
   && python setup.py install \
-  && pip2 install --upgrade pip \
-  && pip2 install \
+  && /bin/bash -c "source activate python2 \
+  && pip install --upgrade pip \
+  && pip install \
     ffmpeg-python \
     ffprobe \
     image-attendant \
     imutils \
     pims \
     simplejson \
-    tqdm \
+    tqdm" \
   && cd $HOME \
   && git clone https://github.com/jfrelinger/cython-munkres-wrapper \
   && cd $HOME/cython-munkres-wrapper \
