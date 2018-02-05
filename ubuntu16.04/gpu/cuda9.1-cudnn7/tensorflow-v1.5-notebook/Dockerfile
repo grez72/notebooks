@@ -12,7 +12,7 @@ MAINTAINER George Alvarez <gre72@gmail.com, alvarez@wjh.harvard.edu>
 
 ARG TENSORFLOW_VERSION=1.5
 ARG TFLEARN_VERSION=0.3.2
-ARG DEFAULT_PYTHON_VERSION=3.5
+ARG DEFAULT_PYTHON_VERSION=3.6
 ARG BAZEL_VERSION=0.5.4
 ARG CUDA_VERSION=9.1
 ARG CUDNN_VERSION=7
@@ -94,7 +94,7 @@ WORKDIR $HOME/tensorflow
 # https://github.com/tensorflow/tensorflow/blob/master/configure
 
 ENV PYTHON_BIN_PATH=/opt/conda/bin/python
-ENV PYTHON_LIB_PATH=/opt/conda/lib/python3.5/site-packages
+ENV PYTHON_LIB_PATH=/opt/conda/lib/python${DEFAULT_PYTHON_VERSION}/site-packages
 ENV TF_NEED_CUDA=1
 ENV TF_NEED_GCP=0
 ENV TF_NEED_OPENCL=0
