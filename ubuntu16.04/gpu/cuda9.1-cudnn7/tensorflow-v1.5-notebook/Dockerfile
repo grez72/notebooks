@@ -21,6 +21,22 @@ USER root
 WORKDIR $HOME
 
 # ==============================================================
+#  Upgrades Before Installing Tensorflow
+# ==============================================================
+
+RUN pip install --upgrade pip \
+  && pip install numpy --upgrade \
+  && conda update conda \
+  && conda install -y mkl -c intel
+
+# RUN conda update -y conda pytorch torchvision
+RUN /bin/bash -c "source activate python2 \
+  && pip install --upgrade pip \
+  && pip install numpy --upgrade \
+  && conda install -y mkl -c intel"
+
+
+# ==============================================================
 #  INSTALL TENSORFLOW DEPENDENCIES
 # ==============================================================
 
@@ -96,7 +112,7 @@ ENV CUDNN_INSTALL_PATH=$CUDA_TOOLKIT_PATH
 ENV CC_OPT_FLAGS=-march=native
 
 # Do you wish to build TensorFlow with MKL support? [y/N]
-ENV TF_NEED_MKL=0
+ENV TF_NEED_MKL=1
 
 # "Do you wish to use jemalloc as the malloc implementation? [Y/n] "
 ENV TF_NEED_JEMALLOC=1
@@ -124,6 +140,12 @@ ENV TF_NEED_KAFKA=0
 
 # Do you wish to build TensorFlow with OpenCL SYCL support?
 ENV TF_NEED_OPENCL_SYCL=0
+
+# Do you wish to build TensorFlow with TensorRT support?
+ENV TF_NEED_TENSORRT=1
+
+# Would you like to interactively configure ./WORKSPACE for Android builds?
+ENV TF_SET_ANDROID_WORKSPACE=0
 
 # https://github.com/tensorflow/tensorflow/blob/8c1f3b3fcdc5f897dbce3b7315c1b7000069f9c4/configure.py
 # Now when we run ./configure, there should be no unset variables, and so it should just proceed.
