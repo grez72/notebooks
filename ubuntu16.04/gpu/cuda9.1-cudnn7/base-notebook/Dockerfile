@@ -45,28 +45,37 @@ ENV NVIDIA_VISIBLE_DEVICES all
 ENV NVIDIA_DRIVER_CAPABILITIES compute,utility
 ENV NVIDIA_REQUIRE_CUDA "cuda>=9.1"
 
-# RUN apt-get update && apt-get install -y --no-install-recommends \
-#         cuda-libraries-dev-$CUDA_PKG_VERSION \
-#         cuda-nvml-dev-$CUDA_PKG_VERSION \
-#         cuda-minimal-build-$CUDA_PKG_VERSION \
-#         cuda-command-line-tools-$CUDA_PKG_VERSION \
-#         libnccl-dev=$NCCL_VERSION-1+cuda9.1 && \
-#     rm -rf /var/lib/apt/lists/*
-#
-# ENV LIBRARY_PATH /usr/local/cuda/lib64/stubs:${LIBRARY_PATH}
-#
-# # =======================================================
-# #   INSTALL NVIDIA cuDNN 7
-# # =======================================================
-#
-# # https://gitlab.com/nvidia/cuda/blob/ubuntu16.04/9.1/devel/cudnn7/Dockerfile
-# ENV CUDNN_VERSION 7.0.5.15
-# LABEL com.nvidia.cudnn.version="${CUDNN_VERSION}"
-#
-# RUN apt-get update && apt-get install -y --no-install-recommends \
-#             libcudnn7=$CUDNN_VERSION-1+cuda9.1 \
-#             libcudnn7-dev=$CUDNN_VERSION-1+cuda9.1 && \
-#     rm -rf /var/lib/apt/lists/*
+# https://gitlab.com/nvidia/cuda/blob/ubuntu16.04/9.1/runtime/Dockerfile
+ENV NCCL_VERSION 2.1.4
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        cuda-libraries-$CUDA_PKG_VERSION \
+        libnccl2=$NCCL_VERSION-1+cuda9.1 && \
+    rm -rf /var/lib/apt/lists/*
+
+# https://gitlab.com/nvidia/cuda/blob/ubuntu16.04/9.1/devel/Dockerfile
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        cuda-libraries-dev-$CUDA_PKG_VERSION \
+        cuda-nvml-dev-$CUDA_PKG_VERSION \
+        cuda-minimal-build-$CUDA_PKG_VERSION \
+        cuda-command-line-tools-$CUDA_PKG_VERSION \
+        libnccl-dev=$NCCL_VERSION-1+cuda9.1 && \
+    rm -rf /var/lib/apt/lists/*
+
+ENV LIBRARY_PATH /usr/local/cuda/lib64/stubs:${LIBRARY_PATH}
+
+# =======================================================
+#   INSTALL NVIDIA cuDNN 7
+# =======================================================
+
+# https://gitlab.com/nvidia/cuda/blob/ubuntu16.04/9.1/devel/cudnn7/Dockerfile
+ENV CUDNN_VERSION 7.0.5.15
+LABEL com.nvidia.cudnn.version="${CUDNN_VERSION}"
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+            libcudnn7=$CUDNN_VERSION-1+cuda9.1 \
+            libcudnn7-dev=$CUDNN_VERSION-1+cuda9.1 && \
+    rm -rf /var/lib/apt/lists/*
 
 #--------------------------------------
 # Setup for notebook use
