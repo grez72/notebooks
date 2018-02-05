@@ -1,15 +1,15 @@
-# grez72/deep-notebooks:ubuntu16.04-gpu-cuda8-cudnn5-minimal-notebook
+# grez72/deep-notebooks:ubuntu16.04-gpu-cuda8-cudnn7-minimal-notebook
 #
-# Dervided from scipy notebook, with cuda8/cudnn5 support, and python2
+# Dervided from scipy notebook, with cuda8/cudnn7 support, and python2
 # resinstated.
 #
 # build it:
-# nvidia-docker build -t grez72/deep-notebooks:ubuntu16.04-gpu-cuda8-cudnn5-minimal-notebook https://github.com/grez72/notebooks.git#master:ubuntu16.04/gpu/cuda8-cudnn5/minimal-notebook
+# nvidia-docker build -t grez72/deep-notebooks:ubuntu16.04-gpu-cuda8-cudnn7-minimal-notebook https://github.com/grez72/notebooks.git#master:ubuntu16.04/gpu/cuda8-cudnn7/minimal-notebook
 #
 # run it:
-# nvidia-docker run -it --rm -p 8888:8888 grez72/deep-notebooks:ubuntu16.04-gpu-cuda8-cudnn5-minimal-notebook
+# nvidia-docker run -it --rm -p 8888:8888 grez72/deep-notebooks:ubuntu16.04-gpu-cuda8-cudnn7-minimal-notebook
 
-FROM grez72/deep-notebooks:ubuntu16.04-gpu-cuda8-cudnn5-base-notebook
+FROM grez72/deep-notebooks:ubuntu16.04-gpu-cuda8-cudnn7-base-notebook
 MAINTAINER George Alvarez <grez72@gmail.com, alvarez.wjh.harvard.edu>
 
 #--------------------------------------
