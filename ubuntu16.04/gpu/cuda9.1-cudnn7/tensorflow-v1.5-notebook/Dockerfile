@@ -17,8 +17,27 @@ ARG BAZEL_VERSION=0.5.4
 ARG CUDA_VERSION=9.1
 
 USER root
+WORKDIR $HOME
 
-WORKDIR /home/$NB_USER/work
+# ==============================================================
+#  INSTALL TENSORFLOW DEPENDENCIES
+# ==============================================================
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        build-essential \
+        curl \
+        libfreetype6-dev \
+        libpng12-dev \
+        libzmq3-dev \
+        pkg-config \
+        python \
+        python-dev \
+        rsync \
+        software-properties-common \
+        unzip \
+        && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
 # ==============================================================
 #  INSTALL TENSORFLOW FROM SOURCE (python3)
@@ -42,13 +61,6 @@ RUN wget https://github.com/bazelbuild/bazel/releases/download/${BAZEL_VERSION}/
     && chmod +x bazel-${BAZEL_VERSION}-installer-linux-x86_64.sh \
     && ./bazel-${BAZEL_VERSION}-installer-linux-x86_64.sh \
     && bazel
-
-# RUN echo "deb [arch=amd64] http://storage.googleapis.com/bazel-apt stable jdk1.8" | sudo tee /etc/apt/sources.list.d/bazel.list
-# RUN curl https://storage.googleapis.com/bazel-apt/doc/apt-key.pub.gpg | sudo apt-key add -
-# RUN apt-get update
-# RUN apt-get install -y bazel
-# RUN apt-get upgrade -y bazel
-# RUN bazel
 
 # install tensorflow
 WORKDIR $HOME
@@ -178,6 +190,13 @@ ENV TF_NEED_GDR=0
 # # conda install -c anaconda hdf5=1.8.17
 # RUN conda remove hdf5 -y && conda install hdf5=1.8.17 -y
 # RUN /bin/bash -c "source activate python2 && conda remove hdf5 -y && conda install hdf5=1.8.17 -y"
+
+# TensorBoard
+EXPOSE 6006
+
+# ==============================================================
+#  set workdir and user for jupyter notebook use
+# ==============================================================
 
 # cleanup
 WORKDIR /home/$NB_USER/work/
