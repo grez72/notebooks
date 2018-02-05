@@ -1,9 +1,9 @@
-# grez72/deep-notebooks:ubuntu16.04-gpu-cuda9.1-cudnn7-chainer-v0.3-notebook
+# grez72/deep-notebooks:ubuntu16.04-gpu-cuda9.1-cudnn7-chainer-v3.3-notebook
 #
 # chainer jupyter notebook with gpu suppport (nvidia CUDA cuDNN).
 #
-# sudo nvidia-docker build -t grez72/deep-notebooks:ubuntu16.04-gpu-cuda9.1-cudnn7-chainer-v0.3-notebook https://github.com/grez72/notebooks.git#master:ubuntu16.04/gpu/cuda9.1-cudnn7/chainer-v0.3-notebook
-# nvidia-docker run -it --rm --shm-size=2G -p 8888:8888 grez72/deep-notebooks:ubuntu16.04-gpu-cuda9.1-cudnn7-chainer-v0.3-notebook
+# sudo nvidia-docker build -t grez72/deep-notebooks:ubuntu16.04-gpu-cuda9.1-cudnn7-chainer-v3.3-notebook https://github.com/grez72/notebooks.git#master:ubuntu16.04/gpu/cuda9.1-cudnn7/chainer-v3.3-notebook
+# nvidia-docker run -it --rm --shm-size=2G -p 8888:8888 grez72/deep-notebooks:ubuntu16.04-gpu-cuda9.1-cudnn7-chainer-v3.3-notebook
 
 FROM grez72/deep-notebooks:ubuntu16.04-gpu-cuda9.1-cudnn7-minimal-notebook
 
