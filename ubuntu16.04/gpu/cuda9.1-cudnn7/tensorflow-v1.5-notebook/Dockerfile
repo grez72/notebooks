@@ -142,7 +142,7 @@ ENV TF_NEED_KAFKA=0
 ENV TF_NEED_OPENCL_SYCL=0
 
 # Do you wish to build TensorFlow with TensorRT support?
-ENV TF_NEED_TENSORRT=1
+ENV TF_NEED_TENSORRT=0
 
 # Would you like to interactively configure ./WORKSPACE for Android builds?
 ENV TF_SET_ANDROID_WORKSPACE=0

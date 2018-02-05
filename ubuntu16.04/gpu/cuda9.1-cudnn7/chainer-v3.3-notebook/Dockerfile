@@ -1,0 +1,37 @@
+# grez72/deep-notebooks:ubuntu16.04-gpu-cuda9.1-cudnn7-chainer-v0.3-notebook
+#
+# chainer jupyter notebook with gpu suppport (nvidia CUDA cuDNN).
+#
+# sudo nvidia-docker build -t grez72/deep-notebooks:ubuntu16.04-gpu-cuda9.1-cudnn7-chainer-v0.3-notebook https://github.com/grez72/notebooks.git#master:ubuntu16.04/gpu/cuda9.1-cudnn7/chainer-v0.3-notebook
+# nvidia-docker run -it --rm --shm-size=2G -p 8888:8888 grez72/deep-notebooks:ubuntu16.04-gpu-cuda9.1-cudnn7-chainer-v0.3-notebook
+
+FROM grez72/deep-notebooks:ubuntu16.04-gpu-cuda9.1-cudnn7-minimal-notebook
+
+MAINTAINER George Alvarez <gre72@gmail.com, alvarez@wjh.harvard.edu>
+
+ARG CHAINER_VERSION=4.0.0b3
+ARG CUDA_VERSION=cuda90
+
+USER root
+WORKDIR $HOME
+
+# ==============================================================
+#  INSTALL CHAINER
+# ==============================================================
+
+RUN apt-get update -y && \
+    apt-get install -y --no-install-recommends \
+    python3-dev \
+    python3-pip \
+    python3-setuptools \
+    python3-wheel && \
+    rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/*
+
+RUN pip install cupy==4.0.0b3 chainer==${CHAINER_VERSION}
+
+# ==============================================================
+#  set workdir and user for jupyter notebook use
+# ==============================================================
+
+WORKDIR /home/$NB_USER/work/
+USER $NB_USER
