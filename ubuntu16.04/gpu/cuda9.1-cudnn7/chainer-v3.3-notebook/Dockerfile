@@ -18,8 +18,10 @@ WORKDIR $HOME
 #  INSTALL CHAINER
 # ==============================================================
 
-RUN pip install cupy==4.0.0b3 chainer==${CHAINER_VERSION} \
+RUN pip install --upgrade pip \
+  && pip install cupy==4.0.0b3 chainer==${CHAINER_VERSION} \
   && /bin/bash -c "source activate python2 \
+  && pip install --upgrade pip \
   && pip install cupy==4.0.0b3 chainer==${CHAINER_VERSION}"
 
 # ==============================================================
