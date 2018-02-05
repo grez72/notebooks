@@ -10,7 +10,7 @@ FROM grez72/deep-notebooks:ubuntu16.04-gpu-cuda9.1-cudnn7-minimal-notebook
 MAINTAINER George Alvarez <gre72@gmail.com, alvarez@wjh.harvard.edu>
 
 ARG PYTORCH_VERSION=0.3.0
-ARG e
+ARG CUDA_VERSION=cuda90
 
 USER root
 WORKDIR $HOME
@@ -23,14 +23,14 @@ RUN pip install --upgrade pip \
   && pip install numpy --upgrade \
   && conda update conda \
   && conda install -y mkl -c intel
-#   && conda install -y pytorch=${PYTORCH_VERSION} torchvision ${CUDA_VERSION} -c pytorch
-#
-# # RUN conda update -y conda pytorch torchvision
-# RUN /bin/bash -c "source activate python2 \
-#   && pip install --upgrade pip \
-#   && pip install numpy --upgrade \
-#   && conda install -y mkl -c intel \
-#   && conda install -y pytorch=${PYTORCH_VERSION} torchvision ${CUDA_VERSION} -c pytorch"
+  && conda install -y pytorch=${PYTORCH_VERSION} torchvision ${CUDA_VERSION} -c pytorch
+
+# RUN conda update -y conda pytorch torchvision
+RUN /bin/bash -c "source activate python2 \
+  && pip install --upgrade pip \
+  && pip install numpy --upgrade \
+  && conda install -y mkl -c intel \
+  && conda install -y pytorch=${PYTORCH_VERSION} torchvision ${CUDA_VERSION} -c pytorch"
 
 # ==============================================================
 #  set workdir and user for jupyter notebook use
