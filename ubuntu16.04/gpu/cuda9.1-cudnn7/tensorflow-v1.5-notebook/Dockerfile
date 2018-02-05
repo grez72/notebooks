@@ -15,6 +15,7 @@ ARG TFLEARN_VERSION=0.3.2
 ARG DEFAULT_PYTHON_VERSION=3.5
 ARG BAZEL_VERSION=0.5.4
 ARG CUDA_VERSION=9.1
+ARG CUDNN_VERSION=7
 
 USER root
 WORKDIR $HOME
@@ -89,7 +90,7 @@ ENV TF_CUDA_COMPUTE_CAPABILITIES=3.5,5.2,6.1
 ENV GCC_HOST_COMPILER_PATH=/usr/bin/gcc
 ENV CC=/usr/bin/gcc
 ENV CXX=/usr/bin/g++
-ENV TF_CUDNN_VERSION=5
+ENV TF_CUDNN_VERSION=${CUDNN_VERSION}
 ENV CUDA_TOOLKIT_PATH=/usr/local/cuda
 ENV CUDNN_INSTALL_PATH=$CUDA_TOOLKIT_PATH
 ENV CC_OPT_FLAGS=-march=native
@@ -118,6 +119,13 @@ ENV TF_NEED_S3=0
 # Do you wish to build TensorFlow with GDR support?
 ENV TF_NEED_GDR=0
 
+# Do you wish to build TensorFlow with Apache Kafka Platform support?
+ENV TF_NEED_KAFKA=0
+
+# Do you wish to build TensorFlow with OpenCL SYCL support?
+ENV TF_NEED_OPENCL_SYCL=0
+
+# https://github.com/tensorflow/tensorflow/blob/8c1f3b3fcdc5f897dbce3b7315c1b7000069f9c4/configure.py
 # Now when we run ./configure, there should be no unset variables, and so it should just proceed.
 # However, tensorflow is continuously adding new options, and so if RUN ./configure errors,
 # you might comment out everthing from here down, then build and run the image. Then use $docker ps
@@ -126,68 +134,68 @@ ENV TF_NEED_GDR=0
 # You can reference https://github.com/tensorflow/tensorflow/blob/master/configure to determine
 # what the actual variable names should be, which you can then set in this file, and re-build the image,
 # uncommenting everything from here down so tensorflow will be built.
-# RUN ./configure
-#
-# RUN bazel build -c opt --config=opt --config=cuda //tensorflow/tools/pip_package:build_pip_package
-# RUN bazel-bin/tensorflow/tools/pip_package/build_pip_package /tmp/tensorflow_pkg
-# RUN pip3 install /tmp/tensorflow_pkg/*
-#
-# # ==============================================================
-# #  build tensorflow for python2
-# # ==============================================================
-#
-# # python2 dependencies
-# RUN apt-get update && sudo apt-get install -y \
-#         build-essential \
-#         curl \
-#         libcurl3-dev \
-#         git \
-#         libfreetype6-dev \
-#         libpng12-dev \
-#         libzmq3-dev \
-#         pkg-config \
-#         python-dev \
-#         python-numpy \
-#         python-pip \
-#         software-properties-common \
-#         swig \
-#         zip \
-#         zlib1g-dev
-#
-# # update config
-# # /usr/bin/python2
-# # /usr/local/lib/python2.7/dist-packages
-# ENV PYTHON_BIN_PATH=/usr/bin/python2
-# ENV PYTHON_LIB_PATH=/usr/local/lib/python2.7/dist-packages
-# RUN ./configure
-#
-# RUN bazel build --verbose_failures -c opt --config=opt --config=cuda //tensorflow/tools/pip_package:build_pip_package
-# RUN bazel-bin/tensorflow/tools/pip_package/build_pip_package /tmp/tensorflow_pkg
-# RUN pip2 install /tmp/tensorflow_pkg/*27*
-# RUN rm -R tensorflow
-#
-# # ==============================================================
-# #  install tflearn
-# # ==============================================================
-#
-# # Kearas is now build into tensorflow
-# # install keras
-# # RUN pip install keras==${KERAS_VERSION}
-# # RUN pip install keras==${KERAS_VERSION}
-# # RUN pip2 install keras==${KERAS_VERSION}
-# # COPY keras.json $HOME/.keras/keras.json
-#
-# # install tflearn
-# # RUN pip install git+https://github.com/tflearn/tflearn.git
-# # RUN pip2 install git+https://github.com/tflearn/tflearn.git
-# RUN pip install tflearn==${TFLEARN_VERSION}
-# RUN pip2 install tflearn==${TFLEARN_VERSION}
-#
-# # ==============================================================
-# #  downgrade anaconda's hdf5 to resolve error
-# # ==============================================================
-#
-# # conda install -c anaconda hdf5=1.8.17
+RUN ./configure
+
+RUN bazel build -c opt --config=opt --config=cuda //tensorflow/tools/pip_package:build_pip_package
+RUN bazel-bin/tensorflow/tools/pip_package/build_pip_package /tmp/tensorflow_pkg
+RUN pip3 install /tmp/tensorflow_pkg/*
+
+# ==============================================================
+#  build tensorflow for python2
+# ==============================================================
+
+# python2 dependencies
+RUN apt-get update && sudo apt-get install -y \
+        build-essential \
+        curl \
+        libcurl3-dev \
+        git \
+        libfreetype6-dev \
+        libpng12-dev \
+        libzmq3-dev \
+        pkg-config \
+        python-dev \
+        python-numpy \
+        python-pip \
+        software-properties-common \
+        swig \
+        zip \
+        zlib1g-dev
+
+# update config
+# /usr/bin/python2
+# /usr/local/lib/python2.7/dist-packages
+ENV PYTHON_BIN_PATH=/usr/bin/python2
+ENV PYTHON_LIB_PATH=/usr/local/lib/python2.7/dist-packages
+RUN ./configure
+
+RUN bazel build --verbose_failures -c opt --config=opt --config=cuda //tensorflow/tools/pip_package:build_pip_package
+RUN bazel-bin/tensorflow/tools/pip_package/build_pip_package /tmp/tensorflow_pkg
+RUN pip2 install /tmp/tensorflow_pkg/*27*
+RUN rm -R tensorflow
+
+# ==============================================================
+#  install tflearn
+# ==============================================================
+
+# Kearas is now build into tensorflow
+# install keras
+# RUN pip install keras==${KERAS_VERSION}
+# RUN pip install keras==${KERAS_VERSION}
+# RUN pip2 install keras==${KERAS_VERSION}
+# COPY keras.json $HOME/.keras/keras.json
+
+# install tflearn
+# RUN pip install git+https://github.com/tflearn/tflearn.git
+# RUN pip2 install git+https://github.com/tflearn/tflearn.git
+RUN pip install tflearn==${TFLEARN_VERSION}
+RUN pip2 install tflearn==${TFLEARN_VERSION}
+
+# ==============================================================
+#  downgrade anaconda's hdf5 to resolve error
+# ==============================================================
+
+# conda install -c anaconda hdf5=1.8.17
 # RUN conda remove hdf5 -y && conda install hdf5=1.8.17 -y
 # RUN /bin/bash -c "source activate python2 && conda remove hdf5 -y && conda install hdf5=1.8.17 -y"
 
