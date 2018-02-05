@@ -80,6 +80,7 @@ RUN git clone --recursive https://github.com/caffe2/caffe2.git \
   && cd caffe2 \
   && git checkout $CAFFE2_VERSION
 RUN /bin/bash -c "source activate python2 \
+  && cd $HOME/caffe2 \
   && make -j$(nproc) \
   && cd build \
   && make -j$(nproc) install \
