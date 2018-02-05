@@ -107,7 +107,7 @@ RUN conda install -y -c lukepfister pycuda \
   && conda install -y -c lukepfister pycuda" \
   && pip install cupy \
   && /bin/bash -c "source activate python2 \
-  && pip install cupy"
+  && pip install cupy" \
   && conda install -y numba \
   && /bin/bash -c "source activate python2 \
   && conda install -y numba"
