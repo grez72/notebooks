@@ -76,7 +76,7 @@ RUN /bin/bash -c "source activate python2 && pip install --upgrade pip && pip in
 # ==============================================================
 
 WORKDIR $HOME
-RUN git clone --branch v${CAFFE2_VERSION} --recursive https://github.com/caffe2/caffe2.git \
+RUN git clone --branch v$CAFFE2_VERSION --recursive https://github.com/caffe2/caffe2.git \
 RUN /bin/bash -c "source activate python2 && cd caffe2 && make -j'$(nproc)' && cd build && make -j'$(nproc)' install"
 RUN /bin/bash -c "source activate python2 && pip install future"
 
