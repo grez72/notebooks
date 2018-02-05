@@ -26,12 +26,12 @@ RUN pip install --upgrade pip \
   && conda install -y pytorch=${PYTORCH_VERSION} torchvision ${CUDA_VERSION} -c pytorch
 
 # RUN conda update -y conda pytorch torchvision
-RUN /bin/bash -c "source activate python2 \
-  && pip install --upgrade pip \
-  && pip install numpy --upgrade \
-  && conda update conda \
-  && conda install -y mkl -c intel \
-  && conda install -y pytorch=${PYTORCH_VERSION} torchvision ${CUDA_VERSION} -c pytorch"
+# RUN /bin/bash -c "source activate python2 \
+#   && pip install --upgrade pip \
+#   && pip install numpy --upgrade \
+#   && conda update conda \
+#   && conda install -y mkl -c intel \
+#   && conda install -y pytorch=${PYTORCH_VERSION} torchvision ${CUDA_VERSION} -c pytorch"
 
 # ==============================================================
 #  set workdir and user for jupyter notebook use
