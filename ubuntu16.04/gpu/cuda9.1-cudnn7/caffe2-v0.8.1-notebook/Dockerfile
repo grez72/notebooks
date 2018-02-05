@@ -14,9 +14,10 @@ USER root
 ENV CAFFE2_VERSION=0.8.1
 
 # ==============================================================
-#  caffe2 install with gpu support
+#  caffe2 dependencies
 # ==============================================================
 
+# required
 RUN /bin/bash -c "source activate python2 && apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
     cmake \
@@ -33,8 +34,7 @@ RUN /bin/bash -c "source activate python2 && apt-get update && apt-get install -
     wget \
     && rm -rf /var/lib/apt/lists/*"
 
-########## OPTIONAL DEPENDENCIES ################
-
+# optional
 RUN /bin/bash -c "source activate python2 && apt-get update && apt-get install -y --no-install-recommends \
     libgflags-dev \
     libgoogle-glog-dev \
@@ -71,20 +71,23 @@ RUN /bin/bash -c "source activate python2 && pip install --upgrade pip && pip in
     setuptools \
     tornado"
 
-########## INSTALLATION STEPS ###################
+# ==============================================================
+#  INSTALL CAFFE2
+# ==============================================================
+
 WORKDIR $HOME
-# RUN git clone --branch v0.8.0 --recursive https://github.com/caffe2/caffe2.git
-# RUN /bin/bash -c "source activate python2 && cd caffe2 && make -j'$(nproc)' && cd build && make -j'$(nproc)' install"
-# RUN /bin/bash -c "source activate python2 && pip install future"
-#
-# ENV PYTHONPATH /usr/local
-# ENV LD_LIBRARY_PATH /usr/local/lib:$LD_LIBRARY_PATH
-# ENV LIBRARY_PATH /usr/local/lib:$LD_LIBRARY_PATH
-# # RUN python -c 'from caffe2.python import core' 2>/dev/null && echo "Success" || echo "Failure"
+RUN git clone --branch v${CAFFE2_VERSION} --recursive https://github.com/caffe2/caffe2.git \
+RUN /bin/bash -c "source activate python2 && cd caffe2 && make -j'$(nproc)' && cd build && make -j'$(nproc)' install"
+RUN /bin/bash -c "source activate python2 && pip install future"
+
+ENV PYTHONPATH /usr/local:$PYTHONPATH
+ENV LD_LIBRARY_PATH /usr/local/lib:$LD_LIBRARY_PATH
+ENV LIBRARY_PATH /usr/local/lib:$LD_LIBRARY_PATH
+# RUN python -c 'from caffe2.python import core' 2>/dev/null && echo "Success" || echo "Failure"
 
 # ==============================================================
 #  set workdir and user for jupyter notebook
 # ==============================================================
 
-# WORKDIR /home/$NB_USER/work/
-# USER $NB_USER
+WORKDIR /home/$NB_USER/work/
+USER $NB_USER
