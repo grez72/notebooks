@@ -78,12 +78,12 @@ RUN /bin/bash -c "source activate python2 && pip install --upgrade pip && pip in
 WORKDIR $HOME
 RUN git clone --recursive https://github.com/caffe2/caffe2.git \
   && cd caffe2 \
-  && git checkout $CAFFE2_VERSION \
-  && /bin/bash -c "source activate python2 \
-  && make -j'$(nproc)' \
-  && cd build \
-  && make -j'$(nproc)' install \
-  && pip install future"
+  && git checkout $CAFFE2_VERSION
+  # && /bin/bash -c "source activate python2 \
+  # && make -j'$(nproc)' \
+  # && cd build \
+  # && make -j'$(nproc)' install \
+  # && pip install future"
 
 ENV PYTHONPATH /usr/local:$PYTHONPATH
 ENV LD_LIBRARY_PATH /usr/local/lib:$LD_LIBRARY_PATH
