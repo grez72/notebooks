@@ -19,6 +19,7 @@ WORKDIR $HOME
 #  INSTALL PYTORCH
 # ==============================================================
 
+USER $NB_USER
 RUN pip install --upgrade pip \
   && pip install numpy --upgrade \
   && conda update conda \
