@@ -34,7 +34,7 @@ RUN apt-get update && apt-get install -y \
 # Install OpenBLAS
 RUN git clone https://github.com/xianyi/OpenBLAS.git && \
     cd OpenBLAS && \
-    make NO_AFFINITY=1 USE_OPENMP=1 && \
+    make -j$(nproc) NO_AFFINITY=1 USE_OPENMP=1 && \
     make install
 
 # clone torch as $NB_USER
