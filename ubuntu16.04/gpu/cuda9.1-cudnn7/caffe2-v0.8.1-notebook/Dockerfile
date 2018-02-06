@@ -29,26 +29,11 @@ RUN /bin/bash -c "source activate python2 && apt-get update && apt-get install -
     python-pydot \
     python-setuptools \
     python-scipy \
+    libprotobuf-dev \
     protobuf-compiler \
     libgoogle-glog-dev \
     wget \
     && rm -rf /var/lib/apt/lists/*"
-
-# RUN /bin/bash -c "source activate python2 && apt-get update && apt-get install -y --no-install-recommends \
-#     build-essential \
-#     cmake \
-#     git \
-#     python-dev \
-#     python-numpy \
-#     python-pip \
-#     python-pydot \
-#     python-setuptools \
-#     python-scipy \
-#     libprotobuf-dev \
-#     protobuf-compiler \
-#     libgoogle-glog-dev \
-#     wget \
-#     && rm -rf /var/lib/apt/lists/*"
 
 # optional
 RUN /bin/bash -c "source activate python2 && apt-get update && apt-get install -y --no-install-recommends \
@@ -87,6 +72,25 @@ RUN /bin/bash -c "source activate python2 && pip install --upgrade pip && pip in
     setuptools \
     tornado"
 
+# Caffe2 requires zeromq 4.0 or above, manually install.
+# If you do not need zeromq, skip this step.
+RUN apt-get install -q -y autoconf libtool
+RUN mkdir /tmp/zeromq-build && \
+  cd /tmp/zeromq-build && \
+  wget https://github.com/zeromq/zeromq4-1/archive/v4.1.3.tar.gz && \
+  tar xzvf v4.1.3.tar.gz --strip 1 && \
+  ./autogen.sh && \
+  ./configure --without-libsodium && \
+  make && make install && \
+  cd / && \
+  rm -rf /tmp/zeromq-build
+
+# update pip, numpy, and install mkl
+RUN /bin/bash -c "source activate python2 \
+  && pip install --upgrade pip \
+  && pip install numpy --upgrade \
+  && conda install -y mkl -c intel"
+
 # ==============================================================
 #  INSTALL CAFFE2
 # ==============================================================
@@ -103,6 +107,9 @@ RUN git clone --recursive https://github.com/caffe2/caffe2.git \
   && cd caffe2 \
   && /bin/bash -c "source activate python2 \
   && cd $HOME/caffe2 \
+  && cmake \
+    -D USE_NATIVE_ARCH=1 \
+    .. \
   && make -j$(nproc) \
   && cd build \
   && make -j$(nproc) install \
