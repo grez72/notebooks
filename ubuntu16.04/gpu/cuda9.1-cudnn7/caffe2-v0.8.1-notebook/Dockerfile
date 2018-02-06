@@ -104,26 +104,28 @@ RUN /bin/bash -c "source activate python2 \
 
 WORKDIR $HOME
 
+RUN git clone --recursive https://github.com/caffe2/caffe2.git
+
 # currently, going to branch v0.8.1 leads to compilation error
 # so we'll just stay with the master branch:
-RUN git clone --recursive https://github.com/caffe2/caffe2.git \
-  && cd caffe2 \
-  # && git checkout $CAFFE2_VERSION
-  && /bin/bash -c "source activate python2 \
-  && cd $HOME/caffe2 \
-  && make -j$(nproc) USE_NATIVE_ARCH=1 \
-  && cd build \
-  && make -j$(nproc) install \
-  && pip install future"
-
-ENV PYTHONPATH /usr/local:$PYTHONPATH
-ENV LD_LIBRARY_PATH /usr/local/lib:$LD_LIBRARY_PATH
-ENV LIBRARY_PATH /usr/local/lib:$LD_LIBRARY_PATH
-# RUN python -c 'from caffe2.python import core' 2>/dev/null && echo "Success" || echo "Failure"
-
-# ==============================================================
-#  set workdir and user for jupyter notebook
-# ==============================================================
-
-WORKDIR /home/$NB_USER/work/
-USER $NB_USER
+# RUN git clone --recursive https://github.com/caffe2/caffe2.git \
+#   && cd caffe2 \
+#   # && git checkout $CAFFE2_VERSION
+#   && /bin/bash -c "source activate python2 \
+#   && cd $HOME/caffe2 \
+#   && make -j$(nproc) USE_NATIVE_ARCH=1 \
+#   && cd build \
+#   && make -j$(nproc) install \
+#   && pip install future"
+#
+# ENV PYTHONPATH /usr/local:$PYTHONPATH
+# ENV LD_LIBRARY_PATH /usr/local/lib:$LD_LIBRARY_PATH
+# ENV LIBRARY_PATH /usr/local/lib:$LD_LIBRARY_PATH
+# # RUN python -c 'from caffe2.python import core' 2>/dev/null && echo "Success" || echo "Failure"
+#
+# # ==============================================================
+# #  set workdir and user for jupyter notebook
+# # ==============================================================
+#
+# WORKDIR /home/$NB_USER/work/
+# USER $NB_USER
