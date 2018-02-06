@@ -5,7 +5,7 @@
 # sudo nvidia-docker build -t grez72/deep-notebooks:ubuntu16.04-gpu-cuda9.1-cudnn7-torch-v7-notebook https://github.com/grez72/notebooks.git#master:ubuntu16.04/gpu/cuda9.1-cudnn7/torch-v7-notebook
 # nvidia-docker run -it --rm --shm-size=2G -p 8888:8888 grez72/deep-notebooks:ubuntu16.04-gpu-cuda9.1-cudnn7-torch-v7-notebook
 
-FROM grez72/deep-notebooks:ubuntu16.04-gpu-cuda9.1-cudnn7-base-notebook
+FROM grez72/deep-notebooks:ubuntu16.04-gpu-cuda9.1-cudnn7-minimal-notebook
 
 MAINTAINER George Alvarez <gre72@gmail.com, alvarez@wjh.harvard.edu>
 
@@ -14,39 +14,39 @@ MAINTAINER George Alvarez <gre72@gmail.com, alvarez@wjh.harvard.edu>
 USER root
 WORKDIR $HOME
 
-# ==============================================================
-#  INSTALL TORCH
-# ==============================================================
-
-# Install git, apt-add-repository and dependencies for iTorch
-RUN apt-get update && apt-get install -y \
-  git \
-  software-properties-common \
-  libssl-dev \
-  libzmq3-dev \
-  python-dev \
-  python-pip \
-  python-zmq \
-  libprotobuf-dev \
-  protobuf-compiler \
-  sudo
-
-# Install OpenBLAS
-RUN git clone https://github.com/xianyi/OpenBLAS.git && \
-    cd OpenBLAS && \
-    make -j$(nproc) NO_AFFINITY=1 USE_OPENMP=1 && \
-    make install
-
-# clone torch as $NB_USER
-USER $NB_USER
-RUN git clone --recursive https://github.com/torch/distro.git $HOME/torch
-
-# install torch
-USER root
-RUN cd $HOME/torch && bash install-deps
-
-USER $NB_USER
-
+# # ==============================================================
+# #  INSTALL TORCH
+# # ==============================================================
+#
+# # Install git, apt-add-repository and dependencies for iTorch
+# RUN apt-get update && apt-get install -y \
+#   git \
+#   software-properties-common \
+#   libssl-dev \
+#   libzmq3-dev \
+#   python-dev \
+#   python-pip \
+#   python-zmq \
+#   libprotobuf-dev \
+#   protobuf-compiler \
+#   sudo
+#
+# # Install OpenBLAS
+# RUN git clone https://github.com/xianyi/OpenBLAS.git && \
+#     cd OpenBLAS && \
+#     make -j$(nproc) NO_AFFINITY=1 USE_OPENMP=1 && \
+#     make install
+#
+# # clone torch as $NB_USER
+# USER $NB_USER
+# RUN git clone --recursive https://github.com/torch/distro.git $HOME/torch
+#
+# # install torch
+# USER root
+# RUN cd $HOME/torch && bash install-deps
+#
+# USER $NB_USER
+#
 # RUN cd $HOME/torch && bash install.sh -b && \
 #     install/bin/torch-activate && \
 #     install/bin/luarocks install itorch
