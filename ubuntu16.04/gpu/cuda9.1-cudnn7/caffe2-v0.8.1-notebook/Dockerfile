@@ -9,7 +9,7 @@ FROM grez72/deep-notebooks:ubuntu16.04-gpu-cuda9.1-cudnn7-minimal-notebook
 
 MAINTAINER George Alvarez <gre72@gmail.com, alvarez@wjh.harvard.edu>
 
-ARG CAFFE2_VERSION=v0.8.1
+ARG CAFFE2_VERSION=v0.8.0
 
 USER root
 WORKDIR $HOME
@@ -99,12 +99,9 @@ WORKDIR $HOME
 
 # currently, going to branch v0.8.1 leads to compilation error
 # so we'll just stay with the master branch:
-# RUN git clone --recursive https://github.com/caffe2/caffe2.git \
-#  && cd caffe2 \
-#  && git checkout $CAFFE2_VERSION
-
 RUN git clone --recursive https://github.com/caffe2/caffe2.git \
   && cd caffe2 \
+  && git checkout $CAFFE2_VERSION \
   && /bin/bash -c "source activate python2 \
   && cd $HOME/caffe2 \
   && cmake \
