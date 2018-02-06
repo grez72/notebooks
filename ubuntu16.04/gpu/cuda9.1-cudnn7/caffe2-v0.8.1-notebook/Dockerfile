@@ -19,7 +19,7 @@ WORKDIR $HOME
 # ==============================================================
 
 RUN echo 'export PATH="/opt/conda/envs/python2/bin:$PATH"' > ~/.bashrc \
-  && source ~/.bashrc
+  && /bin/bash -c "source ~/.bashrc"
 
 # ==============================================================
 #  caffe2 dependencies
