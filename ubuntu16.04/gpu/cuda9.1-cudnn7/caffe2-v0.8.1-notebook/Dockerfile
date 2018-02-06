@@ -18,8 +18,8 @@ WORKDIR $HOME
 #  make python2 the default
 # ==============================================================
 
-RUN echo 'export PATH="/opt/conda/envs/python2/bin:$PATH"' > ~/.bashrc \
-  && /bin/bash -c "source ~/.bashrc"
+# RUN echo 'export PATH="/opt/conda/envs/python2/bin:$PATH"' > ~/.bashrc \
+#   && /bin/bash -c "source ~/.bashrc"
 
 # ==============================================================
 #  caffe2 dependencies
