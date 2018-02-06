@@ -77,10 +77,16 @@ RUN /bin/bash -c "source activate python2 && pip install --upgrade pip && pip in
 # ==============================================================
 
 WORKDIR $HOME
+
+# currently, going to branch v0.8.1 leads to compilation error
+# so we'll just stay with the master branch:
+# RUN git clone --recursive https://github.com/caffe2/caffe2.git \
+#  && cd caffe2 \
+#  && git checkout $CAFFE2_VERSION
+
 RUN git clone --recursive https://github.com/caffe2/caffe2.git \
   && cd caffe2 \
-  && git checkout $CAFFE2_VERSION
-RUN /bin/bash -c "source activate python2 \
+  && /bin/bash -c "source activate python2 \
   && cd $HOME/caffe2 \
   && make -j$(nproc) \
   && cd build \
