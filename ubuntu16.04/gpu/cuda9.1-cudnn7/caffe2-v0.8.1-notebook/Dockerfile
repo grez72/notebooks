@@ -29,11 +29,26 @@ RUN /bin/bash -c "source activate python2 && apt-get update && apt-get install -
     python-pydot \
     python-setuptools \
     python-scipy \
-    libprotobuf-dev \
     protobuf-compiler \
     libgoogle-glog-dev \
     wget \
     && rm -rf /var/lib/apt/lists/*"
+
+# RUN /bin/bash -c "source activate python2 && apt-get update && apt-get install -y --no-install-recommends \
+#     build-essential \
+#     cmake \
+#     git \
+#     python-dev \
+#     python-numpy \
+#     python-pip \
+#     python-pydot \
+#     python-setuptools \
+#     python-scipy \
+#     libprotobuf-dev \
+#     protobuf-compiler \
+#     libgoogle-glog-dev \
+#     wget \
+#     && rm -rf /var/lib/apt/lists/*"
 
 # optional
 RUN /bin/bash -c "source activate python2 && apt-get update && apt-get install -y --no-install-recommends \
