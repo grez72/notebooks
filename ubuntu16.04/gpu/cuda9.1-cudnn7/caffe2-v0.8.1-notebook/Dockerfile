@@ -41,7 +41,6 @@ USER root
 RUN /bin/bash -c "source activate python2 && apt-get install -y --no-install-recommends \
     libgflags-dev \
     libgoogle-glog-dev \
-    libgflags2 \
     libgtest-dev \
     libiomp-dev \
     libleveldb-dev \
