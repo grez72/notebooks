@@ -4,11 +4,16 @@
 #
 # sudo nvidia-docker build -t grez72/deep-notebooks:ubuntu16.04-gpu-cuda9.1-cudnn7-caffe2-v0.8.1-notebook https://github.com/grez72/notebooks.git#master:ubuntu16.04/gpu/cuda9.1-cudnn7/caffe2-v0.8.1-notebook
 # nvidia-docker run -it --rm --shm-size=2G -p 8888:8888 grez72/deep-notebooks:ubuntu16.04-gpu-cuda9.1-cudnn7-caffe2-v0.8.1-notebook
+#
+# tests
 # nvidia-docker run -it --rm --shm-size=2G -p 8888:8888 grez72/deep-notebooks:ubuntu16.04-gpu-cuda9.1-cudnn7-caffe2-v0.8.1-notebook python -c 'from caffe2.python import core' 2>/dev/null && echo "Success" || echo "Failure"
+# nvidia-docker run -it --rm --shm-size=2G -p 8888:8888 grez72/deep-notebooks:ubuntu16.04-gpu-cuda9.1-cudnn7-caffe2-v0.8.1-notebook python -m caffe2.python.operator_test.relu_op_test
+# nvidia-docker run -it --rm --shm-size=2G -p 8888:8888 grez72/deep-notebooks:ubuntu16.04-gpu-cuda9.1-cudnn7-caffe2-v0.8.1-notebook python -c 'from caffe2.python import workspace; print(workspace.NumCudaDevices())'
 
 # FROM nvidia/cuda:9.1-cudnn7-devel-ubuntu16.04
 FROM grez72/deep-notebooks:ubuntu16.04-gpu-cuda9.1-cudnn7-base-notebook
-LABEL maintainer="aaronmarkham@fb.com"
+
+MAINTAINER George Alvarez <gre72@gmail.com, alvarez@wjh.harvard.edu>
 
 # caffe2 install with gpu support
 USER root
@@ -67,7 +72,7 @@ RUN cd caffe2 && mkdir build && cd build \
     -DCUDA_ARCH_PTX="61" \
     -DUSE_NNPACK=OFF \
     -DUSE_ROCKSDB=OFF \
-    # -DEPRIORITIZE_ANACONDA=ON \
+    -DDEPRIORITIZE_ANACONDA=ON \
     && make -j"$(nproc)" install \
     && ldconfig \
     && make clean \
