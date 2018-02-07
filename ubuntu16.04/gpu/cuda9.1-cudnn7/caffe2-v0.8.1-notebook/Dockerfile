@@ -116,15 +116,15 @@ ENV PYTHONPATH /usr/local
 
 # Make Caffe2 in a separate folder to avoid polluting the Caffe2 source tree.
 # This can be anywhere you want it
-RUN git clone --recursive https://github.com/caffe2/caffe2.git && cd caffe2
-RUN git checkout v0.8.0
-RUN mkdir build && cd build
-
-# Add flags to this command to control which packages you want to use. The
-# options to use are at the top of CMakeLists.txt in the topmost Caffe2
-# directory
-RUN cmake -DUSE_CUDA=ON -DUSE_MKL=ON ..
-RUN make -j$(nproc) install
+# RUN git clone --recursive https://github.com/caffe2/caffe2.git && cd caffe2
+# RUN git checkout v0.8.0
+# RUN mkdir build && cd build
+#
+# # Add flags to this command to control which packages you want to use. The
+# # options to use are at the top of CMakeLists.txt in the topmost Caffe2
+# # directory
+# RUN cmake -DUSE_CUDA=ON -DUSE_MKL=ON ..
+# RUN make -j$(nproc) install
 
 # RUN /bin/bash -c "source activate python2 && apt-get update && apt-get install -y --no-install-recommends \
 #     python-dev \
