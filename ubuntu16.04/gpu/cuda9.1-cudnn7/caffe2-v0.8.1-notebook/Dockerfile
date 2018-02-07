@@ -107,7 +107,7 @@ USER $NB_USER
 # Remove pyqt and qt pulled in for matplotlib since we're only ever going to
 # use notebook-friendly backends in these images
 RUN conda install --quiet --yes \
-    'nomkl' \
+    # 'nomkl' \
     'ipywidgets=7.1*' \
     'pandas=0.19*' \
     'numexpr=2.6*' \
@@ -129,7 +129,7 @@ RUN conda install --quiet --yes \
     'h5py=2.6*' \
     'vincent=0.4.*' \
     'beautifulsoup4=4.5.*' \
-    'protobuf=3.*' \
+    # 'protobuf=3.*' \
     'xlrd'  && \
     conda remove --quiet --yes --force qt pyqt && \
     conda clean -tipsy && \
@@ -269,7 +269,7 @@ RUN cd caffe2 && mkdir build && cd build \
     -DCUDA_ARCH_PTX="61" \
     -DUSE_NNPACK=OFF \
     -DUSE_ROCKSDB=OFF \
-    -DDEPRIORITIZE_ANACONDA=ON \
+    # -DDEPRIORITIZE_ANACONDA=ON \
     && make -j"$(nproc)" install \
     && ldconfig \
     && make clean
