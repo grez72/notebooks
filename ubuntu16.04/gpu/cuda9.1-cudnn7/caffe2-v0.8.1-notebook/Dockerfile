@@ -11,7 +11,7 @@ FROM grez72/deep-notebooks:ubuntu16.04-gpu-cuda9.1-cudnn7-base-notebook
 LABEL maintainer="aaronmarkham@fb.com"
 
 # caffe2 install with gpu support
-
+USER root
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
     cmake \
