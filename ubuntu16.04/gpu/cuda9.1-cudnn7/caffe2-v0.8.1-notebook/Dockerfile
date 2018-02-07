@@ -67,6 +67,7 @@ RUN cd caffe2 && mkdir build && cd build \
     -DCUDA_ARCH_PTX="61" \
     -DUSE_NNPACK=OFF \
     -DUSE_ROCKSDB=OFF \
+    -DEPRIORITIZE_ANACONDA=ON \
     && make -j"$(nproc)" install \
     && ldconfig \
     && make clean \
