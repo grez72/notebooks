@@ -20,11 +20,12 @@ FROM jupyter/base-notebook
 
 MAINTAINER George Alvarez <gre72@gmail.com, alvarez@wjh.harvard.edu>
 
+USER root
+WORKDIR $HOME
+
 # =======================================================
 #   INSTALL NVIDIA CUDA 9.1
 # =======================================================
-
-USER root
 
 RUN NVIDIA_GPGKEY_SUM=d1be581509378368edeec8c1eb2958702feedf3bc3d17011adbf24efacce4ab5 && \
     NVIDIA_GPGKEY_FPR=ae09fe4bbd223a84b2ccfce3f60f4b3d7fa2af80 && \
@@ -137,8 +138,10 @@ RUN conda install -y \
     six
 
 # Clone Caffe2
-RUN cd $HOME && git clone --recursive https://github.com/caffe2/caffe2.git \
-  && cd caffe2 \
+
+WORKDIR $HOME
+RUN git clone --recursive https://github.com/caffe2/caffe2.git
+RUN cd caffe2 \
   && mkdir build && cd build \
   # && cmake .. \
   && cmake -DCMAKE_PREFIX_PATH=/opt/conda/envs/python2 -DCMAKE_INSTALL_PREFIX=/opt/conda/envs/python2 .. \
