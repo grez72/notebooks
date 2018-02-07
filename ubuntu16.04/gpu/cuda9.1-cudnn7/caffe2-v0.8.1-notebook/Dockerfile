@@ -92,6 +92,16 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     rm -rf /var/lib/apt/lists/*
 
 # =======================================================
+#   scipy notebook
+# =======================================================
+
+# libav-tools for matplotlib anim
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends libav-tools && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
+# =======================================================
 #   INSTALL caffe2 install with gpu support
 # =======================================================
 
