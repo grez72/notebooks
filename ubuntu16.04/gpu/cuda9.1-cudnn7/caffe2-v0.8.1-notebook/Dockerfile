@@ -16,8 +16,8 @@
 
 # FROM ubuntu:16.04
 # FROM jupyter/base-notebook
-# FROM jupyter/minimal-notebook
-FROM jupyter/scipy-notebook
+FROM jupyter/minimal-notebook
+# FROM jupyter/scipy-notebook
 
 MAINTAINER George Alvarez <gre72@gmail.com, alvarez@wjh.harvard.edu>
 
