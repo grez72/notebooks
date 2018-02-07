@@ -4,8 +4,10 @@
 #
 # sudo nvidia-docker build -t grez72/deep-notebooks:ubuntu16.04-gpu-cuda9.1-cudnn7-caffe2-v0.8.1-notebook https://github.com/grez72/notebooks.git#master:ubuntu16.04/gpu/cuda9.1-cudnn7/caffe2-v0.8.1-notebook
 # nvidia-docker run -it --rm --shm-size=2G -p 8888:8888 grez72/deep-notebooks:ubuntu16.04-gpu-cuda9.1-cudnn7-caffe2-v0.8.1-notebook
+# nvidia-docker run -it --rm --shm-size=2G -p 8888:8888 grez72/deep-notebooks:ubuntu16.04-gpu-cuda9.1-cudnn7-caffe2-v0.8.1-notebook python -c 'from caffe2.python import core' 2>/dev/null && echo "Success" || echo "Failure"
 
-FROM nvidia/cuda:8.0-cudnn7-devel-ubuntu16.04
+
+FROM nvidia/cuda:9.1-cudnn7-devel-ubuntu16.04
 LABEL maintainer="aaronmarkham@fb.com"
 
 # caffe2 install with gpu support
