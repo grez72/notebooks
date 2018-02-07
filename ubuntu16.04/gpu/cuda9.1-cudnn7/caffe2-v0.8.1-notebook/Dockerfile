@@ -8,7 +8,7 @@
 # tests
 # nvidia-docker run -it --rm --shm-size=2G -p 8888:8888 grez72/deep-notebooks:ubuntu16.04-gpu-cuda9.1-cudnn7-caffe2-v0.8.1-notebook python -c 'from caffe2.python import core' 2>/dev/null && echo "Success" || echo "Failure"
 # nvidia-docker run -it --rm --shm-size=2G -p 8888:8888 grez72/deep-notebooks:ubuntu16.04-gpu-cuda9.1-cudnn7-caffe2-v0.8.1-notebook python -m caffe2.python.operator_test.relu_op_test
-# nvidia-docker run -it --rm --shm-size=2G -p 8888:8888 grez72/deep-notebooks:ubuntu16.04-gpu-cuda9.1-cudnn7-caffe2-v0.8.1-notebook python2 -c 'from caffe2.python import workspace; print(workspace.NumCudaDevices())'
+# nvidia-docker run -it --rm --shm-size=2G -p 8888:8888 grez72/deep-notebooks:ubuntu16.04-gpu-cuda9.1-cudnn7-caffe2-v0.8.1-notebook python -c 'from caffe2.python import workspace; print(workspace.NumCudaDevices())'
 # nvidia-docker run -it --rm --shm-size=2G -p 8888:8888 grez72/deep-notebooks:ubuntu16.04-gpu-cuda9.1-cudnn7-caffe2-v0.8.1-notebook bash
 
 # FROM nvidia/cuda:9.1-cudnn7-devel-ubuntu16.04
@@ -220,11 +220,12 @@ RUN cd caffe2 && mkdir build && cd build \
     # -DDEPRIORITIZE_ANACONDA=ON \
     && make -j"$(nproc)" install \
     && ldconfig \
-    && make clean
+    && make clean \
+    && python setup.py install
     # && cd .. \
     # && rm -rf build
 
-ENV PYTHONPATH /usr/local:/opt/conda/bin/python
+ENV PYTHONPATH /usr/local
 
 # FROM grez72/deep-notebooks:ubuntu16.04-gpu-cuda9.1-cudnn7-minimal-notebook
 # # FROM grez72/deep-notebooks:ubuntu14.04-gpu-cuda8-cudnn5-base-notebook
