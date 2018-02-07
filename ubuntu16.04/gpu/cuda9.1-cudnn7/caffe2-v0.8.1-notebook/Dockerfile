@@ -94,7 +94,73 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 #   INSTALL caffe2 install with gpu support
 # =======================================================
 
+# USER root
+#
+# RUN apt-get update && apt-get install -y --no-install-recommends \
+#     build-essential \
+#     cmake \
+#     git \
+#     libgflags-dev \
+#     libgoogle-glog-dev \
+#     libgtest-dev \
+#     libiomp-dev \
+#     libleveldb-dev \
+#     liblmdb-dev \
+#     libopencv-dev \
+#     libopenmpi-dev \
+#     libprotobuf-dev \
+#     libsnappy-dev \
+#     openmpi-bin \
+#     openmpi-doc \
+#     protobuf-compiler \
+#     python-dev \
+#     python-numpy \
+#     python-pip \
+#     python-pydot \
+#     python-setuptools \
+#     python-scipy \
+#     wget \
+#     && rm -rf /var/lib/apt/lists/*
+#
+# # Install required packages
+# # mkl isn't actually required, but is really recommended for Anaconda
+# RUN conda install -y \
+#     future \
+#     gflags \
+#     glog \
+#     lmdb \
+#     mkl \
+#     mkl-include \
+#     numpy \
+#     # opencv \
+#     protobuf \
+#     snappy \
+#     six
+#
+# # Clone Caffe2
+#
+# WORKDIR $HOME
+# RUN git clone --recursive https://github.com/caffe2/caffe2.git
+# RUN cd caffe2 \
+#   && mkdir build && cd build \
+#   # && cmake .. \
+#   && cmake -DCMAKE_PREFIX_PATH=/opt/conda/envs/python2 -DCMAKE_INSTALL_PREFIX=/opt/conda/envs/python2 .. \
+#   && make -j$(nproc) install
+
+
+# Make Caffe2 in a separate folder to avoid polluting the Caffe2 source tree.
+# This can be anywhere you want it
+# RUN mkdir build && cd build
+#
+# # Add flags to this command to control which packages you want to use. The
+# # options to use are at the top of CMakeLists.txt in the topmost Caffe2
+# # directory
+# RUN cmake ..
+# # cmake -DUSE_CUDA=OFF -DUSE_LEVELDB=OFF -DCMAKE_PREFIX_PATH=~/anaconda2/envs/my_caffe2_env -DCMAKE_INSTALL_PREFIX=~/anaconda2/envs/my_caffe2_env ..
+# RUN make -j$(nproc) install
+
 USER root
+WORKDIR $HOME
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
@@ -122,107 +188,43 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     wget \
     && rm -rf /var/lib/apt/lists/*
 
-# Install required packages
-# mkl isn't actually required, but is really recommended for Anaconda
-RUN conda install -y \
+RUN pip install --no-cache-dir --upgrade pip setuptools wheel && \
+    pip install --no-cache-dir \
+    flask \
     future \
-    gflags \
-    glog \
-    lmdb \
-    mkl \
-    mkl-include \
+    graphviz \
+    hypothesis \
+    jupyter \
+    matplotlib \
     numpy \
-    opencv \
     protobuf \
-    snappy \
-    six
+    pydot \
+    python-nvd3 \
+    pyyaml \
+    requests \
+    scikit-image \
+    scipy \
+    setuptools \
+    six \
+    tornado
 
-# Clone Caffe2
+########## INSTALLATION STEPS ###################
+RUN git clone --branch master --recursive https://github.com/caffe2/caffe2.git
+RUN cd caffe2 && mkdir build && cd build \
+    && cmake .. \
+    -DCUDA_ARCH_NAME=Manual \
+    -DCUDA_ARCH_BIN="35 52 60 61" \
+    -DCUDA_ARCH_PTX="61" \
+    -DUSE_NNPACK=OFF \
+    -DUSE_ROCKSDB=OFF \
+    # -DDEPRIORITIZE_ANACONDA=ON \
+    && make -j"$(nproc)" install \
+    && ldconfig \
+    && make clean \
+    && cd .. \
+    && rm -rf build
 
-WORKDIR $HOME
-RUN git clone --recursive https://github.com/caffe2/caffe2.git
-RUN cd caffe2 \
-  && mkdir build && cd build \
-  # && cmake .. \
-  && cmake -DCMAKE_PREFIX_PATH=/opt/conda/envs/python2 -DCMAKE_INSTALL_PREFIX=/opt/conda/envs/python2 .. \
-  && make -j$(nproc) install
-
-
-# Make Caffe2 in a separate folder to avoid polluting the Caffe2 source tree.
-# This can be anywhere you want it
-# RUN mkdir build && cd build
-#
-# # Add flags to this command to control which packages you want to use. The
-# # options to use are at the top of CMakeLists.txt in the topmost Caffe2
-# # directory
-# RUN cmake ..
-# # cmake -DUSE_CUDA=OFF -DUSE_LEVELDB=OFF -DCMAKE_PREFIX_PATH=~/anaconda2/envs/my_caffe2_env -DCMAKE_INSTALL_PREFIX=~/anaconda2/envs/my_caffe2_env ..
-# RUN make -j$(nproc) install
-
-# USER root
-# RUN apt-get update && apt-get install -y --no-install-recommends \
-#     build-essential \
-#     cmake \
-#     git \
-#     libgflags-dev \
-#     libgoogle-glog-dev \
-#     libgtest-dev \
-#     libiomp-dev \
-#     libleveldb-dev \
-#     liblmdb-dev \
-#     libopencv-dev \
-#     libopenmpi-dev \
-#     libprotobuf-dev \
-#     libsnappy-dev \
-#     openmpi-bin \
-#     openmpi-doc \
-#     protobuf-compiler \
-#     python-dev \
-#     python-numpy \
-#     python-pip \
-#     python-pydot \
-#     python-setuptools \
-#     python-scipy \
-#     wget \
-#     && rm -rf /var/lib/apt/lists/*
-#
-# RUN pip install --no-cache-dir --upgrade pip setuptools wheel && \
-#     pip install --no-cache-dir \
-#     flask \
-#     future \
-#     graphviz \
-#     hypothesis \
-#     jupyter \
-#     matplotlib \
-#     numpy \
-#     protobuf \
-#     pydot \
-#     python-nvd3 \
-#     pyyaml \
-#     requests \
-#     scikit-image \
-#     scipy \
-#     setuptools \
-#     six \
-#     tornado
-#
-# ########## INSTALLATION STEPS ###################
-# RUN git clone --branch master --recursive https://github.com/caffe2/caffe2.git
-# RUN cd caffe2 && mkdir build && cd build \
-#     && cmake .. \
-#     -DCUDA_ARCH_NAME=Manual \
-#     -DCUDA_ARCH_BIN="35 52 60 61" \
-#     -DCUDA_ARCH_PTX="61" \
-#     -DUSE_NNPACK=OFF \
-#     -DUSE_ROCKSDB=OFF \
-#     # -DDEPRIORITIZE_ANACONDA=ON \
-#     && make -j"$(nproc)" install \
-#     && ldconfig \
-#     && make clean \
-#     && cd .. \
-#     && rm -rf build
-#
-# ENV PYTHONPATH /usr/local
+ENV PYTHONPATH /usr/local
 
 # FROM grez72/deep-notebooks:ubuntu16.04-gpu-cuda9.1-cudnn7-minimal-notebook
 # # FROM grez72/deep-notebooks:ubuntu14.04-gpu-cuda8-cudnn5-base-notebook
