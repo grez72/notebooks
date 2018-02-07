@@ -15,6 +15,8 @@ FROM grez72/deep-notebooks:ubuntu16.04-gpu-cuda9.1-cudnn7-base-notebook
 
 MAINTAINER George Alvarez <gre72@gmail.com, alvarez@wjh.harvard.edu>
 
+RUN alias python=python2
+
 # caffe2 install with gpu support
 USER root
 RUN apt-get update && apt-get install -y --no-install-recommends \
@@ -72,7 +74,7 @@ RUN cd caffe2 && mkdir build && cd build \
     -DCUDA_ARCH_PTX="61" \
     -DUSE_NNPACK=OFF \
     -DUSE_ROCKSDB=OFF \
-    -DDEPRIORITIZE_ANACONDA=ON \
+    # -DDEPRIORITIZE_ANACONDA=ON \
     && make -j"$(nproc)" install \
     && ldconfig \
     && make clean \
