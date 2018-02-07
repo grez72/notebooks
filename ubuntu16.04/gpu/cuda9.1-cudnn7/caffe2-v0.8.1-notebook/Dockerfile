@@ -98,7 +98,28 @@ USER root
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
     cmake \
-    git
+    git \
+    libgflags-dev \
+    libgoogle-glog-dev \
+    libgtest-dev \
+    libiomp-dev \
+    libleveldb-dev \
+    liblmdb-dev \
+    libopencv-dev \
+    libopenmpi-dev \
+    libprotobuf-dev \
+    libsnappy-dev \
+    openmpi-bin \
+    openmpi-doc \
+    protobuf-compiler \
+    python-dev \
+    python-numpy \
+    python-pip \
+    python-pydot \
+    python-setuptools \
+    python-scipy \
+    wget \
+    && rm -rf /var/lib/apt/lists/*
 
 # Install required packages
 # mkl isn't actually required, but is really recommended for Anaconda
@@ -120,7 +141,9 @@ RUN cd $HOME && git clone --recursive https://github.com/caffe2/caffe2.git \
   && cd caffe2 \
   && mkdir build && cd build \
   && cmake .. \
+  # && cmake -DCMAKE_PREFIX_PATH=/opt/conda/envs/python2 -DCMAKE_INSTALL_PREFIX=/opt/conda/envs/python2 .. \
   && make -j$(nproc) install
+
 
 # Make Caffe2 in a separate folder to avoid polluting the Caffe2 source tree.
 # This can be anywhere you want it
