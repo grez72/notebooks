@@ -95,6 +95,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 USER root
 
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    cmake \
+    git
+
 # Install required packages
 # mkl isn't actually required, but is really recommended for Anaconda
 RUN conda install -y \
