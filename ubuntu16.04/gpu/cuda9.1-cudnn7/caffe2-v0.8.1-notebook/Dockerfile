@@ -116,18 +116,22 @@ RUN conda install -y \
     six
 
 # Clone Caffe2
-RUN cd $HOME && git clone --recursive https://github.com/caffe2/caffe2.git && cd caffe2
+RUN cd $HOME && git clone --recursive https://github.com/caffe2/caffe2.git \
+  && cd caffe2 \
+  && mkdir build && cd build \
+  && cmake .. \
+  && make -j$(nproc) install
 
 # Make Caffe2 in a separate folder to avoid polluting the Caffe2 source tree.
 # This can be anywhere you want it
-RUN mkdir build && cd build
-
-# Add flags to this command to control which packages you want to use. The
-# options to use are at the top of CMakeLists.txt in the topmost Caffe2
-# directory
-RUN cmake ..
-# cmake -DUSE_CUDA=OFF -DUSE_LEVELDB=OFF -DCMAKE_PREFIX_PATH=~/anaconda2/envs/my_caffe2_env -DCMAKE_INSTALL_PREFIX=~/anaconda2/envs/my_caffe2_env ..
-RUN make -j$(nproc) install
+# RUN mkdir build && cd build
+#
+# # Add flags to this command to control which packages you want to use. The
+# # options to use are at the top of CMakeLists.txt in the topmost Caffe2
+# # directory
+# RUN cmake ..
+# # cmake -DUSE_CUDA=OFF -DUSE_LEVELDB=OFF -DCMAKE_PREFIX_PATH=~/anaconda2/envs/my_caffe2_env -DCMAKE_INSTALL_PREFIX=~/anaconda2/envs/my_caffe2_env ..
+# RUN make -j$(nproc) install
 
 # USER root
 # RUN apt-get update && apt-get install -y --no-install-recommends \
