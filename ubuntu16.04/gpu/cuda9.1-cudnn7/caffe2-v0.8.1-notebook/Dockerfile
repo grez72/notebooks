@@ -278,7 +278,7 @@ RUN cd caffe2 && mkdir build && cd build \
 
 RUN cd $HOME/caffe2 \
     && python setup.py install \
-    && /bin/bash -c "source activate python2 && python setup.py install" \
+    # && /bin/bash -c "source activate python2 && python setup.py install" \
     && cd build \
     && rm -rf build
 
