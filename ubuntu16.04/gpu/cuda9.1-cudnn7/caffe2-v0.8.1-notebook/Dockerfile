@@ -140,8 +140,8 @@ RUN conda install -y \
 RUN cd $HOME && git clone --recursive https://github.com/caffe2/caffe2.git \
   && cd caffe2 \
   && mkdir build && cd build \
-  && cmake .. \
-  # && cmake -DCMAKE_PREFIX_PATH=/opt/conda/envs/python2 -DCMAKE_INSTALL_PREFIX=/opt/conda/envs/python2 .. \
+  # && cmake .. \
+  && cmake -DCMAKE_PREFIX_PATH=/opt/conda/envs/python2 -DCMAKE_INSTALL_PREFIX=/opt/conda/envs/python2 .. \
   && make -j$(nproc) install
 
 
