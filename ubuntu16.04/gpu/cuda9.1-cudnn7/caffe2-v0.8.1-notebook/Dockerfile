@@ -220,11 +220,11 @@ RUN cd caffe2 && mkdir build && cd build \
     # -DDEPRIORITIZE_ANACONDA=ON \
     && make -j"$(nproc)" install \
     && ldconfig \
-    && make clean \
-    && cd .. \
-    && rm -rf build
+    && make clean
+    # && cd .. \
+    # && rm -rf build
 
-ENV PYTHONPATH /usr/local
+ENV PYTHONPATH /usr/local:/opt/conda/bin/python
 
 # FROM grez72/deep-notebooks:ubuntu16.04-gpu-cuda9.1-cudnn7-minimal-notebook
 # # FROM grez72/deep-notebooks:ubuntu14.04-gpu-cuda8-cudnn5-base-notebook
