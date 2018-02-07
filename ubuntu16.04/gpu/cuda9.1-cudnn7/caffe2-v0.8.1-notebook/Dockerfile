@@ -221,6 +221,7 @@ RUN cd caffe2 && mkdir build && cd build \
     && make -j"$(nproc)" install \
     && ldconfig \
     && make clean \
+    && cd $HOME/caffe2 \
     && python setup.py install
     # && cd .. \
     # && rm -rf build
