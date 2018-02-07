@@ -11,7 +11,7 @@
 # nvidia-docker run -it --rm --shm-size=2G grez72/deep-notebooks:ubuntu16.04-gpu-cuda9.1-cudnn7-caffe2-v0.8.1-notebook python -c 'from caffe2.python import workspace; print(workspace.NumCudaDevices())'
 # nvidia-docker run -it --rm --shm-size=2G grez72/deep-notebooks:ubuntu16.04-gpu-cuda9.1-cudnn7-caffe2-v0.8.1-notebook bash
 
-FROM grez72/deep-notebooks:ubuntu16.04-gpu-cuda9.1-cudnn7-base-notebook
+FROM grez72/deep-notebooks:ubuntu16.04-gpu-cuda9.1-cudnn7-minimal-notebook
 
 # FROM ubuntu:16.04
 # FROM jupyter/base-notebook
@@ -268,16 +268,19 @@ RUN cd caffe2 && mkdir build && cd build \
     -DCUDA_ARCH_NAME=Manual \
     -DCUDA_ARCH_BIN="35 52 60 61" \
     -DCUDA_ARCH_PTX="61" \
+    -DUSE_OPENCV=ON \
     #-DUSE_NNPACK=OFF \
     #-DUSE_ROCKSDB=OFF \
     # -DDEPRIORITIZE_ANACONDA=ON \
     && make -j"$(nproc)" install \
     && ldconfig \
     && make clean
+
 RUN cd $HOME/caffe2 \
-    && python setup.py install
-    # && cd .. \
-    # && rm -rf build
+    && python setup.py install \
+    && /bin/bash -c "source activate python2 && python setup.py install" \
+    && cd build \
+    && rm -rf build
 
 ENV PYTHONPATH /usr/local
 
