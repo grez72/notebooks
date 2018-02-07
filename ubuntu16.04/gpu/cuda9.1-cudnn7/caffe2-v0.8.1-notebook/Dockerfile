@@ -12,11 +12,12 @@
 # nvidia-docker run -it --rm --shm-size=2G -p 8888:8888 grez72/deep-notebooks:ubuntu16.04-gpu-cuda9.1-cudnn7-caffe2-v0.8.1-notebook bash
 
 # FROM nvidia/cuda:9.1-cudnn7-devel-ubuntu16.04
-FROM grez72/deep-notebooks:ubuntu16.04-gpu-cuda9.1-cudnn7-base-notebook
+# FROM grez72/deep-notebooks:ubuntu16.04-gpu-cuda9.1-cudnn7-base-notebook
 
 # FROM ubuntu:16.04
 # FROM jupyter/base-notebook
 # FROM jupyter/minimal-notebook
+FROM jupyter/scipy-notebook
 
 MAINTAINER George Alvarez <gre72@gmail.com, alvarez@wjh.harvard.edu>
 
@@ -212,6 +213,7 @@ RUN pip install --no-cache-dir --upgrade pip setuptools wheel && \
 RUN git clone --branch master --recursive https://github.com/caffe2/caffe2.git
 RUN cd caffe2 && mkdir build && cd build \
     && cmake .. \
+    # -DUSE_NATIVE_ARCH=On \
     -DCUDA_ARCH_NAME=Manual \
     -DCUDA_ARCH_BIN="35 52 60 61" \
     -DCUDA_ARCH_PTX="61" \
