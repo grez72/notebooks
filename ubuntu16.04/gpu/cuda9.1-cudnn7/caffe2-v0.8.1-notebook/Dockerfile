@@ -11,7 +11,7 @@
 # nvidia-docker run -it --rm --shm-size=2G grez72/deep-notebooks:ubuntu16.04-gpu-cuda9.1-cudnn7-caffe2-v0.8.1-notebook python -c 'from caffe2.python import workspace; print(workspace.NumCudaDevices())'
 # nvidia-docker run -it --rm --shm-size=2G grez72/deep-notebooks:ubuntu16.04-gpu-cuda9.1-cudnn7-caffe2-v0.8.1-notebook bash
 
-FROM grez72/deep-notebooks:ubuntu16.04-gpu-cuda9.1-cudnn7-minimal-notebook
+FROM grez72/deep-notebooks:ubuntu16.04-gpu-cuda9.1-cudnn7-base-notebook
 
 # FROM ubuntu:16.04
 # FROM jupyter/base-notebook
