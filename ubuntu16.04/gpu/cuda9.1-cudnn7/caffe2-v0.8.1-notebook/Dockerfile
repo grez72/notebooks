@@ -12,11 +12,11 @@
 # nvidia-docker run -it --rm --shm-size=2G -p 8888:8888 grez72/deep-notebooks:ubuntu16.04-gpu-cuda9.1-cudnn7-caffe2-v0.8.1-notebook bash
 
 # FROM nvidia/cuda:9.1-cudnn7-devel-ubuntu16.04
-FROM grez72/deep-notebooks:ubuntu16.04-gpu-cuda9.1-cudnn7-base-notebook
+# FROM grez72/deep-notebooks:ubuntu16.04-gpu-cuda9.1-cudnn7-base-notebook
 
 # FROM ubuntu:16.04
 # FROM jupyter/base-notebook
-# FROM jupyter/minimal-notebook
+FROM jupyter/minimal-notebook
 
 MAINTAINER George Alvarez <gre72@gmail.com, alvarez@wjh.harvard.edu>
 
