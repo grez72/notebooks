@@ -59,14 +59,42 @@ RUN /bin/bash -c "source activate python2 && ipython kernel install"
 # Install OpenCV with CUDA Support
 #--------------------------------------
 
-RUN apt-get update
-RUN apt-get install -y cmake \
-  libjpeg8-dev libtiff5-dev libjasper-dev libpng12-dev \
-  libgtk2.0-dev \
-  libavcodec-dev libavformat-dev libswscale-dev libv4l-dev \
-  libatlas-base-dev gfortran \
-  libhdf5-serial-dev \
-  python3-dev python2.7-dev
+# RUN apt-get update
+# RUN apt-get install -y cmake \
+#   libjpeg8-dev libtiff5-dev libjasper-dev libpng12-dev \
+#   libgtk2.0-dev \
+#   libavcodec-dev libavformat-dev libswscale-dev libv4l-dev \
+#   libatlas-base-dev gfortran \
+#   libhdf5-serial-dev \
+#   python3-dev python2.7-dev
+#
+# WORKDIR ~/
+# RUN git clone https://github.com/Itseez/opencv.git \
+#   && cd opencv \
+#   && mkdir build \
+#   && cd build/ \
+#   && cmake -D CMAKE_BUILD_TYPE=RELEASE \
+#     -D PYTHON2_EXECUTABLE:FILEPATH=/opt/conda/envs/python2/bin/python2.7 \
+#     -D PYTHON2_INCLUDE_DIR:PATH=/opt/conda/envs/python2/include/python2.7 \
+#     -D PYTHON2_NUMPY_INCLUDE_DIRS:PATH=/opt/conda/envs/python2/lib/python2.7/site-packages/numpy/core/include \
+#     -D PYTHON2_PACKAGES_PATH:PATH=/opt/conda/envs/python2/lib/python2.7/site-packages \
+#     -D PYTHON3_EXECUTABLE:FILEPATH=/opt/conda/bin/python3.6 \
+#     -D PYTHON3_INCLUDE_DIR:PATH=/opt/conda/include/python3.6m \
+#     -D PYTHON3_NUMPY_INCLUDE_DIRS:PATH=/opt/conda/lib/python3.6/site-packages/numpy/core/include \
+#     -D PYTHON3_PACKAGES_PATH:PATH=/opt/conda/lib/python3.6/site-packages \
+#     -D CMAKE_INSTALL_PREFIX=/usr/local \
+#     -D WITH_CUDA=ON \
+#     -D FORCE_VTK=ON \
+#     -D WITH_TBB=ON \
+#     -D WITH_V4L=ON \
+#     -D WITH_OPENGL=ON \
+#     -D ENABLE_FAST_MATH=1 \
+#     -D CUDA_FAST_MATH=1 \
+#     -D WITH_CUBLAS=1 \
+#     -D INSTALL_PYTHON_EXAMPLES=ON \
+#     -D BUILD_EXAMPLES=OFF .. \
+#   && make -j$(nproc) && sudo make install \
+#   && ldconfig
 
 #--------------------------------------
 # Utilities for optimizing python code:
@@ -378,10 +406,13 @@ RUN cd caffe2 && mkdir build && cd build \
     -DCUDA_ARCH_NAME=Manual \
     -DCUDA_ARCH_BIN="35 52 60 61" \
     -DCUDA_ARCH_PTX="61" \
+    -DUSE_FFMPEG=ON \
     -DUSE_OPENCV=ON \
+    -DCMAKE_PREFIX_PATH=/opt/conda/envs/python2 \
+    -DCMAKE_INSTALL_PREFIX=/opt/conda/envs/python2 \
     #-DUSE_NNPACK=OFF \
     #-DUSE_ROCKSDB=OFF \
-    # -DDEPRIORITIZE_ANACONDA=ON \
+    #-DDEPRIORITIZE_ANACONDA=ON \
     && make -j"$(nproc)" install \
     && ldconfig \
     && make clean
