@@ -14,6 +14,9 @@ ARG CNTK_VERSION=v0.7.0
 ARG ENABLE_1BIT_SGD
 ARG OPENMPI_VERSION=1.10.3
 
+USER root
+WORKDIR $HOME
+
 # ==============================================================
 #  INSTALL CNTK
 # ==============================================================
