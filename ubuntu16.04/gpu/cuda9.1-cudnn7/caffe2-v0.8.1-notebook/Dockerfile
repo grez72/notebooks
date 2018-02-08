@@ -404,9 +404,11 @@ RUN git clone --branch master --recursive https://github.com/caffe2/caffe2.git
 RUN sed -i 's/find_package(OpenCV QUIET COMPONENTS core highgui imgproc imgcodecs)/find_package(OpenCV QUIET COMPONENTS core highgui imgproc imgcodecs superres)/g' caffe2/cmake/Dependencies.cmake
 RUN cd caffe2 \
     && mkdir build && cd build \
-    && cmake -DCUDA_ARCH_NAME=Manual \
+    && cmake -DUSE_CUDA=ON \
+    -DCUDA_ARCH_NAME=Manual \
     -DCUDA_ARCH_BIN="35 52 60 61" \
     -DCUDA_ARCH_PTX="61" \
+    -USE_NATIVE_ARCH=1 \
     -DUSE_FFMPEG=ON \
     -DUSE_OPENCV=ON \
     .. \
@@ -416,7 +418,7 @@ RUN cd caffe2 \
 
 RUN cd $HOME/caffe2 \
     && python setup.py install \
-    # && /bin/bash -c "source activate python2 && python setup.py install" \
+    && /bin/bash -c "source activate python2 && python setup.py install" \
     && cd build \
     && rm -rf build
 
