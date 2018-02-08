@@ -422,7 +422,7 @@ RUN cd $HOME/caffe2 \
     -DCUDA_ARCH_PTX="61" \
     -DUSE_FFMPEG=ON \
     -DUSE_OPENCV=ON' \
-    python setup.py install -j$(nproc) \
+    python setup.py -j$(nproc) install \
     # && /bin/bash -c "source activate python2 && python setup.py install" \
     && cd build \
     && rm -rf build
