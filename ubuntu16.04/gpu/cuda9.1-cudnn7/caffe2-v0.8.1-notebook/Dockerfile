@@ -11,7 +11,8 @@
 # nvidia-docker run -it --rm --shm-size=2G grez72/deep-notebooks:ubuntu16.04-gpu-cuda9.1-cudnn7-caffe2-v0.8.1-notebook python -c 'from caffe2.python import workspace; print(workspace.NumCudaDevices())'
 # nvidia-docker run -it --rm --shm-size=2G grez72/deep-notebooks:ubuntu16.04-gpu-cuda9.1-cudnn7-caffe2-v0.8.1-notebook bash
 
-FROM grez72/deep-notebooks:ubuntu16.04-gpu-cuda9.1-cudnn7-base-notebook
+# FROM grez72/deep-notebooks:ubuntu16.04-gpu-cuda9.1-cudnn7-base-notebook
+FROM grez72/deep-notebooks:ubuntu16.04-gpu-cuda9.1-cudnn7-minimal-notebook
 
 # FROM ubuntu:16.04
 # FROM jupyter/base-notebook
@@ -27,33 +28,33 @@ WORKDIR $HOME
 #   minimal notebook...arg
 # =======================================================
 
-USER $NB_USER
-
-# Install Python 2 packages
-RUN conda create -p $CONDA_DIR/envs/python2 python=2.7 \
-    'ipython=4.0*' \
-    'ipywidgets=4.0*' \
-    'pandas=0.16*' \
-    'matplotlib=1.4*' \
-    'scipy=0.15*' \
-    'seaborn=0.6*' \
-    'scikit-learn=0.16*' \
-    'scikit-image=0.11*' \
-    'sympy=0.7*' \
-    'cython=0.22*' \
-    'patsy=0.3*' \
-    'statsmodels=0.6*' \
-    'cloudpickle=0.1*' \
-    'dill=0.2*' \
-    'numba=0.20*' \
-    'bokeh=0.9*' \
-    'libgfortran=1.0.0' \
-    pyzmq \
-    && conda clean -yt
-
-USER root
-
-RUN /bin/bash -c "source activate python2 && ipython kernel install"
+# USER $NB_USER
+#
+# # Install Python 2 packages
+# RUN conda create -p $CONDA_DIR/envs/python2 python=2.7 \
+#     'ipython=4.0*' \
+#     'ipywidgets=4.0*' \
+#     'pandas=0.16*' \
+#     'matplotlib=1.4*' \
+#     'scipy=0.15*' \
+#     'seaborn=0.6*' \
+#     'scikit-learn=0.16*' \
+#     'scikit-image=0.11*' \
+#     'sympy=0.7*' \
+#     'cython=0.22*' \
+#     'patsy=0.3*' \
+#     'statsmodels=0.6*' \
+#     'cloudpickle=0.1*' \
+#     'dill=0.2*' \
+#     'numba=0.20*' \
+#     'bokeh=0.9*' \
+#     'libgfortran=1.0.0' \
+#     pyzmq \
+#     && conda clean -yt
+#
+# USER root
+#
+# RUN /bin/bash -c "source activate python2 && ipython kernel install"
 
 #--------------------------------------
 # Install OpenCV with CUDA Support
@@ -101,15 +102,15 @@ RUN /bin/bash -c "source activate python2 && ipython kernel install"
 #--------------------------------------
 
 # Cupy, PyCuda, Numba
-RUN conda install -y -c lukepfister pycuda \
-  && /bin/bash -c "source activate python2 \
-  && conda install -y -c lukepfister pycuda" \
-  && pip install cupy \
-  && /bin/bash -c "source activate python2 \
-  && pip install cupy" \
-  && conda install -y numba \
-  && /bin/bash -c "source activate python2 \
-  && conda install -y numba"
+# RUN conda install -y -c lukepfister pycuda \
+#   && /bin/bash -c "source activate python2 \
+#   && conda install -y -c lukepfister pycuda" \
+#   && pip install cupy \
+#   && /bin/bash -c "source activate python2 \
+#   && pip install cupy" \
+#   && conda install -y numba \
+#   && /bin/bash -c "source activate python2 \
+#   && conda install -y numba"
 
 #--------------------------------------
 # Install Video and Image Utilities
@@ -117,49 +118,49 @@ RUN conda install -y -c lukepfister pycuda \
 
 # Installing all of these dependencies together in one RUN command
 # to avoid limit on number of layers in docker image
-RUN conda install -y -c conda-forge av trackpy ipywidgets \
-  && conda install -y filterpy \
-  && /bin/bash -c "source activate python2 \
-  && conda install -y -c conda-forge av trackpy ipywidgets \
-  && conda install -y filterpy" \
-  && jupyter nbextension enable --py --sys-prefix widgetsnbextension \
-  && pip install --upgrade pip \
-  && pip install \
-    ffmpeg-python \
-    image-attendant \
-    imutils \
-    pims \
-    tqdm \
-  && cd $HOME \
-  && git clone https://github.com/DheerendraRathor/ffprobe3 \
-  && cd $HOME/ffprobe3 \
-  && python setup.py install \
-  && /bin/bash -c "source activate python2 \
-  && pip install --upgrade pip \
-  && pip install \
-    ffmpeg-python \
-    ffprobe \
-    image-attendant \
-    imutils \
-    pims \
-    simplejson \
-    tqdm" \
-  && cd $HOME \
-  && git clone https://github.com/jfrelinger/cython-munkres-wrapper \
-  && cd $HOME/cython-munkres-wrapper \
-  && python setup.py install \
-  && /bin/bash -c "source activate python2 && cd $HOME/cython-munkres-wrapper && python setup.py install"
+# RUN conda install -y -c conda-forge av trackpy ipywidgets \
+#   && conda install -y filterpy \
+#   && /bin/bash -c "source activate python2 \
+#   && conda install -y -c conda-forge av trackpy ipywidgets \
+#   && conda install -y filterpy" \
+#   && jupyter nbextension enable --py --sys-prefix widgetsnbextension \
+#   && pip install --upgrade pip \
+#   && pip install \
+#     ffmpeg-python \
+#     image-attendant \
+#     imutils \
+#     pims \
+#     tqdm \
+#   && cd $HOME \
+#   && git clone https://github.com/DheerendraRathor/ffprobe3 \
+#   && cd $HOME/ffprobe3 \
+#   && python setup.py install \
+#   && /bin/bash -c "source activate python2 \
+#   && pip install --upgrade pip \
+#   && pip install \
+#     ffmpeg-python \
+#     ffprobe \
+#     image-attendant \
+#     imutils \
+#     pims \
+#     simplejson \
+#     tqdm" \
+#   && cd $HOME \
+#   && git clone https://github.com/jfrelinger/cython-munkres-wrapper \
+#   && cd $HOME/cython-munkres-wrapper \
+#   && python setup.py install \
+#   && /bin/bash -c "source activate python2 && cd $HOME/cython-munkres-wrapper && python setup.py install"
 
 #--------------------------------------
 # Install Additional Packages
 #--------------------------------------
 
 # plotly + dependencies
-RUN pip install plotly \
-  && conda install -c bioconda cufflinks \
-  && /bin/bash -c "source activate python2 \
-  && pip install plotly \
-  && conda install -c bioconda cufflinks"
+# RUN pip install plotly \
+#   && conda install -c bioconda cufflinks \
+#   && /bin/bash -c "source activate python2 \
+#   && pip install plotly \
+#   && conda install -c bioconda cufflinks"
 
 # =======================================================
 #   INSTALL NVIDIA CUDA 9.1
