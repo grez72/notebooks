@@ -85,9 +85,9 @@ RUN pip install --no-cache-dir --upgrade pip setuptools wheel && \
 #  install Caffe2 with gpu support
 # ==============================================================
 
-RUN git clone --branch master --recursive https://github.com/caffe2/caffe2.git \
-  && cd caffe2 \
-  && git checkout $CAFFE2_VERSION
+RUN git clone --branch master --recursive https://github.com/caffe2/caffe2.git
+  # && cd caffe2 \
+  # && git checkout $CAFFE2_VERSION
 
 # make the following change to caffe2/cmake/Dependencies.cmake deal with an error when using opencv 3.4
 RUN sed -i 's/find_package(OpenCV QUIET COMPONENTS core highgui imgproc imgcodecs)/find_package(OpenCV QUIET COMPONENTS core highgui imgproc imgcodecs superres)/g' caffe2/cmake/Dependencies.cmake
