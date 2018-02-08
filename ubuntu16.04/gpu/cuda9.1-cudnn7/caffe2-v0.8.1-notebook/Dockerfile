@@ -415,11 +415,11 @@ RUN cd caffe2 \
     && ldconfig \
     && make clean
 
-RUN cd $HOME/caffe2 \
-    && python setup.py install \
-    # && /bin/bash -c "source activate python2 && python setup.py install" \
-    && cd build \
-    && rm -rf build
+# RUN cd $HOME/caffe2 \
+#     && python setup.py install \
+#     # && /bin/bash -c "source activate python2 && python setup.py install" \
+#     && cd build \
+#     && rm -rf build
 
 # RUN conda install -y opencv \
 #   && /bin/bash -c "source activate python2 && conda install -y opencv"
