@@ -419,6 +419,8 @@ RUN git clone --branch master --recursive https://github.com/caffe2/caffe2.git
 RUN conda install -y opencv \
   && /bin/bash -c "source activate python2 && conda install -y opencv"
 
+RUN echo "George!"  
+
 RUN cd $HOME/caffe2 \
     && CMAKE_ARGS='-DUSE_CUDA=ON \
     -DCUDA_ARCH_NAME=Manual \
