@@ -363,6 +363,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libiomp-dev \
     libleveldb-dev \
     liblmdb-dev \
+    # we already have a GPU enabled version of opencv 3.4 installed
     # libopencv-dev \
     libopenmpi-dev \
     libprotobuf-dev \
@@ -399,9 +400,16 @@ RUN pip install --no-cache-dir --upgrade pip setuptools wheel && \
     six \
     tornado
 
-########## INSTALLATION STEPS ###################
+# ==============================================================
+#  install Caffe2 with gpu support
+# ==============================================================
+
 RUN git clone --branch master --recursive https://github.com/caffe2/caffe2.git
+
+# make the following change to caffe2/cmake/Dependencies.cmake deal with an error when using opencv 3.4
 RUN sed -i 's/find_package(OpenCV QUIET COMPONENTS core highgui imgproc imgcodecs)/find_package(OpenCV QUIET COMPONENTS core highgui imgproc imgcodecs superres)/g' caffe2/cmake/Dependencies.cmake
+
+# run installation
 RUN cd caffe2 \
     && mkdir build && cd build \
     && cmake -DUSE_CUDA=ON \
@@ -416,6 +424,7 @@ RUN cd caffe2 \
     && ldconfig \
     && make clean
 
+# install for anaconda python3 and python2
 RUN cd $HOME/caffe2 \
     && python setup.py install \
     && /bin/bash -c "source activate python2 && python setup.py install" \
@@ -424,8 +433,6 @@ RUN cd $HOME/caffe2 \
 
 # RUN conda install -y opencv \
 #   && /bin/bash -c "source activate python2 && conda install -y opencv"
-
-# RUN echo "George!"
 
 # RUN cd $HOME/caffe2 \
 #     && CMAKE_ARGS='-DUSE_CUDA=ON \
