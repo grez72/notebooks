@@ -401,37 +401,37 @@ RUN pip install --no-cache-dir --upgrade pip setuptools wheel && \
 
 ########## INSTALLATION STEPS ###################
 RUN git clone --branch master --recursive https://github.com/caffe2/caffe2.git
-RUN cd caffe2 && mkdir build && cd build \
-    && cmake .. \
-    # -DUSE_NATIVE_ARCH=On \
-    -DCUDA_ARCH_NAME=Manual \
-    -DCUDA_ARCH_BIN="35 52 60 61" \
-    -DCUDA_ARCH_PTX="61" \
-    -DUSE_FFMPEG=ON \
-    -DUSE_OPENCV=ON \
-    && make -j"$(nproc)" install \
-    && ldconfig \
-    && make clean
+# RUN cd caffe2 && mkdir build && cd build \
+#     && cmake .. \
+#     # -DUSE_NATIVE_ARCH=On \
+#     -DCUDA_ARCH_NAME=Manual \
+#     -DCUDA_ARCH_BIN="35 52 60 61" \
+#     -DCUDA_ARCH_PTX="61" \
+#     -DUSE_FFMPEG=ON \
+#     -DUSE_OPENCV=ON \
+#     && make -j"$(nproc)" install \
+#     && ldconfig \
+#     && make clean
 
 # RUN conda install -y opencv \
 #   && /bin/bash -c "source activate python2 && conda install -y opencv"
 
 # RUN echo "George!"
 
-RUN cd $HOME/caffe2 \
-    && CMAKE_ARGS='-DUSE_CUDA=ON \
-    -DCUDA_ARCH_NAME=Manual \
-    -DCUDA_ARCH_BIN="35 52 60 61" \
-    -DCUDA_ARCH_PTX="61" \
-    -DUSE_FFMPEG=ON \
-    -DUSE_OPENCV=ON' \
-    python setup.py install
-    # && /bin/bash -c "source activate python2 && python setup.py install" \
-
-    # && cd build \
-    # && rm -rf build
-
-ENV PYTHONPATH /usr/local
+# RUN cd $HOME/caffe2 \
+#     && CMAKE_ARGS='-DUSE_CUDA=ON \
+#     -DCUDA_ARCH_NAME=Manual \
+#     -DCUDA_ARCH_BIN="35 52 60 61" \
+#     -DCUDA_ARCH_PTX="61" \
+#     -DUSE_FFMPEG=ON \
+#     -DUSE_OPENCV=ON' \
+#     python setup.py install
+#     # && /bin/bash -c "source activate python2 && python setup.py install" \
+#
+#     # && cd build \
+#     # && rm -rf build
+#
+# ENV PYTHONPATH /usr/local
 
 # FROM grez72/deep-notebooks:ubuntu16.04-gpu-cuda9.1-cudnn7-minimal-notebook
 # # FROM grez72/deep-notebooks:ubuntu14.04-gpu-cuda8-cudnn5-base-notebook
