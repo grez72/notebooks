@@ -416,6 +416,8 @@ RUN git clone --branch master --recursive https://github.com/caffe2/caffe2.git
 #     && ldconfig \
 #     && make clean
 
+RUN conda install -y opencv
+
 RUN cd $HOME/caffe2 \
     && CMAKE_ARGS='-DUSE_CUDA=ON \
     -DCUDA_ARCH_NAME=Manual \
