@@ -86,6 +86,7 @@ RUN pip install --no-cache-dir --upgrade pip setuptools wheel && \
 # ==============================================================
 
 RUN git clone --branch master --recursive https://github.com/caffe2/caffe2.git \
+  && cd caffe2 \
   && git checkout $CAFFE2_VERSION
 
 # make the following change to caffe2/cmake/Dependencies.cmake deal with an error when using opencv 3.4
