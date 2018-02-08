@@ -416,12 +416,12 @@ RUN git clone --branch master --recursive https://github.com/caffe2/caffe2.git
 #     && make clean
 
 RUN cd $HOME/caffe2 \
-    && CMAKE_ARGS=-DUSE_CUDA=ON \
+    && CMAKE_ARGS='-DUSE_CUDA=ON \
     -DCUDA_ARCH_NAME=Manual \
     -DCUDA_ARCH_BIN="35 52 60 61" \
     -DCUDA_ARCH_PTX="61" \
     -DUSE_FFMPEG=ON \
-    -DUSE_OPENCV=ON \
+    -DUSE_OPENCV=ON' \
     python setup.py install -j$(nproc) \
     # && /bin/bash -c "source activate python2 && python setup.py install" \
     && cd build \
