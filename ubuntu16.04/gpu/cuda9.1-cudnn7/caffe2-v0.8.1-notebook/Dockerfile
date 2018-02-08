@@ -108,11 +108,11 @@ RUN cd caffe2 \
     && make clean
 
 # install for anaconda python3 and python2
-# RUN cd $HOME/caffe2 \
-#     && python setup.py install \
-#     && /bin/bash -c "source activate python2 && python setup.py install" \
-#     && cd build \
-#     && rm -rf build
+RUN cd $HOME/caffe2 \
+    && python setup.py install \
+    && /bin/bash -c "source activate python2 && python setup.py install" \
+    && cd build \
+    && rm -rf build
 
 # RUN cd $HOME/caffe2 \
 #     && CMAKE_ARGS='-DUSE_CUDA=ON \
@@ -126,26 +126,16 @@ RUN cd caffe2 \
 #
 #     # && cd build \
 #     # && rm -rf build
-#
+
+# these paths don't seem necessary
 # ENV PYTHONPATH /usr/local
-
-# ########## INSTALLATION STEPS ###################
-# RUN /bin/bash -c 'source activate python2 && cd caffe2 && make -j"$(nproc)" && cd build && make -j"$(nproc)" install'
-# RUN /bin/bash -c "source activate python2 && pip install future && pip install future --upgrade"
-
 # ENV PYTHONPATH /usr/local
 # ENV LD_LIBRARY_PATH /usr/local/lib:$LD_LIBRARY_PATH
 # ENV LIBRARY_PATH /usr/local/lib:$LD_LIBRARY_PATH
 
-# test installation
-# python -c 'from caffe2.python import core' 2>/dev/null && echo "Success" || echo "Failure"
-# test gpu
-# python -m caffe2.python.operator_test.relu_op_test
-# python -c 'from caffe2.python import workspace; print(workspace.NumCudaDevices())'
+# ==============================================================
+#  set workdir and user for jupyter notebook
+# ==============================================================
 
-# # ==============================================================
-# #  set workdir and user for jupyter notebook
-# # ==============================================================
-#
-# WORKDIR /home/$NB_USER/work/
-# USER $NB_USER
+WORKDIR /home/$NB_USER/work/
+USER $NB_USER
