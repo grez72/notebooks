@@ -27,11 +27,13 @@ WORKDIR $HOME
 RUN pip install --upgrade pip setuptools \
   && pip install numpy --upgrade \
   && conda update conda \
+  && conda update setuptools \
   && conda install -y mkl -c intel
 
 RUN /bin/bash -c "source activate python2 \
   && pip install --upgrade pip setuptools \
   && pip install numpy --upgrade --ignore-installed \
+  && conda update setuptools \
   && conda install -y mkl -c intel"
 
 # ==============================================================
