@@ -25,6 +25,7 @@ WORKDIR $HOME
 # ==============================================================
 
 RUN pip install --upgrade pip \
+  && pip install --upgrade setuptools \
   && pip install numpy --upgrade \
   && conda update conda \
   && conda install -y mkl -c intel
@@ -32,9 +33,9 @@ RUN pip install --upgrade pip \
 # RUN conda update -y conda pytorch torchvision
 RUN /bin/bash -c "source activate python2 \
   && pip install --upgrade pip \
+  && pip install --upgrade setuptools \
   && pip install numpy --upgrade --ignore-installed \
   && conda install -y mkl -c intel"
-
 
 # ==============================================================
 #  INSTALL TENSORFLOW DEPENDENCIES
