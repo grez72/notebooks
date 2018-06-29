@@ -24,8 +24,8 @@ WORKDIR $HOME
 #  Upgrades Before Installing Tensorflow
 # ==============================================================
 
-RUN pip uninstall setuptools \
-  && pip install --upgrade pip setuptools \
+RUN pip uninstall setuptools
+RUN pip install --upgrade pip setuptools \
   && pip install numpy --upgrade \
   && conda update conda \
   && conda install -y mkl -c intel
