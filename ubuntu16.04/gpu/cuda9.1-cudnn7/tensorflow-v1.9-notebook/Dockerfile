@@ -156,77 +156,77 @@ ENV TF_SET_ANDROID_WORKSPACE=0
 # You can reference https://github.com/tensorflow/tensorflow/blob/master/configure to determine
 # what the actual variable names should be, which you can then set in this file, and re-build the image,
 # uncommenting everything from here down so tensorflow will be built.
-RUN ./configure
-
-RUN bazel build -c opt --config=opt --config=cuda //tensorflow/tools/pip_package:build_pip_package
-RUN bazel-bin/tensorflow/tools/pip_package/build_pip_package /tmp/tensorflow_pkg
-RUN pip install /tmp/tensorflow_pkg/*
-
-# ==============================================================
-#  build tensorflow for python2
-# ==============================================================
-
-# python2 dependencies
-RUN apt-get update && sudo apt-get install -y \
-        build-essential \
-        curl \
-        libcurl3-dev \
-        git \
-        libfreetype6-dev \
-        libpng12-dev \
-        libzmq3-dev \
-        pkg-config \
-        python-dev \
-        python-numpy \
-        python-pip \
-        software-properties-common \
-        swig \
-        zip \
-        zlib1g-dev
-
-# update config
-# /usr/bin/python2
-# /usr/local/lib/python2.7/dist-packages
-ENV PYTHON_BIN_PATH=/opt/conda/envs/python2/bin/python
-ENV PYTHON_LIB_PATH=/opt/conda/envs/python2/lib/python2.7/site-packages
-RUN ./configure
-
-RUN bazel build --verbose_failures -c opt --config=opt --config=cuda //tensorflow/tools/pip_package:build_pip_package
-RUN bazel-bin/tensorflow/tools/pip_package/build_pip_package /tmp/tensorflow_pkg
-RUN /bin/bash -c "source activate python2 && pip install /tmp/tensorflow_pkg/*27* \
-  && rm -R tensorflow"
-
-# ==============================================================
-#  install tflearn
-# ==============================================================
-
-# Kearas is now build into tensorflow
-# install keras
-# RUN pip install keras==${KERAS_VERSION}
-# RUN pip install keras==${KERAS_VERSION}
-# RUN pip2 install keras==${KERAS_VERSION}
-# COPY keras.json $HOME/.keras/keras.json
-
-# install tflearn
-RUN pip install tflearn==${TFLEARN_VERSION} \
-  && /bin/bash -c "source activate python2 \
-  && pip install tflearn==${TFLEARN_VERSION}"
-
-# ==============================================================
-#  downgrade anaconda's hdf5 to resolve error
-# ==============================================================
-
-# conda install -c anaconda hdf5=1.8.17
-# RUN conda remove hdf5 -y && conda install hdf5=1.8.17 -y
-# RUN /bin/bash -c "source activate python2 && conda remove hdf5 -y && conda install hdf5=1.8.17 -y"
-
-# TensorBoard
-EXPOSE 6006
-
-# ==============================================================
-#  set workdir and user for jupyter notebook use
-# ==============================================================
-
-# cleanup
-WORKDIR /home/$NB_USER/work/
-USER $NB_USER
+# RUN ./configure
+#
+# RUN bazel build -c opt --config=opt --config=cuda //tensorflow/tools/pip_package:build_pip_package
+# RUN bazel-bin/tensorflow/tools/pip_package/build_pip_package /tmp/tensorflow_pkg
+# RUN pip install /tmp/tensorflow_pkg/*
+#
+# # ==============================================================
+# #  build tensorflow for python2
+# # ==============================================================
+#
+# # python2 dependencies
+# RUN apt-get update && sudo apt-get install -y \
+#         build-essential \
+#         curl \
+#         libcurl3-dev \
+#         git \
+#         libfreetype6-dev \
+#         libpng12-dev \
+#         libzmq3-dev \
+#         pkg-config \
+#         python-dev \
+#         python-numpy \
+#         python-pip \
+#         software-properties-common \
+#         swig \
+#         zip \
+#         zlib1g-dev
+#
+# # update config
+# # /usr/bin/python2
+# # /usr/local/lib/python2.7/dist-packages
+# ENV PYTHON_BIN_PATH=/opt/conda/envs/python2/bin/python
+# ENV PYTHON_LIB_PATH=/opt/conda/envs/python2/lib/python2.7/site-packages
+# RUN ./configure
+#
+# RUN bazel build --verbose_failures -c opt --config=opt --config=cuda //tensorflow/tools/pip_package:build_pip_package
+# RUN bazel-bin/tensorflow/tools/pip_package/build_pip_package /tmp/tensorflow_pkg
+# RUN /bin/bash -c "source activate python2 && pip install /tmp/tensorflow_pkg/*27* \
+#   && rm -R tensorflow"
+#
+# # ==============================================================
+# #  install tflearn
+# # ==============================================================
+#
+# # Kearas is now build into tensorflow
+# # install keras
+# # RUN pip install keras==${KERAS_VERSION}
+# # RUN pip install keras==${KERAS_VERSION}
+# # RUN pip2 install keras==${KERAS_VERSION}
+# # COPY keras.json $HOME/.keras/keras.json
+#
+# # install tflearn
+# RUN pip install tflearn==${TFLEARN_VERSION} \
+#   && /bin/bash -c "source activate python2 \
+#   && pip install tflearn==${TFLEARN_VERSION}"
+#
+# # ==============================================================
+# #  downgrade anaconda's hdf5 to resolve error
+# # ==============================================================
+#
+# # conda install -c anaconda hdf5=1.8.17
+# # RUN conda remove hdf5 -y && conda install hdf5=1.8.17 -y
+# # RUN /bin/bash -c "source activate python2 && conda remove hdf5 -y && conda install hdf5=1.8.17 -y"
+#
+# # TensorBoard
+# EXPOSE 6006
+#
+# # ==============================================================
+# #  set workdir and user for jupyter notebook use
+# # ==============================================================
+#
+# # cleanup
+# WORKDIR /home/$NB_USER/work/
+# USER $NB_USER
