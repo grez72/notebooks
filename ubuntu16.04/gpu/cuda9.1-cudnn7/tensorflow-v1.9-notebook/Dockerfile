@@ -30,11 +30,11 @@ RUN pip uninstall setuptools \
   && conda update conda \
   && conda install -y mkl -c intel
 
-RUN /bin/bash -c "source activate python2 \
-  && pip uninstall setuptools \
-  && pip install --upgrade pip setuptools \
-  && pip install numpy --upgrade --ignore-installed \
-  && conda install -y mkl -c intel"
+# RUN /bin/bash -c "source activate python2 \
+#   && pip uninstall setuptools \
+#   && pip install --upgrade pip setuptools \
+#   && pip install numpy --upgrade --ignore-installed \
+#   && conda install -y mkl -c intel"
 
 # ==============================================================
 #  INSTALL TENSORFLOW DEPENDENCIES
