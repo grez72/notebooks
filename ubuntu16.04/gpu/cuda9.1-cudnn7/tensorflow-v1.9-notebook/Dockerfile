@@ -189,6 +189,9 @@ RUN apt-get update && sudo apt-get install -y \
         zip \
         zlib1g-dev
 
+RUN /bin/bash -c "source activate python2 \
+  && pip install mock"
+
 # update config
 # /usr/bin/python2
 # /usr/local/lib/python2.7/dist-packages
