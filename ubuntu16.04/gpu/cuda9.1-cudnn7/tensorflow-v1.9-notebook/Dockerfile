@@ -201,40 +201,40 @@ RUN ./configure
 
 RUN bazel build --verbose_failures -c opt --config=opt --config=cuda //tensorflow/tools/pip_package:build_pip_package
 RUN bazel-bin/tensorflow/tools/pip_package/build_pip_package /tmp/tensorflow_pkg
-# RUN /bin/bash -c "source activate python2 && pip install /tmp/tensorflow_pkg/*27* \
-#   && rm -R tensorflow"
-#
-# # ==============================================================
-# #  install tflearn
-# # ==============================================================
-#
-# # Kearas is now build into tensorflow
-# # install keras
-# # RUN pip install keras==${KERAS_VERSION}
-# # RUN pip install keras==${KERAS_VERSION}
-# # RUN pip2 install keras==${KERAS_VERSION}
-# # COPY keras.json $HOME/.keras/keras.json
-#
-# # install tflearn
-# RUN pip install tflearn==${TFLEARN_VERSION} \
-#   && /bin/bash -c "source activate python2 \
-#   && pip install tflearn==${TFLEARN_VERSION}"
-#
-# # ==============================================================
-# #  downgrade anaconda's hdf5 to resolve error
-# # ==============================================================
-#
-# # conda install -c anaconda hdf5=1.8.17
-# # RUN conda remove hdf5 -y && conda install hdf5=1.8.17 -y
-# # RUN /bin/bash -c "source activate python2 && conda remove hdf5 -y && conda install hdf5=1.8.17 -y"
-#
-# # TensorBoard
-# EXPOSE 6006
-#
-# # ==============================================================
-# #  set workdir and user for jupyter notebook use
-# # ==============================================================
-#
-# # cleanup
-# WORKDIR /home/$NB_USER/work/
-# USER $NB_USER
+RUN /bin/bash -c "source activate python2 && pip install /tmp/tensorflow_pkg/*27* \
+  && rm -R tensorflow"
+
+# ==============================================================
+#  install tflearn
+# ==============================================================
+
+# Kearas is now build into tensorflow
+# install keras
+# RUN pip install keras==${KERAS_VERSION}
+# RUN pip install keras==${KERAS_VERSION}
+# RUN pip2 install keras==${KERAS_VERSION}
+# COPY keras.json $HOME/.keras/keras.json
+
+# install tflearn
+RUN pip install tflearn==${TFLEARN_VERSION} \
+  && /bin/bash -c "source activate python2 \
+  && pip install tflearn==${TFLEARN_VERSION}"
+
+# ==============================================================
+#  downgrade anaconda's hdf5 to resolve error
+# ==============================================================
+
+# conda install -c anaconda hdf5=1.8.17
+# RUN conda remove hdf5 -y && conda install hdf5=1.8.17 -y
+# RUN /bin/bash -c "source activate python2 && conda remove hdf5 -y && conda install hdf5=1.8.17 -y"
+
+# TensorBoard
+EXPOSE 6006
+
+# ==============================================================
+#  set workdir and user for jupyter notebook use
+# ==============================================================
+
+# cleanup
+WORKDIR /home/$NB_USER/work/
+USER $NB_USER
