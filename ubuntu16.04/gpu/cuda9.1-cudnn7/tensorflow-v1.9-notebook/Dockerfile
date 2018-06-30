@@ -201,7 +201,7 @@ RUN ./configure
 
 RUN bazel build --verbose_failures -c opt --config=opt --config=cuda //tensorflow/tools/pip_package:build_pip_package
 RUN bazel-bin/tensorflow/tools/pip_package/build_pip_package /tmp/tensorflow_pkg
-RUN /bin/bash -c "source activate python2 && pip install /tmp/tensorflow_pkg/*27* \
+RUN /bin/bash -c "source activate python2 && pip install --ignore-installed /tmp/tensorflow_pkg/*27* \
   && rm -R tensorflow"
 
 # ==============================================================
