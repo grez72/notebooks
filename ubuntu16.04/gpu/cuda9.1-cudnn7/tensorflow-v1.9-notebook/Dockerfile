@@ -165,7 +165,7 @@ RUN ./configure
 
 RUN bazel build -c opt --config=opt --config=cuda //tensorflow/tools/pip_package:build_pip_package
 RUN bazel-bin/tensorflow/tools/pip_package/build_pip_package /tmp/tensorflow_pkg
-RUN pip install /tmp/tensorflow_pkg/*
+RUN pip install --ignore-installed /tmp/tensorflow_pkg/*
 
 # ==============================================================
 #  build tensorflow for python2
