@@ -45,6 +45,93 @@ USER root
 RUN /bin/bash -c "source activate python2 && ipython kernel install"
 
 #--------------------------------------
+# Utilities for optimizing python code:
+#--------------------------------------
+
+# Cupy, PyCuda, Numba
+RUN conda install -y -c lukepfister pycuda \
+  && /bin/bash -c "source activate python2 \
+  && conda install -y -c lukepfister pycuda" \
+  && pip install cupy \
+  && /bin/bash -c "source activate python2 \
+  && pip install cupy" \
+  && conda install -y numba \
+  && /bin/bash -c "source activate python2 \
+  && conda install -y numba"
+
+#--------------------------------------
+#   FFMEG with libx264 support
+#--------------------------------------
+
+RUN apt-get update -qq && sudo apt-get -y install \
+      autoconf \
+      automake \
+      build-essential \
+      cmake \
+      git-core \
+      libass-dev \
+      libfreetype6-dev \
+      libsdl2-dev \
+      libtool \
+      libva-dev \
+      libvdpau-dev \
+      libvorbis-dev \
+      libxcb1-dev \
+      libxcb-shm0-dev \
+      libxcb-xfixes0-dev \
+      pkg-config \
+      texinfo \
+      wget \
+      zlib1g-dev \
+      yasm \
+      nasm \
+      libx264-dev \
+      libx265-dev libnuma-dev \
+      libvpx-dev \
+      libfdk-aac-dev \
+      libmp3lame-dev \
+      libopus-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+  RUN mkdir -p ~/ffmpeg_sources
+
+  WORKDIR ~/ffmpeg_sources
+
+  # RUN wget https://www.nasm.us/pub/nasm/releasebuilds/2.13.03/nasm-2.13.03.tar.bz2 && \
+  #     tar xjvf nasm-2.13.03.tar.bz2 && \
+  #     cd nasm-2.13.03 && \
+  #     ./autogen.sh && \
+  #     PATH="$HOME/bin:$PATH" ./configure --prefix="$HOME/ffmpeg_build" --bindir="$HOME/bin" && \
+  #     make -j16 && \
+  #     make install
+
+  RUN wget -O ffmpeg-snapshot.tar.bz2 https://ffmpeg.org/releases/ffmpeg-snapshot.tar.bz2 && \
+      tar xjvf ffmpeg-snapshot.tar.bz2 && \
+      rm -r ffmpeg-snapshot.tar.bz2 && \
+      cd ffmpeg && \
+      PATH="~/bin:$PATH" PKG_CONFIG_PATH="~/ffmpeg_build/lib/pkgconfig" ./configure \
+      --prefix="~/ffmpeg_build" \
+      --pkg-config-flags="--static" \
+      --extra-cflags="-I~/ffmpeg_build/include" \
+      --extra-ldflags="-L~/ffmpeg_build/lib" \
+      --extra-libs="-lpthread -lm" \
+      --bindir="/bin" \
+      --enable-gpl \
+      --enable-libass \
+      --enable-libfdk-aac \
+      --enable-libfreetype \
+      --enable-libmp3lame \
+      --enable-libopus \
+      --enable-libvorbis \
+      --enable-libvpx \
+      --enable-libx264 \
+      --enable-libx265 \
+      --enable-nonfree && \
+      PATH="~/bin:$PATH" make -j$(nproc) && \
+      make install && \
+      hash -r
+
+#--------------------------------------
 # Install OpenCV with CUDA Support
 #--------------------------------------
 
@@ -54,8 +141,8 @@ RUN /bin/bash -c "source activate python2 && ipython kernel install"
 # export LIBRARY_PATH=/usr/local/nvidia:$LIBRARY_PATH
 # export LD_LIBRARY_PATH=/usr/local/nvidia/lib64:/usr/local/cuda/lib64:/usr/local/cuda/lib:$LD_LIBRARY_PATH
 
-RUN apt-get update
-RUN apt-get install -y cmake \
+# RUN apt-get update
+RUN apt-get update && apt-get install -y cmake \
   libjpeg8-dev libtiff5-dev libjasper-dev libpng12-dev \
   libgtk2.0-dev \
   libavcodec-dev libavformat-dev libswscale-dev libv4l-dev \
@@ -63,11 +150,7 @@ RUN apt-get install -y cmake \
   libhdf5-serial-dev \
   python3-dev python2.7-dev
 
-# RUN apt-get install emacs23 curl git autoconf lzip cmake-curses-gui cmake libtool unzip pkg-config build-essential python-pip ipython gfortran python-dev libatlas-base-dev python-scipy libfreetype6-dev libpng3 openssh-server zlibc libcurl3-dev
-
-# RUN apt-get install -y build-essential cmake git libgtk2.0-dev pkg-config python-dev python-numpy libdc1394-22 libdc1394-22-dev libjpeg-dev libpng12-dev libtiff5-dev libjasper-dev libavcodec-dev libavformat-dev libswscale-dev libxine2-dev libgstreamer0.10-dev libgstreamer-plugins-base0.10-dev libv4l-dev libtbb-dev libqt4-dev libfaac-dev libmp3lame-dev libopencore-amrnb-dev libopencore-amrwb-dev libtheora-dev libvorbis-dev libxvidcore-dev v4l-utils unzip yasm git subversion pkg-config checkinstall cmake libfaac-dev libjack-jackd2-dev libmp3lame-dev libopencore-amrnb-dev libopencore-amrwb-dev libsdl1.2-dev libtheora-dev libva-dev libvdpau-dev libvorbis-dev libx11-dev libxfixes-dev libxvidcore-dev texi2html zlib1g-dev libgstreamer0.10-0 libgstreamer0.10-dev gstreamer0.10-tools gstreamer0.10-plugins-base libgstreamer-plugins-base0.10-dev gstreamer0.10-plugins-good gstreamer0.10-plugins-ugly gstreamer0.10-plugins-bad libgtk2.0-0 libgtk2.0-dev libjpeg8 libjpeg8-dev freeglut3-dev qt-sdk libgdal-dev libwebp-dev libopenexr-dev libeigen3-dev python-tk python3-dev python3-tk python3-numpy ant default-jdk
-
-WORKDIR ~/
+# WORKDIR ~/
 # RUN git clone https://github.com/Itseez/opencv.git \
 #   && cd opencv \
 #   && mkdir build \
@@ -90,27 +173,11 @@ WORKDIR ~/
 #     -D ENABLE_FAST_MATH=1 \
 #     -D CUDA_FAST_MATH=1 \
 #     -D WITH_CUBLAS=1 \
+#     -D WITH_FFMPEG=1 \
 #     -D INSTALL_PYTHON_EXAMPLES=ON \
 #     -D BUILD_EXAMPLES=OFF .. \
 #   && make -j$(nproc) && sudo make install \
 #   && ldconfig
-
-# -D WITH_QT=ON \
-
-#--------------------------------------
-# Utilities for optimizing python code:
-#--------------------------------------
-
-# Cupy, PyCuda, Numba
-RUN conda install -y -c lukepfister pycuda \
-  && /bin/bash -c "source activate python2 \
-  && conda install -y -c lukepfister pycuda" \
-  && pip install cupy \
-  && /bin/bash -c "source activate python2 \
-  && pip install cupy" \
-  && conda install -y numba \
-  && /bin/bash -c "source activate python2 \
-  && conda install -y numba"
 
 #--------------------------------------
 # Install Video and Image Utilities
@@ -118,49 +185,49 @@ RUN conda install -y -c lukepfister pycuda \
 
 # Installing all of these dependencies together in one RUN command
 # to avoid limit on number of layers in docker image
-RUN conda install -y -c conda-forge av trackpy ipywidgets \
-  && conda install -y filterpy \
-  && /bin/bash -c "source activate python2 \
-  && conda install -y -c conda-forge av trackpy ipywidgets \
-  && conda install -y filterpy" \
-  && jupyter nbextension enable --py --sys-prefix widgetsnbextension \
-  && pip install --upgrade pip \
-  && pip install \
-    ffmpeg-python \
-    image-attendant \
-    imutils \
-    pims \
-    tqdm \
-  && cd $HOME \
-  && git clone https://github.com/DheerendraRathor/ffprobe3 \
-  && cd $HOME/ffprobe3 \
-  && python setup.py install \
-  && /bin/bash -c "source activate python2 \
-  && pip install --upgrade pip \
-  && pip install \
-    ffmpeg-python \
-    ffprobe \
-    image-attendant \
-    imutils \
-    pims \
-    simplejson \
-    tqdm" \
-  && cd $HOME \
-  && git clone https://github.com/jfrelinger/cython-munkres-wrapper \
-  && cd $HOME/cython-munkres-wrapper \
-  && python setup.py install \
-  && /bin/bash -c "source activate python2 && cd $HOME/cython-munkres-wrapper && python setup.py install"
+# RUN conda install -y -c conda-forge av trackpy ipywidgets \
+#   && conda install -y filterpy \
+#   && /bin/bash -c "source activate python2 \
+#   && conda install -y -c conda-forge av trackpy ipywidgets \
+#   && conda install -y filterpy" \
+#   && jupyter nbextension enable --py --sys-prefix widgetsnbextension \
+#   && pip install --upgrade pip \
+#   && pip install \
+#     ffmpeg-python \
+#     image-attendant \
+#     imutils \
+#     pims \
+#     tqdm \
+#   && cd $HOME \
+#   && git clone https://github.com/DheerendraRathor/ffprobe3 \
+#   && cd $HOME/ffprobe3 \
+#   && python setup.py install \
+#   && /bin/bash -c "source activate python2 \
+#   && pip install --upgrade pip \
+#   && pip install \
+#     ffmpeg-python \
+#     ffprobe \
+#     image-attendant \
+#     imutils \
+#     pims \
+#     simplejson \
+#     tqdm" \
+#   && cd $HOME \
+#   && git clone https://github.com/jfrelinger/cython-munkres-wrapper \
+#   && cd $HOME/cython-munkres-wrapper \
+#   && python setup.py install \
+#   && /bin/bash -c "source activate python2 && cd $HOME/cython-munkres-wrapper && python setup.py install"
 
 #--------------------------------------
 # Install Additional Packages
 #--------------------------------------
 
 # plotly + dependencies
-RUN pip install plotly \
-  && conda install -c bioconda cufflinks \
-  && /bin/bash -c "source activate python2 \
-  && pip install plotly \
-  && conda install -c bioconda cufflinks"
+# RUN pip install plotly \
+#   && conda install -c bioconda cufflinks \
+#   && /bin/bash -c "source activate python2 \
+#   && pip install plotly \
+#   && conda install -c bioconda cufflinks"
 
 #--------------------------------------
 # Setup for notebook use
