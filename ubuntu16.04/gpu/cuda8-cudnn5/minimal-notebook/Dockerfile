@@ -150,34 +150,47 @@ RUN apt-get update && apt-get install -y cmake \
   libhdf5-serial-dev \
   python3-dev python2.7-dev
 
-# WORKDIR ~/
-# RUN git clone https://github.com/Itseez/opencv.git \
-#   && cd opencv \
-#   && mkdir build \
-#   && cd build/ \
-#   && cmake -D CMAKE_BUILD_TYPE=RELEASE \
-#     -D PYTHON2_EXECUTABLE:FILEPATH=/opt/conda/envs/python2/bin/python2.7 \
-#     -D PYTHON2_INCLUDE_DIR:PATH=/opt/conda/envs/python2/include/python2.7 \
-#     -D PYTHON2_NUMPY_INCLUDE_DIRS:PATH=/opt/conda/envs/python2/lib/python2.7/site-packages/numpy/core/include \
-#     -D PYTHON2_PACKAGES_PATH:PATH=/opt/conda/envs/python2/lib/python2.7/site-packages \
-#     -D PYTHON3_EXECUTABLE:FILEPATH=/opt/conda/bin/python3.6 \
-#     -D PYTHON3_INCLUDE_DIR:PATH=/opt/conda/include/python3.6m \
-#     -D PYTHON3_NUMPY_INCLUDE_DIRS:PATH=/opt/conda/lib/python3.6/site-packages/numpy/core/include \
-#     -D PYTHON3_PACKAGES_PATH:PATH=/opt/conda/lib/python3.6/site-packages \
-#     -D CMAKE_INSTALL_PREFIX=/usr/local \
-#     -D WITH_CUDA=ON \
-#     -D FORCE_VTK=ON \
-#     -D WITH_TBB=ON \
-#     -D WITH_V4L=ON \
-#     -D WITH_OPENGL=ON \
-#     -D ENABLE_FAST_MATH=1 \
-#     -D CUDA_FAST_MATH=1 \
-#     -D WITH_CUBLAS=1 \
-#     -D WITH_FFMPEG=1 \
-#     -D INSTALL_PYTHON_EXAMPLES=ON \
-#     -D BUILD_EXAMPLES=OFF .. \
-#   && make -j$(nproc) && sudo make install \
-#   && ldconfig
+WORKDIR ~/
+RUN git clone https://github.com/Itseez/opencv.git \
+  && cd opencv \
+  && mkdir build \
+  && cd build/ \
+  && cmake -D CMAKE_BUILD_TYPE=RELEASE \
+    -D PYTHON2_EXECUTABLE:FILEPATH=/opt/conda/envs/python2/bin/python2.7 \
+    -D PYTHON2_INCLUDE_DIR:PATH=/opt/conda/envs/python2/include/python2.7 \
+    -D PYTHON2_NUMPY_INCLUDE_DIRS:PATH=/opt/conda/envs/python2/lib/python2.7/site-packages/numpy/core/include \
+    -D PYTHON2_PACKAGES_PATH:PATH=/opt/conda/envs/python2/lib/python2.7/site-packages \
+    -D PYTHON3_EXECUTABLE:FILEPATH=/opt/conda/bin/python3.6 \
+    -D PYTHON3_INCLUDE_DIR:PATH=/opt/conda/include/python3.6m \
+    -D PYTHON3_NUMPY_INCLUDE_DIRS:PATH=/opt/conda/lib/python3.6/site-packages/numpy/core/include \
+    -D PYTHON3_PACKAGES_PATH:PATH=/opt/conda/lib/python3.6/site-packages \
+    -D CMAKE_INSTALL_PREFIX=/usr/local \
+    -D Protobuf_LIBRARY=/opt/conda/lib \
+    -D Protobuf_INCLUDE_DIR=/opt/conda/include \
+    -D Protobuf_PROTOC_EXECUTABLE=/opt/conda/bin/protoc \
+    -D BUILD_PROTOBUF=OFF \
+    -D WITH_CUDA=ON \
+    -D FORCE_VTK=ON \
+    -D WITH_TBB=ON \
+    -D WITH_V4L=ON \
+    -D WITH_OPENGL=ON \
+    -D ENABLE_FAST_MATH=1 \
+    -D CUDA_FAST_MATH=1 \
+    -D WITH_CUBLAS=1 \
+    -D WITH_FFMPEG=1 \
+    -D INSTALL_PYTHON_EXAMPLES=ON \
+    -D BUILD_EXAMPLES=OFF .. \
+  && make -j$(nproc) && sudo make install \
+  && ldconfig
+
+# why this setting?:
+# -D BUILD_opencv_dnn=OFF \
+
+# Had to turn off BUILD_opencv_dnn, because it uses conflicting version of Protobuf_LIBRARY
+# alternatively, we can try to set these to our local Protobuf_LIBRARY
+# -D Protobuf_LIBRARY=/opt/conda/lib \
+# -D Protobuf_INCLUDE_DIR=/opt/conda/include \
+# -D Protobuf_PROTOC_EXECUTABLE=/opt/conda/bin/protoc \
 
 #--------------------------------------
 # Install Video and Image Utilities
@@ -185,49 +198,49 @@ RUN apt-get update && apt-get install -y cmake \
 
 # Installing all of these dependencies together in one RUN command
 # to avoid limit on number of layers in docker image
-# RUN conda install -y -c conda-forge av trackpy ipywidgets \
-#   && conda install -y filterpy \
-#   && /bin/bash -c "source activate python2 \
-#   && conda install -y -c conda-forge av trackpy ipywidgets \
-#   && conda install -y filterpy" \
-#   && jupyter nbextension enable --py --sys-prefix widgetsnbextension \
-#   && pip install --upgrade pip \
-#   && pip install \
-#     ffmpeg-python \
-#     image-attendant \
-#     imutils \
-#     pims \
-#     tqdm \
-#   && cd $HOME \
-#   && git clone https://github.com/DheerendraRathor/ffprobe3 \
-#   && cd $HOME/ffprobe3 \
-#   && python setup.py install \
-#   && /bin/bash -c "source activate python2 \
-#   && pip install --upgrade pip \
-#   && pip install \
-#     ffmpeg-python \
-#     ffprobe \
-#     image-attendant \
-#     imutils \
-#     pims \
-#     simplejson \
-#     tqdm" \
-#   && cd $HOME \
-#   && git clone https://github.com/jfrelinger/cython-munkres-wrapper \
-#   && cd $HOME/cython-munkres-wrapper \
-#   && python setup.py install \
-#   && /bin/bash -c "source activate python2 && cd $HOME/cython-munkres-wrapper && python setup.py install"
+RUN conda install -y -c conda-forge av trackpy ipywidgets \
+  && conda install -y filterpy \
+  && /bin/bash -c "source activate python2 \
+  && conda install -y -c conda-forge av trackpy ipywidgets \
+  && conda install -y filterpy" \
+  && jupyter nbextension enable --py --sys-prefix widgetsnbextension \
+  && pip install --upgrade pip \
+  && pip install \
+    ffmpeg-python \
+    image-attendant \
+    imutils \
+    pims \
+    tqdm \
+  && cd $HOME \
+  && git clone https://github.com/DheerendraRathor/ffprobe3 \
+  && cd $HOME/ffprobe3 \
+  && python setup.py install \
+  && /bin/bash -c "source activate python2 \
+  && pip install --upgrade pip \
+  && pip install \
+    ffmpeg-python \
+    ffprobe \
+    image-attendant \
+    imutils \
+    pims \
+    simplejson \
+    tqdm" \
+  && cd $HOME \
+  && git clone https://github.com/jfrelinger/cython-munkres-wrapper \
+  && cd $HOME/cython-munkres-wrapper \
+  && python setup.py install \
+  && /bin/bash -c "source activate python2 && cd $HOME/cython-munkres-wrapper && python setup.py install"
 
 #--------------------------------------
 # Install Additional Packages
 #--------------------------------------
 
 # plotly + dependencies
-# RUN pip install plotly \
-#   && conda install -c bioconda cufflinks \
-#   && /bin/bash -c "source activate python2 \
-#   && pip install plotly \
-#   && conda install -c bioconda cufflinks"
+RUN pip install plotly \
+  && conda install -c bioconda cufflinks \
+  && /bin/bash -c "source activate python2 \
+  && pip install plotly \
+  && conda install -c bioconda cufflinks"
 
 #--------------------------------------
 # Setup for notebook use
