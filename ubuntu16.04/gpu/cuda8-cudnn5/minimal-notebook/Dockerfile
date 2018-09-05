@@ -166,6 +166,6 @@ RUN pip install plotly \
 # Setup for notebook use
 #--------------------------------------
 
-RUN jupyter labextension install @jupyterlab/hub-extension@0.4.1
+# RUN jupyter labextension install @jupyterlab/hub-extension
 WORKDIR /home/$NB_USER/work/
 USER $NB_USER
