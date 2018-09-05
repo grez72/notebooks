@@ -68,32 +68,32 @@ RUN apt-get install -y cmake \
 # RUN apt-get install -y build-essential cmake git libgtk2.0-dev pkg-config python-dev python-numpy libdc1394-22 libdc1394-22-dev libjpeg-dev libpng12-dev libtiff5-dev libjasper-dev libavcodec-dev libavformat-dev libswscale-dev libxine2-dev libgstreamer0.10-dev libgstreamer-plugins-base0.10-dev libv4l-dev libtbb-dev libqt4-dev libfaac-dev libmp3lame-dev libopencore-amrnb-dev libopencore-amrwb-dev libtheora-dev libvorbis-dev libxvidcore-dev v4l-utils unzip yasm git subversion pkg-config checkinstall cmake libfaac-dev libjack-jackd2-dev libmp3lame-dev libopencore-amrnb-dev libopencore-amrwb-dev libsdl1.2-dev libtheora-dev libva-dev libvdpau-dev libvorbis-dev libx11-dev libxfixes-dev libxvidcore-dev texi2html zlib1g-dev libgstreamer0.10-0 libgstreamer0.10-dev gstreamer0.10-tools gstreamer0.10-plugins-base libgstreamer-plugins-base0.10-dev gstreamer0.10-plugins-good gstreamer0.10-plugins-ugly gstreamer0.10-plugins-bad libgtk2.0-0 libgtk2.0-dev libjpeg8 libjpeg8-dev freeglut3-dev qt-sdk libgdal-dev libwebp-dev libopenexr-dev libeigen3-dev python-tk python3-dev python3-tk python3-numpy ant default-jdk
 
 WORKDIR ~/
-RUN git clone https://github.com/Itseez/opencv.git \
-  && cd opencv \
-  && mkdir build \
-  && cd build/ \
-  && cmake -D CMAKE_BUILD_TYPE=RELEASE \
-    -D PYTHON2_EXECUTABLE:FILEPATH=/opt/conda/envs/python2/bin/python2.7 \
-    -D PYTHON2_INCLUDE_DIR:PATH=/opt/conda/envs/python2/include/python2.7 \
-    -D PYTHON2_NUMPY_INCLUDE_DIRS:PATH=/opt/conda/envs/python2/lib/python2.7/site-packages/numpy/core/include \
-    -D PYTHON2_PACKAGES_PATH:PATH=/opt/conda/envs/python2/lib/python2.7/site-packages \
-    -D PYTHON3_EXECUTABLE:FILEPATH=/opt/conda/bin/python3.6 \
-    -D PYTHON3_INCLUDE_DIR:PATH=/opt/conda/include/python3.6m \
-    -D PYTHON3_NUMPY_INCLUDE_DIRS:PATH=/opt/conda/lib/python3.6/site-packages/numpy/core/include \
-    -D PYTHON3_PACKAGES_PATH:PATH=/opt/conda/lib/python3.6/site-packages \
-    -D CMAKE_INSTALL_PREFIX=/usr/local \
-    -D WITH_CUDA=ON \
-    -D FORCE_VTK=ON \
-    -D WITH_TBB=ON \
-    -D WITH_V4L=ON \
-    -D WITH_OPENGL=ON \
-    -D ENABLE_FAST_MATH=1 \
-    -D CUDA_FAST_MATH=1 \
-    -D WITH_CUBLAS=1 \
-    -D INSTALL_PYTHON_EXAMPLES=ON \
-    -D BUILD_EXAMPLES=OFF .. \
-  && make -j$(nproc) && sudo make install \
-  && ldconfig
+# RUN git clone https://github.com/Itseez/opencv.git \
+#   && cd opencv \
+#   && mkdir build \
+#   && cd build/ \
+#   && cmake -D CMAKE_BUILD_TYPE=RELEASE \
+#     -D PYTHON2_EXECUTABLE:FILEPATH=/opt/conda/envs/python2/bin/python2.7 \
+#     -D PYTHON2_INCLUDE_DIR:PATH=/opt/conda/envs/python2/include/python2.7 \
+#     -D PYTHON2_NUMPY_INCLUDE_DIRS:PATH=/opt/conda/envs/python2/lib/python2.7/site-packages/numpy/core/include \
+#     -D PYTHON2_PACKAGES_PATH:PATH=/opt/conda/envs/python2/lib/python2.7/site-packages \
+#     -D PYTHON3_EXECUTABLE:FILEPATH=/opt/conda/bin/python3.6 \
+#     -D PYTHON3_INCLUDE_DIR:PATH=/opt/conda/include/python3.6m \
+#     -D PYTHON3_NUMPY_INCLUDE_DIRS:PATH=/opt/conda/lib/python3.6/site-packages/numpy/core/include \
+#     -D PYTHON3_PACKAGES_PATH:PATH=/opt/conda/lib/python3.6/site-packages \
+#     -D CMAKE_INSTALL_PREFIX=/usr/local \
+#     -D WITH_CUDA=ON \
+#     -D FORCE_VTK=ON \
+#     -D WITH_TBB=ON \
+#     -D WITH_V4L=ON \
+#     -D WITH_OPENGL=ON \
+#     -D ENABLE_FAST_MATH=1 \
+#     -D CUDA_FAST_MATH=1 \
+#     -D WITH_CUBLAS=1 \
+#     -D INSTALL_PYTHON_EXAMPLES=ON \
+#     -D BUILD_EXAMPLES=OFF .. \
+#   && make -j$(nproc) && sudo make install \
+#   && ldconfig
 
 # -D WITH_QT=ON \
 
@@ -166,5 +166,6 @@ RUN pip install plotly \
 # Setup for notebook use
 #--------------------------------------
 
+RUN jupyter labextension install @jupyterlab/hub-extension
 WORKDIR /home/$NB_USER/work/
 USER $NB_USER
