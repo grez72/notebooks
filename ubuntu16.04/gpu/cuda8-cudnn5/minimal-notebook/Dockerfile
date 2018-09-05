@@ -207,7 +207,7 @@ RUN conda install -y -c conda-forge av trackpy ipywidgets \
     ffmpeg-python \
     image-attendant \
     imutils \
-    pims \
+    https://github.com/soft-matter/pims/archive/master.zip \
     tqdm \
   && cd $HOME \
   && git clone https://github.com/DheerendraRathor/ffprobe3 \
@@ -220,7 +220,7 @@ RUN conda install -y -c conda-forge av trackpy ipywidgets \
     ffprobe \
     image-attendant \
     imutils \
-    pims \
+    https://github.com/soft-matter/pims/archive/master.zip \
     simplejson \
     tqdm" \
   && cd $HOME \
