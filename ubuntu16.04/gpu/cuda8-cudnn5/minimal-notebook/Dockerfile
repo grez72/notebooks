@@ -165,9 +165,7 @@ RUN git clone https://github.com/Itseez/opencv.git \
     -D PYTHON3_NUMPY_INCLUDE_DIRS:PATH=/opt/conda/lib/python3.6/site-packages/numpy/core/include \
     -D PYTHON3_PACKAGES_PATH:PATH=/opt/conda/lib/python3.6/site-packages \
     -D CMAKE_INSTALL_PREFIX=/usr/local \
-    -D Protobuf_LIBRARY=/opt/conda/lib \
-    -D Protobuf_INCLUDE_DIR=/opt/conda/include \
-    -D Protobuf_PROTOC_EXECUTABLE=/opt/conda/bin/protoc \
+    -D BUILD_opencv_dnn=OFF \
     -D BUILD_PROTOBUF=OFF \
     -D WITH_CUDA=ON \
     -D FORCE_VTK=ON \
