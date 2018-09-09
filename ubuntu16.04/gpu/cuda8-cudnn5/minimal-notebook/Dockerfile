@@ -255,11 +255,30 @@ RUN conda config --add channels conda-forge \
 
 # https://drtiresome.com/2016/08/23/build-and-install-mpi-parallel-hdf5-and-h5py-from-source-on-linux/
 
-# install MPICH? see link above
+WORKDIR /tmp
+
+# install MPICH, so we can pip install mpi4py
+RUN wget http://www.mpich.org/static/downloads/3.2.1/mpich-3.2.1.tar.gz \
+  && tar -xzf mpich-3.2.1.tar.gz \
+  && cd mpich-3.2.1 \
+  && ./configure --enable-romio --enable-shared --with-device=ch3:sock --disable-fortran --prefix=/usr/local \
+  && make -j$(nproc) \
+  && make install \
+  && make clean
 
 # install mpi4py
-# RUN pip install mpi4py \
-#   && /bin/bash -c "source activate python2 && pip install mpi4py"
+RUN pip install mpi4py \
+  && /bin/bash -c "source activate python2 && pip install mpi4py"
+
+# test file:
+# test_mpi4py.py
+# from mpi4py import MPI
+# comm = MPI.COMM_WORLD
+# rank = comm.Get_rank()
+# print("hello world from process ", rank)
+
+# run test:
+# mpiexec -n 5 python test_mpi4py.py
 
 # https://github.com/HDFGroup/
 # h5cc -showconfig
