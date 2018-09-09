@@ -258,17 +258,18 @@ RUN conda config --add channels conda-forge \
 # install MPICH? see link above
 
 # install mpi4py
-RUN pip install mpi4py
+# RUN pip install mpi4py \
+#   && /bin/bash -c "source activate python2 && pip install mpi4py"
 
 # https://github.com/HDFGroup/
 # h5cc -showconfig
-RUN wget https://support.hdfgroup.org/ftp/HDF5/releases/hdf5-1.10/hdf5-1.10.3/src/hdf5-1.10.3.tar.gz \
-  && tar -xzf hdf5-1.10.3.tar.gz \
-  && cd hdf5-1.10.3 \
-  && ./configure --prefix=/usr/local --enable-parallel --enable-shared --enable-build-mode=production \
-  && make -j$(nproc) \
-  && make install \
-  && make clean
+# RUN wget https://support.hdfgroup.org/ftp/HDF5/releases/hdf5-1.10/hdf5-1.10.3/src/hdf5-1.10.3.tar.gz \
+#   && tar -xzf hdf5-1.10.3.tar.gz \
+#   && cd hdf5-1.10.3 \
+#   && ./configure --prefix=/usr/local --enable-parallel --enable-shared --enable-build-mode=production \
+#   && make -j$(nproc) \
+#   && make install \
+#   && make clean
 
 # Test config
 # h5pcc -showconfig
