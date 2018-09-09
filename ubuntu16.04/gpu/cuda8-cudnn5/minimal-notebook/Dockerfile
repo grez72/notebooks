@@ -282,13 +282,13 @@ RUN pip install mpi4py \
 
 # https://github.com/HDFGroup/
 # h5cc -showconfig
-# RUN wget https://support.hdfgroup.org/ftp/HDF5/releases/hdf5-1.10/hdf5-1.10.3/src/hdf5-1.10.3.tar.gz \
-#   && tar -xzf hdf5-1.10.3.tar.gz \
-#   && cd hdf5-1.10.3 \
-#   && ./configure --prefix=/usr/local --enable-parallel --enable-shared --enable-build-mode=production \
-#   && make -j$(nproc) \
-#   && make install \
-#   && make clean
+RUN wget https://support.hdfgroup.org/ftp/HDF5/releases/hdf5-1.10/hdf5-1.10.3/src/hdf5-1.10.3.tar.gz \
+  && tar -xzf hdf5-1.10.3.tar.gz \
+  && cd hdf5-1.10.3 \
+  && ./configure --prefix=/usr/local --enable-parallel --enable-shared --enable-build-mode=production \
+  && make -j$(nproc) \
+  && make install \
+  && make clean
 
 # Test config
 # h5pcc -showconfig
@@ -298,12 +298,13 @@ RUN pip install mpi4py \
 # h5dump SDS_row.h5
 
 # link h5py to h5pcc
+# export CC=mpicc
 # RUN wget https://files.pythonhosted.org/packages/74/5d/6f11a5fffc3d8884bb8d6c06abbee0b3d7c8c81bde9819979208ba823a47/h5py-2.8.0.tar.gz \
 #   && tar -xzf h5py-2.8.0.tar.gz \
 #   && cd h5py-2.8.0 \
-#   &&
-#   && python setup.py configure --mpi --hdf5=/usr/local
-#   && python setup.py build
+#   && python setup.py configure --mpi --hdf5=/usr/local \
+#   && python setup.py build \
+#   && python setup.py install
 
 # mpiexec -n 4 --allow-run-as-root python testh_5py.py
 
