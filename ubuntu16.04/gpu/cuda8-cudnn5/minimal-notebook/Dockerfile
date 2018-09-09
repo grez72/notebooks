@@ -230,6 +230,64 @@ RUN conda install -y -c conda-forge av trackpy ipywidgets \
   && /bin/bash -c "source activate python2 && cd $HOME/cython-munkres-wrapper && python setup.py install"
 
 #--------------------------------------
+# update pyzmq to fix python2 kernel crash
+#   AttributeError: type object 'IOLoop' has no attribute 'initialized'
+#--------------------------------------
+
+RUN /bin/bash -c "source activate python2 && conda install -c conda-forge pyzmq"
+
+#--------------------------------------
+# PyTurboJPEG
+#--------------------------------------
+
+RUN conda config --add channels conda-forge \
+  && conda install -c loopbio libjpeg-turbo \
+  && pip install -U git+git://github.com/lilohuang/PyTurboJPEG.git \
+  && mkdir -p /opt/libjpeg-turbo/lib64 \
+  && ln -s /opt/conda/lib/libjpeg-turbo/lib/libturbojpeg.so /opt/libjpeg-turbo/lib64/libturbojpeg.so \
+  && /bin/bash -c "source activate python2 && conda config --add channels conda-forge \
+    && conda install -c loopbio libjpeg-turbo \
+    && pip install -U git+git://github.com/lilohuang/PyTurboJPEG.git"
+
+#--------------------------------------
+# Parallel HDF5
+#--------------------------------------
+
+# https://drtiresome.com/2016/08/23/build-and-install-mpi-parallel-hdf5-and-h5py-from-source-on-linux/
+
+# install MPICH? see link above
+
+# install mpi4py
+RUN pip install mpi4py
+
+# https://github.com/HDFGroup/
+# h5cc -showconfig
+RUN wget https://support.hdfgroup.org/ftp/HDF5/releases/hdf5-1.10/hdf5-1.10.3/src/hdf5-1.10.3.tar.gz \
+    && tar -xzf hdf5-1.10.3.tar.gz \
+    && cd hdf5-1.10.3
+    && ./configure --prefix=/usr/local --enable-parallel --enable-shared --enable-build-mode=production \
+    && make -j$(nproc) \
+    && make install \
+    && make clean
+
+# Test config
+# h5pcc -showconfig
+# wget https://support.hdfgroup.org/ftp/HDF5/examples/parallel/Hyperslab_by_row.c
+# h5pcc Hyperslab_by_row.c
+# mpiexec -n 4 ./a.out
+# h5dump SDS_row.h5
+
+# link h5py to h5pcc
+# RUN wget https://files.pythonhosted.org/packages/74/5d/6f11a5fffc3d8884bb8d6c06abbee0b3d7c8c81bde9819979208ba823a47/h5py-2.8.0.tar.gz \
+#   && tar -xzf h5py-2.8.0.tar.gz \
+#   && cd h5py-2.8.0 \
+#   &&
+#   && python setup.py configure --mpi --hdf5=/usr/local
+#   && python setup.py build
+
+# mpiexec -n 4 --allow-run-as-root python testh_5py.py
+
+#--------------------------------------
 # Install Additional Packages
 #--------------------------------------
 
