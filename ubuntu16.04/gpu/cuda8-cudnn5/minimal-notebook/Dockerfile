@@ -167,6 +167,7 @@ RUN git clone https://github.com/Itseez/opencv.git \
     -D PYTHON3_PACKAGES_PATH:PATH=/opt/conda/lib/python3.6/site-packages \
     -D CMAKE_INSTALL_PREFIX=/usr/local \
     -D BUILD_opencv_dnn=OFF \
+    -D BUILD_opencv_dnn_modern=OFF \
     -D BUILD_PROTOBUF=OFF \
     -D WITH_CUDA=ON \
     -D FORCE_VTK=ON \
@@ -175,7 +176,6 @@ RUN git clone https://github.com/Itseez/opencv.git \
     -D WITH_OPENGL=ON \
     -D ENABLE_FAST_MATH=1 \
     -D CUDA_FAST_MATH=1 \
-    -D KALDI_DOUBLE_PRECISION=0 \
     -D WITH_CUBLAS=1 \
     -D WITH_FFMPEG=1 \
     -D INSTALL_PYTHON_EXAMPLES=ON \
