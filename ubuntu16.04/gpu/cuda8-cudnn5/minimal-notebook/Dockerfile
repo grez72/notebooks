@@ -116,6 +116,7 @@ RUN apt-get update -qq && sudo apt-get -y install \
       --extra-ldflags="-L~/ffmpeg_build/lib" \
       --extra-libs="-lpthread -lm" \
       --bindir="/bin" \
+      --enable-avresample \
       --enable-gpl \
       --enable-libass \
       --enable-libfdk-aac \
