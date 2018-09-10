@@ -294,8 +294,15 @@ RUN wget https://support.hdfgroup.org/ftp/HDF5/releases/hdf5-1.10/hdf5-1.10.3/sr
 # h5pcc -showconfig
 # wget https://support.hdfgroup.org/ftp/HDF5/examples/parallel/Hyperslab_by_row.c
 # h5pcc Hyperslab_by_row.c
-# mpiexec -n 4 ./a.out
+#
+
 # h5dump SDS_row.h5
+
+# RUN conda uninstall h5py hdf5
+# ENV HDF5_DIR=/usr/local
+# ENV CC=mpicc
+# ENV HDF5_MPI="ON"
+# RUN pip install --no-binary=h5py h5py
 
 # link h5py to h5pcc
 # export CC=mpicc
@@ -303,8 +310,8 @@ RUN wget https://support.hdfgroup.org/ftp/HDF5/releases/hdf5-1.10/hdf5-1.10.3/sr
 #   && tar -xzf h5py-2.8.0.tar.gz \
 #   && cd h5py-2.8.0 \
 #   && python setup.py configure --mpi --hdf5=/usr/local \
-#   && python setup.py build \
-#   && python setup.py install
+#   && CC=mpicc python setup.py build \
+#   && python setup.py install --user
 
 # mpiexec -n 4 --allow-run-as-root python testh_5py.py
 
