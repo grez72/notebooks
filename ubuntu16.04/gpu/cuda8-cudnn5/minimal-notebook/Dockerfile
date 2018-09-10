@@ -154,6 +154,7 @@ RUN apt-get update && apt-get install -y cmake \
 WORKDIR ~/
 RUN git clone https://github.com/Itseez/opencv.git \
   && cd opencv \
+  && git checkout tags/3.4.2 \
   && mkdir build \
   && cd build/ \
   && cmake -D CMAKE_BUILD_TYPE=RELEASE \
