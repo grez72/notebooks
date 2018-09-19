@@ -204,9 +204,12 @@ RUN apt-get update -qq && sudo apt-get -y install \
       libopus-dev \
     && rm -rf /var/lib/apt/lists/*
 
-  RUN mkdir -p ~/ffmpeg_sources
+  RUN mkdir -p /usr/local/src/ffmpeg_sources
 
-  WORKDIR ~/ffmpeg_sources
+  WORKDIR /usr/local/src/ffmpeg_sources
+
+  # RUN mkdir -p ~/ffmpeg_sources
+  # WORKDIR ~/ffmpeg_sources
 
   # RUN wget https://www.nasm.us/pub/nasm/releasebuilds/2.13.03/nasm-2.13.03.tar.bz2 && \
   #     tar xjvf nasm-2.13.03.tar.bz2 && \
