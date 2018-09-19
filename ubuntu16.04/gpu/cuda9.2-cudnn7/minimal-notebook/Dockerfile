@@ -91,11 +91,9 @@ RUN cd /tmp && \
     rm -rf /home/$NB_USER/.cache/yarn
 
 # Install Tini
-# RUN conda install --quiet --yes 'tini=0.18.0' && \
-#     conda list tini | grep tini | tr -s ' ' | cut -d ' ' -f 1,2 >> $CONDA_DIR/conda-meta/pinned && \
-#     conda clean -tipsy && \
-#     fix-permissions $CONDA_DIR && \
-#     fix-permissions /home/$NB_USER
+RUN conda install --quiet --yes 'tini=0.18.0' && \
+    conda list tini | grep tini | tr -s ' ' | cut -d ' ' -f 1,2 >> $CONDA_DIR/conda-meta/pinned && \
+    conda clean -tipsy
 
 #--------------------------------------
 #   Jupyterhub/Jupyterlab
@@ -107,4 +105,5 @@ WORKDIR $HOME/work
 
 EXPOSE 8888
 
-ENTRYPOINT ["jupyter", "lab","--ip=0.0.0.0","--allow-root"]
+ENTRYPOINT ["tini", "-g", "--"]
+# ENTRYPOINT ["jupyter", "lab","--ip=0.0.0.0","--allow-root"]
