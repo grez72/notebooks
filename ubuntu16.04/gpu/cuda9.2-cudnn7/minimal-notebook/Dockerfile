@@ -77,34 +77,34 @@ USER $NB_UID
 
 # Install conda as jovyan and check the md5 sum provided on the download site
 ENV MINICONDA_VERSION 4.5.4
-# RUN cd /tmp && \
-#     wget --quiet https://repo.continuum.io/miniconda/Miniconda3-${MINICONDA_VERSION}-Linux-x86_64.sh && \
-#     echo "a946ea1d0c4a642ddf0c3a26a18bb16d *Miniconda3-${MINICONDA_VERSION}-Linux-x86_64.sh" | md5sum -c - && \
-#     /bin/bash Miniconda3-${MINICONDA_VERSION}-Linux-x86_64.sh -f -b -p $CONDA_DIR && \
-#     rm Miniconda3-${MINICONDA_VERSION}-Linux-x86_64.sh && \
-#     $CONDA_DIR/bin/conda config --system --prepend channels conda-forge && \
-#     $CONDA_DIR/bin/conda config --system --set auto_update_conda false && \
-#     $CONDA_DIR/bin/conda config --system --set show_channel_urls true && \
-#     $CONDA_DIR/bin/conda install --quiet --yes conda="${MINICONDA_VERSION%.*}.*" && \
-#     $CONDA_DIR/bin/conda update --all --quiet --yes && \
+RUN cd /tmp && \
+    wget --quiet https://repo.continuum.io/miniconda/Miniconda3-${MINICONDA_VERSION}-Linux-x86_64.sh && \
+    echo "a946ea1d0c4a642ddf0c3a26a18bb16d *Miniconda3-${MINICONDA_VERSION}-Linux-x86_64.sh" | md5sum -c - && \
+    /bin/bash Miniconda3-${MINICONDA_VERSION}-Linux-x86_64.sh -f -b -p $CONDA_DIR && \
+    rm Miniconda3-${MINICONDA_VERSION}-Linux-x86_64.sh && \
+    $CONDA_DIR/bin/conda config --system --prepend channels conda-forge && \
+    $CONDA_DIR/bin/conda config --system --set auto_update_conda false && \
+    $CONDA_DIR/bin/conda config --system --set show_channel_urls true && \
+    $CONDA_DIR/bin/conda install --quiet --yes conda="${MINICONDA_VERSION%.*}.*" && \
+    $CONDA_DIR/bin/conda update --all --quiet --yes && \
+    conda clean -tipsy && \
+    rm -rf /home/$NB_USER/.cache/yarn
+
+# Install Tini
+# RUN conda install --quiet --yes 'tini=0.18.0' && \
+#     conda list tini | grep tini | tr -s ' ' | cut -d ' ' -f 1,2 >> $CONDA_DIR/conda-meta/pinned && \
 #     conda clean -tipsy && \
-#     rm -rf /home/$NB_USER/.cache/yarn
-#
-# # Install Tini
-# # RUN conda install --quiet --yes 'tini=0.18.0' && \
-# #     conda list tini | grep tini | tr -s ' ' | cut -d ' ' -f 1,2 >> $CONDA_DIR/conda-meta/pinned && \
-# #     conda clean -tipsy && \
-# #     fix-permissions $CONDA_DIR && \
-# #     fix-permissions /home/$NB_USER
-#
-# #--------------------------------------
-# #   Jupyterhub/Jupyterlab
-# #--------------------------------------
-#
-# WORKDIR /work
-#
-# RUN pip install jupyter -U && pip install jupyterlab
-#
-# EXPOSE 8888
-#
-# ENTRYPOINT ["jupyter", "lab","--ip=0.0.0.0","--allow-root"]
+#     fix-permissions $CONDA_DIR && \
+#     fix-permissions /home/$NB_USER
+
+#--------------------------------------
+#   Jupyterhub/Jupyterlab
+#--------------------------------------
+
+WORKDIR /work
+
+RUN pip install jupyter -U && pip install jupyterlab
+
+EXPOSE 8888
+
+ENTRYPOINT ["jupyter", "lab","--ip=0.0.0.0","--allow-root"]
