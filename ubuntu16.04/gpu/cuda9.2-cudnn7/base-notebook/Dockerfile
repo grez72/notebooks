@@ -4,6 +4,7 @@
 # nvidia-docker build -t grez72/deep-notebooks:ubuntu16.04-gpu-cuda9.2-cudnn7-base-notebook https://github.com/grez72/notebooks.git#master:ubuntu16.04/gpu/cuda9.2-cudnn7/base-notebook
 #
 # run it:
+# nvidia-docker run -it --rm grez72/deep-notebooks:ubuntu16.04-gpu-cuda9.2-cudnn7-base-notebook nvidia-smi
 # nvidia-docker run -it --rm grez72/deep-notebooks:ubuntu16.04-gpu-cuda9.2-cudnn7-base-notebook bash
 # nvidia-docker run -it --rm -p 8888:8888 grez72/deep-notebooks:ubuntu16.04-gpu-cuda9.2-cudnn7-base-notebook
 
@@ -108,7 +109,7 @@ RUN conda install --quiet --yes \
 USER root
 
 EXPOSE 8888
-WORKDIR $HOME
+WORKDIR $HOME/work
 
 # Configure container startup
 ENTRYPOINT ["tini", "-g", "--"]
