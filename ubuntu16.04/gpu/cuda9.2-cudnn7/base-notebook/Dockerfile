@@ -126,22 +126,6 @@ RUN conda install --quiet --yes \
     fix-permissions $CONDA_DIR && \
     fix-permissions /home/$NB_USER
 
-USER root
-
-EXPOSE 8888
-WORKDIR $HOME/work
-
-# Configure container startup
-ENTRYPOINT ["tini", "-g", "--"]
-CMD ["start-notebook.sh"]
-
-# Add local files as late as possible to avoid cache busting
-COPY start.sh /usr/local/bin/
-COPY start-notebook.sh /usr/local/bin/
-COPY start-singleuser.sh /usr/local/bin/
-COPY jupyter_notebook_config.py /etc/jupyter/
-RUN fix-permissions /etc/jupyter/
-
 #--------------------------------------
 # Install all OS dependencies for fully functional notebook server:
 #--------------------------------------
@@ -557,6 +541,22 @@ RUN pip install plotly \
 #--------------------------------------
 # Notebook Setup
 #--------------------------------------
+
+USER root
+
+EXPOSE 8888
+WORKDIR $HOME/work
+
+# Configure container startup
+ENTRYPOINT ["tini", "-g", "--"]
+CMD ["start-notebook.sh"]
+
+# Add local files as late as possible to avoid cache busting
+COPY start.sh /usr/local/bin/
+COPY start-notebook.sh /usr/local/bin/
+COPY start-singleuser.sh /usr/local/bin/
+COPY jupyter_notebook_config.py /etc/jupyter/
+RUN fix-permissions /etc/jupyter/
 
 WORKDIR $HOME/work
 
