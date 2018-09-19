@@ -1,5 +1,8 @@
 # grez72/minimal-notebook
 #
+# Creates a minimal jupyterlab notebook server with access to the GPU on the
+# host machine, running Ubuntu 16.04, CUDA 9.2, CUDNN7, python2, python3.
+#
 # build it:
 # nvidia-docker build -t grez72/minimal-notebook:ubuntu16.04-gpu-cuda9.2-cudnn7 https://github.com/grez72/notebooks.git#master:ubuntu16.04/gpu/cuda9.2-cudnn7/minimal-notebook
 #
