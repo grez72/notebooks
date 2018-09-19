@@ -70,6 +70,8 @@ WORKDIR /lab
 
 RUN apt-get update && pip install jupyter -U && pip install jupyterlab
 
+USER $NB_UID
+
 EXPOSE 8888
 
 ENTRYPOINT ["jupyter", "lab","--ip=0.0.0.0","--allow-root"]
