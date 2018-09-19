@@ -22,7 +22,8 @@ WORKDIR $HOME
 RUN pip install --upgrade pip \
   && pip install numpy --upgrade \
   && conda update conda \
-  && conda install -y mkl -c intel mock \
+  && conda install -c conda-forge mock \
+  && conda install -y mkl -c intel \
   && conda install pytorch torchvision cuda92 -c pytorch \
   && conda clean -tipsy
 
@@ -30,7 +31,8 @@ RUN pip install --upgrade pip \
 RUN /bin/bash -c "source activate python2 \
   && pip install --upgrade pip \
   && pip install numpy --upgrade \
-  && conda install -y mkl -c intel mock \
+  && conda install -y mkl -c intel \
+  && conda install -c conda-forge mock \
   && conda install pytorch torchvision cuda92 -c pytorch \
   && conda clean -tipsy"
 
