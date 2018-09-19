@@ -17,19 +17,19 @@ USER root
 #   OS dependencies
 #--------------------------------------
 
-RUN apt-get install python-minimal
+ENV DEBIAN_FRONTEND noninteractive
+RUN apt-get update && apt-get -yq dist-upgrade \
+ && apt-get install -yq --no-install-recommends \
+    wget \
+    bzip2 \
+    ca-certificates \
+    python-minimal \
+    sudo \
+    locales \
+    fonts-liberation \
+ && apt-get clean \
+ && rm -rf /var/lib/apt/lists/*
 
-# ENV DEBIAN_FRONTEND noninteractive
-# RUN apt-get update && apt-get -yq dist-upgrade \
-#  && apt-get install -yq --no-install-recommends \
-#     wget \
-#     bzip2 \
-#     ca-certificates \
-#     sudo \
-#     locales \
-#     fonts-liberation \
-#  && apt-get clean \
-#  && rm -rf /var/lib/apt/lists/*
 #
 # RUN echo "en_US.UTF-8 UTF-8" > /etc/locale.gen && \
 #     locale-gen
@@ -71,7 +71,7 @@ RUN apt-get install python-minimal
 
 WORKDIR /lab
 
-RUN pip install jupyter -U && pip install jupyterlab
+RUN apt-get update pip install jupyter -U && pip install jupyterlab
 
 EXPOSE 8888
 
