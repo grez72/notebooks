@@ -3,6 +3,10 @@
 # Creates a minimal jupyterlab notebook server with access to the GPU on the
 # host machine, running Ubuntu 16.04, CUDA 9.2, CUDNN7, python2, python3.
 #
+# By default, it uses a password
+# from notebook.auth import passwd
+# pwhash = passwd()
+#
 # build it:
 # nvidia-docker build -t grez72/minimal-notebook:ubuntu16.04-gpu-cuda9.2-cudnn7 https://github.com/grez72/notebooks.git#master:ubuntu16.04/gpu/cuda9.2-cudnn7/minimal-notebook
 #
@@ -123,6 +127,7 @@ RUN conda install --quiet --yes 'tini=0.18.0' && \
 USER root
 RUN pip install jupyter -U && pip install jupyterlab
 COPY jupyter_notebook_config.py /etc/jupyter/
+COPY genpass.py /
 RUN fix-permissions /etc/jupyter/
 
 WORKDIR $HOME/work
