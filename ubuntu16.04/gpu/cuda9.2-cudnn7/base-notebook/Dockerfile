@@ -129,21 +129,6 @@ RUN apt-get update && apt-get install -yq --no-install-recommends \
     rm -rf /var/lib/apt/lists/*
 
 #--------------------------------------
-# Utilities for optimizing python code:
-#--------------------------------------
-
-# Cupy, PyCuda, Numba
-RUN conda install -y -c lukepfister pycuda \
-  && /bin/bash -c "source activate python2 \
-  && conda install -y -c lukepfister pycuda" \
-  && pip install cupy \
-  && /bin/bash -c "source activate python2 \
-  && pip install cupy" \
-  && conda install -y numba \
-  && /bin/bash -c "source activate python2 \
-  && conda install -y numba"
-
-#--------------------------------------
 #   FFMEG with libx264 support
 #--------------------------------------
 
@@ -377,6 +362,21 @@ RUN git clone https://github.com/Itseez/opencv.git \
 # -D Protobuf_INCLUDE_DIR=/opt/conda/include \
 # -D Protobuf_PROTOC_EXECUTABLE=/opt/conda/bin/protoc \
 
+#--------------------------------------
+# Utilities for optimizing python code:
+#--------------------------------------
+
+# Cupy, PyCuda, Numba
+RUN conda install -y -c lukepfister pycuda \
+  && /bin/bash -c "source activate python2 \
+  && conda install -y -c lukepfister pycuda" \
+  && pip install cupy \
+  && /bin/bash -c "source activate python2 \
+  && pip install cupy" \
+  && conda install -y numba \
+  && /bin/bash -c "source activate python2 \
+  && conda install -y numba"
+  
 #--------------------------------------
 # Install Video and Image Utilities
 #--------------------------------------
