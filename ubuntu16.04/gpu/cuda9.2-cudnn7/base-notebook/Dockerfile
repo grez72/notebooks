@@ -29,7 +29,7 @@
 # nvidia-docker run -it --rm grez72/base-notebook:ubuntu16.04-cuda9.2-cudnn7 nvidia-smi
 #
 # generate a password:
-# nvidia-docker run -it --rm grez72/base-notebook:ubuntu16.04-gpu-cuda9.2-cudnn7 python /genpass.py -p 'supersecretpassword'
+# nvidia-docker run -it --rm grez72/base-notebook:ubuntu16.04-cuda9.2-cudnn7 python genpass.py -p 'supersecretpassword'
 #
 # mount it:
 # nvidia-docker run -it --rm grez72/base-notebook:ubuntu16.04-cuda9.2-cudnn7 bash
