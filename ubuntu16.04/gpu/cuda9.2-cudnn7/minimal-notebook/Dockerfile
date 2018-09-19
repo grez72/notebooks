@@ -119,6 +119,7 @@ RUN conda install --quiet --yes 'tini=0.18.0' && \
 
 USER root
 RUN pip install jupyter -U && pip install jupyterlab
+RUN jupyter notebook --set-password 'sha1:b43e2d39955f:b09acc36be8f4d051f6922e10f024db6d7dddd4b'
 
 WORKDIR $HOME/work
 
