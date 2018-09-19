@@ -118,7 +118,7 @@ RUN conda install --quiet --yes 'tini=0.18.0' && \
 #--------------------------------------
 
 USER root
-RUN pip install jupyter -U && pip install jupyterlab && ipython kernel install
+RUN pip install jupyter -U && pip install jupyterlab
 
 WORKDIR $HOME/work
 
