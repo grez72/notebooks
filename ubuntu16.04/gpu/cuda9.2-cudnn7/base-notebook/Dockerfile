@@ -71,7 +71,7 @@ RUN apt-get update && apt-get -yq dist-upgrade \
 
 WORKDIR /lab
 
-RUN apt-get update pip install jupyter && pip install jupyterlab
+RUN apt-get update && pip install jupyter -U && pip install jupyterlab
 
 EXPOSE 8888
 
