@@ -73,11 +73,10 @@ RUN groupadd wheel -g 11 && \
 #   Install conda / python
 #--------------------------------------
 
-# USER $NB_UID
-# WORKDIR ~
-#
-# # Install conda as jovyan and check the md5 sum provided on the download site
-# ENV MINICONDA_VERSION 4.5.4
+USER $NB_UID
+
+# Install conda as jovyan and check the md5 sum provided on the download site
+ENV MINICONDA_VERSION 4.5.4
 # RUN cd /tmp && \
 #     wget --quiet https://repo.continuum.io/miniconda/Miniconda3-${MINICONDA_VERSION}-Linux-x86_64.sh && \
 #     echo "a946ea1d0c4a642ddf0c3a26a18bb16d *Miniconda3-${MINICONDA_VERSION}-Linux-x86_64.sh" | md5sum -c - && \
