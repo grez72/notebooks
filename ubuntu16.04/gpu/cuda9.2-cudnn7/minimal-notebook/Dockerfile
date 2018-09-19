@@ -98,6 +98,8 @@ RUN cd /tmp && \
 
 # python2 environment
 RUN conda create -p $CONDA_DIR/envs/python2 python=2.7 \
+    'ipython=4.0*' \
+    'ipywidgets=4.0*' \
     && conda clean -yt
 
 USER root
