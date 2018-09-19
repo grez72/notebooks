@@ -101,9 +101,9 @@ RUN cd /tmp && \
 #   Jupyterhub/Jupyterlab
 #--------------------------------------
 
-WORKDIR /work
-
 RUN pip install jupyter -U && pip install jupyterlab
+
+WORKDIR $HOME/work
 
 EXPOSE 8888
 
