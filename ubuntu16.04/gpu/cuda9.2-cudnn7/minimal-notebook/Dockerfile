@@ -46,6 +46,8 @@ ENV CONDA_DIR=/opt/conda \
 
 ENV PATH=$CONDA_DIR/bin:$PATH
 
+RUN mkdir -p $CONDA_DIR
+
 # ENV PATH=$CONDA_DIR/bin:$PATH \
 #     HOME=/home/$NB_USER
 
