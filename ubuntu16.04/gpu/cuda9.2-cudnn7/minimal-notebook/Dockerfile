@@ -13,6 +13,9 @@
 # test it:
 # nvidia-docker run -it --rm grez72/minimal-notebook:ubuntu16.04-gpu-cuda9.2-cudnn7 nvidia-smi
 #
+# generate a password:
+# nvidia-docker run -it --rm grez72/minimal-notebook:ubuntu16.04-gpu-cuda9.2-cudnn7 python genpass.py -p 'supersecretpassword'
+#
 # mount it:
 # nvidia-docker run -it --rm grez72/minimal-notebook:ubuntu16.04-gpu-cuda9.2-cudnn7 bash
 #
@@ -127,7 +130,7 @@ RUN conda install --quiet --yes 'tini=0.18.0' && \
 USER root
 RUN pip install jupyter -U && pip install jupyterlab
 COPY jupyter_notebook_config.py /etc/jupyter/
-COPY genpass.py /
+COPY genpass.py .
 RUN fix-permissions /etc/jupyter/
 
 WORKDIR $HOME/work
