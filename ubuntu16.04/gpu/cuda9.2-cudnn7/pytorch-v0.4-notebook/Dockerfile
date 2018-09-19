@@ -35,6 +35,9 @@ RUN /bin/bash -c "source activate python2 \
   && conda install pytorch torchvision cuda92 -c pytorch \
   && conda clean -tipsy"
 
+# python2, couldn't update numpy for some reason:
+#  && pip install numpy --upgrade \
+
 # ==============================================================
 #  set workdir and user for jupyter notebook use
 # ==============================================================
