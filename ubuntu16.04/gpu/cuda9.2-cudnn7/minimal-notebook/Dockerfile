@@ -3,9 +3,19 @@
 # Creates a minimal jupyterlab notebook server with access to the GPU on the
 # host machine, running Ubuntu 16.04, CUDA 9.2, CUDNN7, python2, python3.
 #
-# By default, it uses a password
+# By default, Jupyter uses a password specified in jupyter_notebook_config.py
+# To use tokens instead, comment out the password line of the config file:
+# c.NotebookApp.password = 'sha1:b43e2d39955f:b09acc36be8f4d051f6922e10f024db6d7dddd4b'
+#
+# You can then generate your own password by running the following in python:
 # from notebook.auth import passwd
-# pwhash = passwd()
+# print(passwd('supersecretpassword'))
+#
+# Then update the config file:
+# c.NotebookApp.password = '...'
+#
+# uncomment the password line, and rebuild the image. You should then be
+# able to login with your password.
 #
 # build it:
 # nvidia-docker build -t grez72/minimal-notebook:ubuntu16.04-gpu-cuda9.2-cudnn7 https://github.com/grez72/notebooks.git#master:ubuntu16.04/gpu/cuda9.2-cudnn7/minimal-notebook
@@ -14,7 +24,7 @@
 # nvidia-docker run -it --rm grez72/minimal-notebook:ubuntu16.04-gpu-cuda9.2-cudnn7 nvidia-smi
 #
 # generate a password:
-# nvidia-docker run -it --rm grez72/minimal-notebook:ubuntu16.04-gpu-cuda9.2-cudnn7 python genpass.py -p 'supersecretpassword'
+# nvidia-docker run -it --rm grez72/minimal-notebook:ubuntu16.04-gpu-cuda9.2-cudnn7 python /genpass.py -p 'supersecretpassword'
 #
 # mount it:
 # nvidia-docker run -it --rm grez72/minimal-notebook:ubuntu16.04-gpu-cuda9.2-cudnn7 bash
