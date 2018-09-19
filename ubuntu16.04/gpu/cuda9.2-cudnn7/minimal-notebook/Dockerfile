@@ -11,7 +11,6 @@
 
 FROM grez72/base-notebook:ubuntu16.04-cuda9.2-cudnn7
 
-#     && conda clean -yt
 LABEL maintainer="George Alvarez <grez72@gmail.com, alvarez.wjh.harvard.edu>"
 
 #--------------------------------------

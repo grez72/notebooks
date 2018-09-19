@@ -123,7 +123,8 @@ RUN conda create -p $CONDA_DIR/envs/python2 python=2.7 \
     'numba=0.20*' \
     'bokeh=0.9*' \
     'libgfortran=1.0.0' \
-    pyzmq \
+    'tornado=4.5.3' \
+    'pyzmq' \
     && conda clean -yt
 
 USER root
@@ -151,13 +152,6 @@ RUN conda install --quiet --yes \
     rm -rf /home/$NB_USER/.cache/yarn && \
     fix-permissions $CONDA_DIR && \
     fix-permissions /home/$NB_USER
-
-#--------------------------------------
-# update pyzmq to fix python2 kernel crash
-#   AttributeError: type object 'IOLoop' has no attribute 'initialized'
-#--------------------------------------
-
-RUN /bin/bash -c "source activate python2 && conda install -c conda-forge pyzmq"
 
 USER root
 
