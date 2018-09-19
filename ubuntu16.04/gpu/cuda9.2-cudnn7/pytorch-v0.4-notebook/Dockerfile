@@ -23,7 +23,7 @@ RUN pip install --upgrade pip \
   && pip install numpy --upgrade \
   && conda update conda \
   && conda install -y mkl -c intel \
-  && conda install pytorch torchvision cuda90 -c pytorch \
+  && conda install pytorch torchvision cuda92 -c pytorch \
   && conda clean -tipsy
 
 # RUN conda update -y conda pytorch torchvision
