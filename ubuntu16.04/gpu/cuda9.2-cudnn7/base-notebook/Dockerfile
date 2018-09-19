@@ -4,9 +4,22 @@
 # nvidia-docker build -t grez72/deep-notebooks:ubuntu16.04-gpu-cuda9.2-cudnn7-base-notebook https://github.com/grez72/notebooks.git#master:ubuntu16.04/gpu/cuda9.2-cudnn7/base-notebook
 #
 # run it:
+# nvidia-docker run -it --rm grez72/deep-notebooks:ubuntu16.04-gpu-cuda9.2-cudnn7-base-notebook bash
 # nvidia-docker run -it --rm -p 8888:8888 grez72/deep-notebooks:ubuntu16.04-gpu-cuda9.2-cudnn7-base-notebook
 
 FROM nvidia/cuda:9.2-cudnn7-devel-ubuntu16.04
+
+#--------------------------------------
+#   Jupyterhub/Jupyterlab
+#--------------------------------------
+
+WORKDIR /lab
+
+RUN pip install jupyter -U && pip install jupyterlab
+
+EXPOSE 8888
+
+ENTRYPOINT ["jupyter", "lab","--ip=0.0.0.0","--allow-root"]
 
 # starting from scipy-noteboo notebook latest as of 2018/09/19
 # FROM jupyter/scipy-notebook:137a295ff71b
