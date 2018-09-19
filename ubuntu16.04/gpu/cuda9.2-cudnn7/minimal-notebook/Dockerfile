@@ -50,7 +50,10 @@ ENV CONDA_DIR=/opt/conda \
     LANGUAGE=en_US.UTF-8 \
     JUPYTER_ENABLE_LAB=1
 
-ENV PATH=$CONDA_DIR/bin:$PATH
+ENV PATH=$CONDA_DIR/bin:$PATH \
+    HOME=/home/$NB_USER
+
+ADD fix-permissions /usr/local/bin/fix-permissions
 
 # Create jovyan user with UID=1000 and in the 'users' group
 # and make sure these dirs are writable by the `users` group.
@@ -59,15 +62,15 @@ RUN groupadd wheel -g 11 && \
     useradd -m -s /bin/bash -N -u $NB_UID $NB_USER && \
     mkdir -p $CONDA_DIR && \
     chown $NB_USER:$NB_GID $CONDA_DIR && \
-    chmod g+w /etc/passwd
-    # && \
-    # fix-permissions $HOME && \
-    # fix-permissions $CONDA_DIR
+    chmod g+w /etc/passwd && \
+    fix-permissions $HOME && \
+    fix-permissions $CONDA_DIR
+
+USER $NB_UID
 
 # Setup work directory for backward-compatibility
-# RUN mkdir /home/$NB_USER/work && \
-#     fix-permissions /home/$NB_USER
-# RUN mkdir /home/$NB_USER/work
+RUN mkdir /home/$NB_USER/work && \
+    fix-permissions /home/$NB_USER
 
 #--------------------------------------
 #   Install conda / python
@@ -88,12 +91,16 @@ RUN cd /tmp && \
     $CONDA_DIR/bin/conda install --quiet --yes conda="${MINICONDA_VERSION%.*}.*" && \
     $CONDA_DIR/bin/conda update --all --quiet --yes && \
     conda clean -tipsy && \
-    rm -rf /home/$NB_USER/.cache/yarn
+    rm -rf /home/$NB_USER/.cache/yarn && \
+    fix-permissions $CONDA_DIR && \
+    fix-permissions /home/$NB_USER
 
 # Install Tini
 RUN conda install --quiet --yes 'tini=0.18.0' && \
     conda list tini | grep tini | tr -s ' ' | cut -d ' ' -f 1,2 >> $CONDA_DIR/conda-meta/pinned && \
-    conda clean -tipsy
+    conda clean -tipsy && \
+    fix-permissions $CONDA_DIR && \
+    fix-permissions /home/$NB_USER
 
 #--------------------------------------
 #   Jupyterhub/Jupyterlab

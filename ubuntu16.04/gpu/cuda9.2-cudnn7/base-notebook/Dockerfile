@@ -6,9 +6,13 @@
 # build it:
 # nvidia-docker build -t grez72/base-notebook:ubuntu16.04-cuda9.2-cudnn7 https://github.com/grez72/notebooks.git#master:ubuntu16.04/gpu/cuda9.2-cudnn7/base-notebook
 #
-# run it:
+# test it:
 # nvidia-docker run -it --rm grez72/base-notebook:ubuntu16.04-cuda9.2-cudnn7 nvidia-smi
+#
+# mount it:
 # nvidia-docker run -it --rm grez72/base-notebook:ubuntu16.04-cuda9.2-cudnn7 bash
+#
+# run it:
 # nvidia-docker run -it --rm -p 8888:8888 grez72/base-notebook:ubuntu16.04-cuda9.2-cudnn7
 
 FROM nvidia/cuda:9.2-cudnn7-devel-ubuntu16.04
@@ -64,9 +68,9 @@ RUN groupadd wheel -g 11 && \
     fix-permissions $HOME && \
     fix-permissions $CONDA_DIR
 
+# Setup work directory
 USER $NB_UID
 
-# Setup work directory for backward-compatibility
 RUN mkdir /home/$NB_USER/work && \
     fix-permissions /home/$NB_USER
 
@@ -74,7 +78,7 @@ RUN mkdir /home/$NB_USER/work && \
 #   Install conda / python
 #--------------------------------------
 
-# Install conda as jovyan and check the md5 sum provided on the download site
+# Install conda as NB_USER and check the md5 sum provided on the download site
 ENV MINICONDA_VERSION 4.5.4
 RUN cd /tmp && \
     wget --quiet https://repo.continuum.io/miniconda/Miniconda3-${MINICONDA_VERSION}-Linux-x86_64.sh && \
