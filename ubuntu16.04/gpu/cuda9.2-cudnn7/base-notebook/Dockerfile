@@ -152,6 +152,13 @@ RUN conda install --quiet --yes \
     fix-permissions $CONDA_DIR && \
     fix-permissions /home/$NB_USER
 
+#--------------------------------------
+# update pyzmq to fix python2 kernel crash
+#   AttributeError: type object 'IOLoop' has no attribute 'initialized'
+#--------------------------------------
+
+RUN /bin/bash -c "source activate python2 && conda install -c conda-forge pyzmq"
+
 USER root
 
 EXPOSE 8888
