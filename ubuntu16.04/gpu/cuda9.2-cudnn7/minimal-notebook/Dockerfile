@@ -106,4 +106,4 @@ WORKDIR $HOME/work
 EXPOSE 8888
 
 ENTRYPOINT ["tini", "-g", "--"]
-# ENTRYPOINT ["jupyter", "lab","--ip=0.0.0.0","--allow-root"]
+CMD ["jupyter", "lab","--ip=0.0.0.0","--allow-root"]
