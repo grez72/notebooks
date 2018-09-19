@@ -18,19 +18,19 @@
 # able to login with your password.
 #
 # build it:
-# nvidia-docker build -t grez72/minimal-notebook:ubuntu16.04-gpu-cuda9.2-cudnn7 https://github.com/grez72/notebooks.git#master:ubuntu16.04/gpu/cuda9.2-cudnn7/minimal-notebook
+# nvidia-docker build -t grez72/minimal-notebook:ubuntu16.04-cuda9.2-cudnn7 https://github.com/grez72/notebooks.git#master:ubuntu16.04/gpu/cuda9.2-cudnn7/minimal-notebook
 #
 # test it:
-# nvidia-docker run -it --rm grez72/minimal-notebook:ubuntu16.04-gpu-cuda9.2-cudnn7 nvidia-smi
+# nvidia-docker run -it --rm grez72/minimal-notebook:ubuntu16.04-cuda9.2-cudnn7 nvidia-smi
 #
 # generate a password:
-# nvidia-docker run -it --rm grez72/minimal-notebook:ubuntu16.04-gpu-cuda9.2-cudnn7 python /genpass.py -p 'supersecretpassword'
+# nvidia-docker run -it --rm grez72/minimal-notebook:ubuntu16.04-cuda9.2-cudnn7 python /genpass.py -p 'supersecretpassword'
 #
 # mount it:
-# nvidia-docker run -it --rm grez72/minimal-notebook:ubuntu16.04-gpu-cuda9.2-cudnn7 bash
+# nvidia-docker run -it --rm grez72/minimal-notebook:ubuntu16.04-cuda9.2-cudnn7 bash
 #
 # run the notebook:
-# nvidia-docker run -it --rm -p 8888:8888 grez72/minimal-notebook:ubuntu16.04-gpu-cuda9.2-cudnn7
+# nvidia-docker run -it --rm -p 8888:8888 grez72/minimal-notebook:ubuntu16.04-cuda9.2-cudnn7
 
 FROM nvidia/cuda:9.2-cudnn7-devel-ubuntu16.04
 
