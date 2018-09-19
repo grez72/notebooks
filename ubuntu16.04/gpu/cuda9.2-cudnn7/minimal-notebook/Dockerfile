@@ -95,7 +95,16 @@ RUN cd /tmp && \
     fix-permissions $CONDA_DIR && \
     fix-permissions /home/$NB_USER
 
+
+# python2 environment
+RUN conda create -p $CONDA_DIR/envs/python2 python=2.7 \
+    && conda clean -yt
+
+USER root
+RUN /bin/bash -c "source activate python2 && ipython kernel install"
+
 # Install Tini
+USER $NB_UID
 RUN conda install --quiet --yes 'tini=0.18.0' && \
     conda list tini | grep tini | tr -s ' ' | cut -d ' ' -f 1,2 >> $CONDA_DIR/conda-meta/pinned && \
     conda clean -tipsy && \
@@ -106,6 +115,7 @@ RUN conda install --quiet --yes 'tini=0.18.0' && \
 #   Jupyterhub/Jupyterlab
 #--------------------------------------
 
+USER root
 RUN pip install jupyter -U && pip install jupyterlab
 
 WORKDIR $HOME/work
