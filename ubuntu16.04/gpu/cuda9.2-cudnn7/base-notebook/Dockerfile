@@ -547,5 +547,11 @@ RUN pip install plotly \
   && pip install plotly \
   && conda install -c bioconda cufflinks"
 
+#--------------------------------------
+# Notebook Setup
+#--------------------------------------
+
+WORKDIR $HOME/work
+
 # Switch back to jovyan to avoid accidental container runs as root
 USER $NB_UID
