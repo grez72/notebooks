@@ -68,7 +68,10 @@ RUN cd /tmp && \
 
 WORKDIR /lab
 
-RUN apt-get update && pip install jupyter -U && pip install jupyterlab
+RUN apt-get update \
+  && pip install jupyterhub==0.8.1
+  && pip install jupyter -U \
+  && pip install jupyterlab
 
 USER $NB_UID
 
