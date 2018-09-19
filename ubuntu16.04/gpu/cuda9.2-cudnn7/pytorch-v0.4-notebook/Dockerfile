@@ -30,7 +30,6 @@ RUN pip install --upgrade pip \
 # RUN conda update -y conda pytorch torchvision
 RUN /bin/bash -c "source activate python2 \
   && pip install --upgrade pip \
-  && pip install numpy --upgrade \
   && conda install -y mkl -c intel \
   && conda install -c conda-forge mock \
   && conda install pytorch torchvision cuda92 -c pytorch \
