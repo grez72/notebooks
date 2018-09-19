@@ -239,9 +239,7 @@ RUN conda install --quiet --yes \
     'xlrd'  && \
     conda remove --quiet --yes --force qt pyqt && \
     conda clean -tipsy && \
-    # Activate ipywidgets extension in the environment that runs the notebook server
     jupyter nbextension enable --py widgetsnbextension --sys-prefix && \
-    # Also activate ipywidgets extension for JupyterLab
     jupyter labextension install @jupyter-widgets/jupyterlab-manager@^0.37.0 && \
     jupyter labextension install jupyterlab_bokeh@^0.6.0 && \
     npm cache clean --force && \
@@ -376,7 +374,7 @@ RUN conda install -y -c lukepfister pycuda \
   && conda install -y numba \
   && /bin/bash -c "source activate python2 \
   && conda install -y numba"
-  
+
 #--------------------------------------
 # Install Video and Image Utilities
 #--------------------------------------
