@@ -9,6 +9,62 @@
 
 FROM nvidia/cuda:9.2-cudnn7-devel-ubuntu16.04
 
+LABEL maintainer="George Alvarez <alvarez@wjh.harvard.com>"
+
+USER root
+
+#--------------------------------------
+#   OS dependencies
+#--------------------------------------
+
+RUN apt-get install python-minimal
+
+# ENV DEBIAN_FRONTEND noninteractive
+# RUN apt-get update && apt-get -yq dist-upgrade \
+#  && apt-get install -yq --no-install-recommends \
+#     wget \
+#     bzip2 \
+#     ca-certificates \
+#     sudo \
+#     locales \
+#     fonts-liberation \
+#  && apt-get clean \
+#  && rm -rf /var/lib/apt/lists/*
+#
+# RUN echo "en_US.UTF-8 UTF-8" > /etc/locale.gen && \
+#     locale-gen
+#
+# ENV CONDA_DIR=/opt/conda \
+#     SHELL=/bin/bash \
+#     NB_UID=1000 \
+#     NB_GID=100 \
+#     LC_ALL=en_US.UTF-8 \
+#     LANG=en_US.UTF-8 \
+#     LANGUAGE=en_US.UTF-8
+#
+# ENV PATH=$CONDA_DIR/bin:$PATH \
+#     HOME=/lab
+
+#--------------------------------------
+#   Install Conda for python env management
+#--------------------------------------
+
+# ENV MINICONDA_VERSION 4.5.4
+# RUN cd /tmp && \
+#     wget --quiet https://repo.continuum.io/miniconda/Miniconda3-${MINICONDA_VERSION}-Linux-x86_64.sh && \
+#     echo "a946ea1d0c4a642ddf0c3a26a18bb16d *Miniconda3-${MINICONDA_VERSION}-Linux-x86_64.sh" | md5sum -c - && \
+#     /bin/bash Miniconda3-${MINICONDA_VERSION}-Linux-x86_64.sh -f -b -p $CONDA_DIR && \
+#     rm Miniconda3-${MINICONDA_VERSION}-Linux-x86_64.sh && \
+#     $CONDA_DIR/bin/conda config --system --prepend channels conda-forge && \
+#     $CONDA_DIR/bin/conda config --system --set auto_update_conda false && \
+#     $CONDA_DIR/bin/conda config --system --set show_channel_urls true && \
+#     $CONDA_DIR/bin/conda install --quiet --yes conda="${MINICONDA_VERSION%.*}.*" && \
+#     $CONDA_DIR/bin/conda update --all --quiet --yes && \
+#     conda clean -tipsy && \
+#     rm -rf /home/$NB_USER/.cache/yarn && \
+#     fix-permissions $CONDA_DIR && \
+#     fix-permissions /home/$NB_USER
+
 #--------------------------------------
 #   Jupyterhub/Jupyterlab
 #--------------------------------------
