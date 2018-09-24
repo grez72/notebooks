@@ -557,10 +557,14 @@ RUN wget https://support.hdfgroup.org/ftp/HDF5/releases/hdf5-1.10/hdf5-1.10.3/sr
 #--------------------------------------
 
 # plotly + dependencies
-RUN pip install plotly \
+RUN apt-get update && apt-get install -y build-essential libcap-dev
+RUN easy_install python-prctl
+RUN pip install plotly msgpack msgpack-numpy lmdb \
+  && pip install --upgrade git+https://github.com/tensorpack/tensorpack.git \
   && conda install -c bioconda cufflinks \
   && /bin/bash -c "source activate python2 \
-  && pip install plotly \
+  && pip install plotly msgpack msgpack-numpy lmdb \
+  && pip install --upgrade git+https://github.com/tensorpack/tensorpack.git \
   && conda install -c bioconda cufflinks"
 
 #--------------------------------------

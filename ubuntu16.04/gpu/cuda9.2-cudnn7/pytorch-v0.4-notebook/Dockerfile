@@ -1,4 +1,4 @@
-# grez72/deep-notebooks:ubuntu16.04-gpu-cuda9.2-cudnn7-pytorch-v0.4
+# grez72/deep-notebooks:ubuntu16.04-cuda9.2-cudnn7-pytorch-v0.4-notebook
 #
 # Pytorch jupyter notebook with gpu suppport (nvidia CUDA9.2 cuDNN7).
 #
