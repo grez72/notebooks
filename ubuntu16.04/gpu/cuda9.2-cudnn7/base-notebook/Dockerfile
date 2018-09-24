@@ -562,7 +562,7 @@ RUN easy_install python-prctl
 RUN pip install plotly msgpack msgpack-numpy lmdb \
   && pip install --upgrade git+https://github.com/tensorpack/tensorpack.git \
   && conda install -c bioconda cufflinks \
-  && /bin/bash -c "source activate python2 \
+RUN /bin/bash -c "source activate python2 \
   && pip install plotly msgpack msgpack-numpy lmdb \
   && pip install --upgrade git+https://github.com/tensorpack/tensorpack.git \
   && conda install -c bioconda cufflinks"
