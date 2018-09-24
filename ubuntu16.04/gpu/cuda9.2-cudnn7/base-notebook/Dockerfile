@@ -561,7 +561,7 @@ RUN apt-get update && apt-get install -y build-essential libcap-dev
 RUN easy_install python-prctl
 RUN pip install plotly msgpack msgpack-numpy lmdb \
   && pip install --upgrade git+https://github.com/tensorpack/tensorpack.git \
-  && conda install -c bioconda cufflinks \
+  && conda install -c bioconda cufflinks
 RUN /bin/bash -c "source activate python2 \
   && pip install plotly msgpack msgpack-numpy lmdb \
   && pip install --upgrade git+https://github.com/tensorpack/tensorpack.git \
