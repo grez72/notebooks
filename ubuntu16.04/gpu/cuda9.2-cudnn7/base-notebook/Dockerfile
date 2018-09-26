@@ -477,14 +477,14 @@ RUN conda install -y -c conda-forge av trackpy ipywidgets \
 # PyTurboJPEG
 #--------------------------------------
 
+# http://blog.loopbio.com/video-io-2-jpeg-decoding.html
+# using loopbio's PyTurbojpeg fork! https://github.com/loopbio/PyTurbojpeg
 RUN conda config --add channels conda-forge \
   && conda install -c loopbio libjpeg-turbo \
-  && pip install -U git+git://github.com/lilohuang/PyTurboJPEG.git \
   && mkdir -p /opt/libjpeg-turbo/lib64 \
   && ln -s /opt/conda/lib/libjpeg-turbo/lib/libturbojpeg.so /opt/libjpeg-turbo/lib64/libturbojpeg.so \
   && /bin/bash -c "source activate python2 && conda config --add channels conda-forge \
-    && conda install -c loopbio libjpeg-turbo \
-    && pip install -U git+git://github.com/lilohuang/PyTurboJPEG.git"
+    && conda install -c loopbio libjpeg-turbo"
 
 #--------------------------------------
 # Parallel HDF5
