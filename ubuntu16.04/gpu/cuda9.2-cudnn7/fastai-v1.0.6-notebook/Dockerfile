@@ -25,6 +25,7 @@ RUN pip install --upgrade pip \
   && conda install -c conda-forge mock \
   && conda install -y mkl -c intel \
   && conda install pytorch-nightly cuda92 -c pytorch \
+  && conda install -c fastai torchvision-nightly fastprogress \
   && conda clean -tipsy
 
 # RUN conda update -y conda pytorch torchvision
@@ -33,6 +34,7 @@ RUN /bin/bash -c "source activate python2 \
   && conda install -y mkl -c intel \
   && conda install -c conda-forge mock \
   && conda install pytorch-nightly cuda92 -c pytorch \
+  && conda install -c fastai torchvision-nightly fastprogress \
   && conda clean -tipsy"
 
 # python2, couldn't update numpy for some reason:
@@ -41,6 +43,13 @@ RUN /bin/bash -c "source activate python2 \
 # ==============================================================
 #  INSTALL FASTAI
 # ==============================================================
+
+WORKDIR $HOME
+
+RUN git clone https://github.com/fastai/fastai \
+  && cd fastai \
+  && conda env update \
+  && conda clean -tipsy
 
 # ==============================================================
 #  set workdir and user for jupyter notebook use
