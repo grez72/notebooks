@@ -22,21 +22,21 @@ WORKDIR $HOME
 RUN pip install --upgrade pip \
   && pip install numpy --upgrade \
   && conda update conda \
-  && conda install scipy \
-  && conda install -c conda-forge mock \
+  && conda install -y scipy scikit-learn \
+  && conda install -y -c conda-forge mock \
   && conda install -y mkl -c intel \
-  && conda install pytorch-nightly cuda92 -c pytorch \
-  && conda install -c fastai torchvision-nightly fastprogress \
+  && conda install -y pytorch-nightly cuda92 -c pytorch \
+  && conda install -y -c fastai torchvision-nightly fastprogress \
   && conda clean -tipsy
 
 # RUN conda update -y conda pytorch torchvision
 RUN /bin/bash -c "source activate python2 \
   && pip install --upgrade pip \
-  && conda install scipy \
+  && conda install -y scipy scikit-learn \
   && conda install -y mkl -c intel \
-  && conda install -c conda-forge mock \
-  && conda install pytorch-nightly cuda92 -c pytorch \
-  && conda install -c fastai torchvision-nightly fastprogress \
+  && conda install -y -c conda-forge mock \
+  && conda install -y pytorch-nightly cuda92 -c pytorch \
+  && conda install -y -c fastai torchvision-nightly fastprogress \
   && conda clean -tipsy"
 
 # python2, couldn't update numpy for some reason:
