@@ -51,6 +51,7 @@ WORKDIR $HOME
 RUN git clone https://github.com/fastai/fastai \
   && cd fastai \
   && conda env update \
+  && pip install . \
   && conda clean -tipsy
 
 # ==============================================================
