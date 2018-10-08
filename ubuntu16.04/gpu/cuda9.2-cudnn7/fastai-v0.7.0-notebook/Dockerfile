@@ -1,9 +1,9 @@
-# grez72/deep-notebooks:ubuntu16.04-cuda9.2-cudnn7-fastai-v1.0.6-notebook
+# grez72/deep-notebooks:ubuntu16.04-cuda9.2-cudnn7-fastai-v0.7.0-notebook
 #
 # Pytorch jupyter notebook with gpu suppport (nvidia CUDA9.2 cuDNN7).
 #
-# sudo nvidia-docker build -t grez72/deep-notebooks:ubuntu16.04-cuda9.2-cudnn7-fastai-v1.0.6-notebook https://github.com/grez72/notebooks.git#master:ubuntu16.04/gpu/cuda9.2-cudnn7/fastai-v1.0.6-notebook
-# nvidia-docker run -it --rm --shm-size=2G -p 8888:8888 grez72/deep-notebooks:ubuntu16.04-gpu-cuda9.2-cudnn7-fastai-v1.0.6
+# sudo nvidia-docker build -t grez72/deep-notebooks:ubuntu16.04-cuda9.2-cudnn7-fastai-v0.7.0-notebook https://github.com/grez72/notebooks.git#master:ubuntu16.04/gpu/cuda9.2-cudnn7/fastai-v0.7.0-notebook
+# nvidia-docker run -it --rm --shm-size=2G -p 8888:8888 grez72/deep-notebooks:ubuntu16.04-gpu-cuda9.2-cudnn7-fastai-v0.7.0
 
 FROM grez72/base-notebook:ubuntu16.04-cuda9.2-cudnn7
 
@@ -25,10 +25,9 @@ RUN pip install --upgrade pip \
   && conda install -y scipy scikit-learn bokeh pandas patsy seaborn scikit-image \
   && conda install -y -c conda-forge mock \
   && conda install -y mkl -c intel \
-  && conda install -y pytorch-nightly cuda92 -c pytorch \
-  && conda install -y -c fastai torchvision-nightly fastprogress \
-  && conda install -c fastai fastai \
-  && conda clean -tipsy
+  && conda clean -tipsy \
+  && pip install torch_nightly -f https://download.pytorch.org/whl/nightly/cu92/torch_nightly.html
+  && pip install fastai==0.7.0
 
 # RUN conda update -y conda pytorch torchvision
 RUN /bin/bash -c "source activate python2 \
@@ -47,8 +46,8 @@ RUN /bin/bash -c "source activate python2 \
 #  INSTALL FASTAI
 # ==============================================================
 
-WORKDIR $HOME
-
+# WORKDIR $HOME
+#
 # RUN git clone https://github.com/fastai/fastai \
 #   && cd fastai \
 #   && conda env update \
