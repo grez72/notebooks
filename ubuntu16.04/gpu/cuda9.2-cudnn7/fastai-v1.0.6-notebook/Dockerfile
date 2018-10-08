@@ -52,7 +52,8 @@ RUN git clone https://github.com/fastai/fastai \
   && cd fastai \
   && conda env update \
   && pip install . \
-  && conda clean -tipsy
+  && wget -O $HOME/fastai/weights.tgz http://files.fast.ai/models/weights.tgz \
+  && tar xvfz $HOME/fastai/weights.tgz -C fastai
 
 # ==============================================================
 #  set workdir and user for jupyter notebook use
