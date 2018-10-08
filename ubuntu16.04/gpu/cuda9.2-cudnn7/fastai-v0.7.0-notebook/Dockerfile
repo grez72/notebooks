@@ -25,9 +25,10 @@ RUN pip install --upgrade pip \
   && conda install -y scipy scikit-learn bokeh pandas patsy seaborn scikit-image \
   && conda install -y -c conda-forge mock \
   && conda install -y mkl -c intel \
+  && conda install -y pytorch-nightly cuda92 -c pytorch \
+  && conda install -y -c fastai torchvision-nightly fastprogress \
+  && conda install -c fastai fastai=0.7.0 \
   && conda clean -tipsy \
-  && pip install torch_nightly -f https://download.pytorch.org/whl/nightly/cu92/torch_nightly.html \
-  && pip install fastai==0.7.0
 
 # RUN conda update -y conda pytorch torchvision
 RUN /bin/bash -c "source activate python2 \
