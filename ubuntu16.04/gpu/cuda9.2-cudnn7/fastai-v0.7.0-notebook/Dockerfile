@@ -19,26 +19,24 @@ WORKDIR $HOME
 #  INSTALL PYTORCH
 # ==============================================================
 
-RUN pip install --upgrade pip \
-  && pip install numpy --upgrade \
-  && conda update conda \
+RUN conda update conda \
   && conda install -y scipy scikit-learn bokeh pandas patsy seaborn scikit-image \
   && conda install -y -c conda-forge mock \
   && conda install -y mkl -c intel \
-  && conda install -y pytorch-nightly cuda92 -c pytorch \
-  && conda install -y -c fastai torchvision-nightly fastprogress \
-  && conda install -c fastai fastai=0.7.0 \
   && conda clean -tipsy \
+  && pip install --upgrade pip \
+  && pip install numpy --upgrade \
+  && pip install fastai==0.7.0
 
 # RUN conda update -y conda pytorch torchvision
-RUN /bin/bash -c "source activate python2 \
-  && pip install --upgrade pip \
-  && conda install -y scipy scikit-learn bokeh pandas patsy seaborn scikit-image \
-  && conda install -y mkl -c intel \
-  && conda install -y -c conda-forge mock \
-  && conda install -y -c pytorch pytorch-nightly cuda92 \
-  && conda install -y -c fastai torchvision-nightly fastprogress \
-  && conda clean -tipsy"
+# RUN /bin/bash -c "source activate python2 \
+#   && pip install --upgrade pip \
+#   && conda install -y scipy scikit-learn bokeh pandas patsy seaborn scikit-image \
+#   && conda install -y mkl -c intel \
+#   && conda install -y -c conda-forge mock \
+#   && conda install -y -c pytorch pytorch-nightly cuda92 \
+#   && conda install -y -c fastai torchvision-nightly fastprogress \
+#   && conda clean -tipsy"
 
 # python2, couldn't update numpy for some reason:
 #  && pip install numpy --upgrade \
