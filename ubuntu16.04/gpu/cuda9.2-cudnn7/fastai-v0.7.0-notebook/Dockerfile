@@ -26,7 +26,7 @@ RUN pip install --upgrade pip \
   && conda install -y -c conda-forge mock \
   && conda install -y mkl -c intel \
   && conda clean -tipsy \
-  && pip install torch_nightly -f https://download.pytorch.org/whl/nightly/cu92/torch_nightly.html
+  && pip install torch_nightly -f https://download.pytorch.org/whl/nightly/cu92/torch_nightly.html \
   && pip install fastai==0.7.0
 
 # RUN conda update -y conda pytorch torchvision
