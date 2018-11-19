@@ -23,7 +23,7 @@
 # is copied at the end). You should then be able to login with your password.
 #
 # build it:
-# nvidia-docker build -t grez72/base-notebook:ubuntu16.04-cuda9.2-cudnn7 https://github.com/grez72/notebooks.git#master:ubuntu16.04/gpu/cuda9.2-cudnn7/base-notebook
+# docker build -t grez72/base-notebook:ubuntu16.04-cuda9.2-cudnn7 https://github.com/grez72/notebooks.git#master:ubuntu16.04/gpu/cuda9.2-cudnn7/base-notebook
 #
 # test it:
 # nvidia-docker run -it --rm grez72/base-notebook:ubuntu16.04-cuda9.2-cudnn7 nvidia-smi
@@ -143,7 +143,7 @@ RUN conda install --quiet --yes \
     'jupyterhub=0.9.*' \
     'jupyterlab=0.35.*' && \
     conda clean -tipsy && \
-    jupyter labextension install @jupyterlab/hub-extension@^0.11.0 && \
+    jupyter labextension install @jupyterlab/hub-extension@^0.12.0 && \
     npm cache clean --force && \
     jupyter notebook --generate-config && \
     rm -rf $CONDA_DIR/share/jupyter/lab/staging && \
