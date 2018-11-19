@@ -141,7 +141,7 @@ USER $NB_USER
 RUN conda install --quiet --yes \
     'notebook=5.6.*' \
     'jupyterhub=0.9.*' \
-    'jupyterlab=0.34.*' && \
+    'jupyterlab=0.35.*' && \
     conda clean -tipsy && \
     jupyter labextension install @jupyterlab/hub-extension@^0.11.0 && \
     npm cache clean --force && \
@@ -479,6 +479,7 @@ RUN conda install -y -c conda-forge av trackpy ipywidgets \
 
 # http://blog.loopbio.com/video-io-2-jpeg-decoding.html
 # using loopbio's PyTurbojpeg fork! https://github.com/loopbio/PyTurbojpeg
+# pip install -U git+git://github.com/loopbio/PyTurboJPEG.git
 RUN conda config --add channels conda-forge \
   && conda install -c loopbio libjpeg-turbo \
   && mkdir -p /opt/libjpeg-turbo/lib64 \
