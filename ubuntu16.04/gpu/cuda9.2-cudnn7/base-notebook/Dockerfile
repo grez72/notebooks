@@ -458,6 +458,8 @@ RUN git clone https://github.com/Itseez/opencv.git \
     -D CUDA_FAST_MATH=1 \
     -D WITH_CUBLAS=1 \
     -D WITH_FFMPEG=1 \
+    -D WITH_JPEG=ON \
+    -D BUILD_JPEG=OFF \
     -D JPEG_LIBRARY=/opt/libjpeg-turbo/lib64/libturbojpeg.so \
     -D JPEG_INCLUDE_DIR=/usr/libjpeg-turbo/include \
     -D BUILD_TIFF=ON \
@@ -612,6 +614,13 @@ RUN pip install plotly msgpack msgpack-numpy lmdb \
 RUN /bin/bash -c "source activate python2 \
   && pip install plotly \
   && conda install -c bioconda cufflinks"
+
+RUN conda install -y cookiecutter \
+  && conda install -c menpo pathlib \
+  && conda clean -tipsy \
+  && /bin/bash -c "source activate python2 \
+    && conda install -c menpo pathlib \
+    && conda clean -tipsy"
 
 #--------------------------------------
 # Notebook Setup

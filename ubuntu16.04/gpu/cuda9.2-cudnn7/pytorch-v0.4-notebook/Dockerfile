@@ -42,7 +42,12 @@ RUN /bin/bash -c "source activate python2 \
 #  Late Installtions, Candidates for Base Notebook
 # ==============================================================
 
-RUN conda install -y cookiecutter
+# RUN conda install -y cookiecutter \
+#   && conda install -c menpo pathlib \
+#   && conda clean -tipsy \
+#   && /bin/bash -c "source activate python2 \
+#     && conda install -c menpo pathlib \
+#     && conda clean -tipsy"
 
 # ==============================================================
 #  set workdir and user for jupyter notebook use
