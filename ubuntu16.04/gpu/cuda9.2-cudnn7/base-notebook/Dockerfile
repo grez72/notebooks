@@ -363,20 +363,12 @@ RUN /bin/bash -c "source activate python2 && ipython kernel install"
 #--------------------------------------
 
 RUN apt-get update && apt-get install -y cmake \
-  libjpeg9-dev libtiff5-dev libjasper-dev libpng12-dev \
+  libjpeg8-dev libtiff5-dev libjasper-dev libpng12-dev \
   libgtk2.0-dev \
   libavcodec-dev libavformat-dev libswscale-dev libv4l-dev \
   libatlas-base-dev gfortran \
   libhdf5-serial-dev \
   python3-dev python2.7-dev
-
-# RUN apt-get update && apt-get install -y cmake \
-#   libjpeg8-dev libtiff5-dev libjasper-dev libpng12-dev \
-#   libgtk2.0-dev \
-#   libavcodec-dev libavformat-dev libswscale-dev libv4l-dev \
-#   libatlas-base-dev gfortran \
-#   libhdf5-serial-dev \
-#   python3-dev python2.7-dev
 
 #--------------------------------------
 #   LIBJPEGTURBO
