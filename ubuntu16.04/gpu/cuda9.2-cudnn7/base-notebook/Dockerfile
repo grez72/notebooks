@@ -371,6 +371,70 @@ RUN apt-get update && apt-get install -y cmake \
   python3-dev python2.7-dev
 
 #--------------------------------------
+# Install OpenCV
+#--------------------------------------
+
+# do we need to set these?
+# export PATH=/usr/local/cuda/bin:$PATH
+# export LPATH=/usr/local/nvidia/lib64:$LPATH
+# export LIBRARY_PATH=/usr/local/nvidia:$LIBRARY_PATH
+# export LD_LIBRARY_PATH=/usr/local/nvidia/lib64:/usr/local/cuda/lib64:/usr/local/cuda/lib:$LD_LIBRARY_PATH
+
+# -D WITH_JPEG=ON \
+# -D BUILD_JPEG=OFF \
+# -D JPEG_LIBRARY=/opt/libjpeg-turbo/lib64/libturbojpeg.so \
+# -D JPEG_INCLUDE_DIR=/usr/libjpeg-turbo/include \
+# -D BUILD_TIFF=ON \
+# -D WITH_TIFF=ON \
+# -D BUILD_PNG=ON \
+# -D WITH_PNG=ON \
+
+WORKDIR ~/
+
+# try to force use of our custom installation of ffmpeg
+RUN conda uninstall -y ffmpeg \
+  && /bin/bash -c "source activate python2 && conda uninstall -y ffmpeg"
+RUN git clone https://github.com/Itseez/opencv.git \
+  && cd opencv \
+  && git checkout tags/3.4.3 \
+  && mkdir build \
+  && cd build/ \
+  && cmake -D CMAKE_BUILD_TYPE=RELEASE \
+    -D PYTHON2_EXECUTABLE:FILEPATH=/opt/conda/envs/python2/bin/python2.7 \
+    -D PYTHON2_INCLUDE_DIR:PATH=/opt/conda/envs/python2/include/python2.7 \
+    -D PYTHON2_NUMPY_INCLUDE_DIRS:PATH=/opt/conda/envs/python2/lib/python2.7/site-packages/numpy/core/include \
+    -D PYTHON2_PACKAGES_PATH:PATH=/opt/conda/envs/python2/lib/python2.7/site-packages \
+    -D PYTHON3_EXECUTABLE:FILEPATH=/opt/conda/bin/python3.6 \
+    -D PYTHON3_INCLUDE_DIR:PATH=/opt/conda/include/python3.6m \
+    -D PYTHON3_NUMPY_INCLUDE_DIRS:PATH=/opt/conda/lib/python3.6/site-packages/numpy/core/include \
+    -D PYTHON3_PACKAGES_PATH:PATH=/opt/conda/lib/python3.6/site-packages \
+    -D CMAKE_INSTALL_PREFIX=/usr/local \
+    -D BUILD_opencv_dnn=OFF \
+    -D BUILD_opencv_dnn_modern=OFF \
+    -D BUILD_PROTOBUF=OFF \
+    -D WITH_CUDA=OFF \
+    -D FORCE_VTK=ON \
+    -D WITH_TBB=ON \
+    -D WITH_V4L=ON \
+    -D WITH_OPENGL=ON \
+    -D ENABLE_FAST_MATH=1 \
+    -D CUDA_FAST_MATH=1 \
+    -D WITH_CUBLAS=1 \
+    -D WITH_FFMPEG=1 \
+    -D INSTALL_PYTHON_EXAMPLES=ON \
+    -D BUILD_EXAMPLES=OFF .. \
+  && make -j$(nproc) && sudo make install \
+  && ldconfig
+
+# why this setting?:
+# -D BUILD_opencv_dnn=OFF \
+# Had to turn off BUILD_opencv_dnn, because it uses conflicting version of Protobuf_LIBRARY
+# alternatively, we can try to set these to our local Protobuf_LIBRARY
+# -D Protobuf_LIBRARY=/opt/conda/lib \
+# -D Protobuf_INCLUDE_DIR=/opt/conda/include \
+# -D Protobuf_PROTOC_EXECUTABLE=/opt/conda/bin/protoc \
+
+#--------------------------------------
 #   LIBJPEGTURBO
 #--------------------------------------
 
@@ -410,78 +474,6 @@ RUN cd /opt \
 RUN pip install -U git+git://github.com/loopbio/PyTurboJPEG.git \
   && /bin/bash -c "source activate python2 && pip install -U git+git://github.com/loopbio/PyTurboJPEG.git"
 
-#--------------------------------------
-# Install OpenCV
-#--------------------------------------
-
-# do we need to set these?
-# export PATH=/usr/local/cuda/bin:$PATH
-# export LPATH=/usr/local/nvidia/lib64:$LPATH
-# export LIBRARY_PATH=/usr/local/nvidia:$LIBRARY_PATH
-# export LD_LIBRARY_PATH=/usr/local/nvidia/lib64:/usr/local/cuda/lib64:/usr/local/cuda/lib:$LD_LIBRARY_PATH
-
-# -D WITH_JPEG=ON
-# -D BUILD_JPEG=OFF
-# -D JPEG_INCLUDE_DIR=/path/to/libjepeg-turbo/include/ -DJPEG_LIBRARY=/usr/lib/x86_64-linux-gnu/libjpeg.a /path/to/OpenCV
-# -D WITH_JPEG=ON \
-# -D BUILD_JPEG=OFF \
-# -D JPEG_INCLUDE_DIR=/opt/conda/ \
-# -D JPEG_LIBRARY=/usr/lib/x86_64-linux-gnu/libjpeg.a \
-# -D JPEG_INCLUDE_DIR=/usr/libjpeg-turbo/include
-# -D JPEG_LIBRARY=/usr/libjpeg-turbo/lib/libjpeg.a
-
-WORKDIR ~/
-
-# try to force use of our custom installation of ffmpeg
-RUN conda uninstall -y ffmpeg \
-  && /bin/bash -c "source activate python2 && conda uninstall -y ffmpeg"
-RUN git clone https://github.com/Itseez/opencv.git \
-  && cd opencv \
-  && git checkout tags/3.4.3 \
-  && mkdir build \
-  && cd build/ \
-  && cmake -D CMAKE_BUILD_TYPE=RELEASE \
-    -D PYTHON2_EXECUTABLE:FILEPATH=/opt/conda/envs/python2/bin/python2.7 \
-    -D PYTHON2_INCLUDE_DIR:PATH=/opt/conda/envs/python2/include/python2.7 \
-    -D PYTHON2_NUMPY_INCLUDE_DIRS:PATH=/opt/conda/envs/python2/lib/python2.7/site-packages/numpy/core/include \
-    -D PYTHON2_PACKAGES_PATH:PATH=/opt/conda/envs/python2/lib/python2.7/site-packages \
-    -D PYTHON3_EXECUTABLE:FILEPATH=/opt/conda/bin/python3.6 \
-    -D PYTHON3_INCLUDE_DIR:PATH=/opt/conda/include/python3.6m \
-    -D PYTHON3_NUMPY_INCLUDE_DIRS:PATH=/opt/conda/lib/python3.6/site-packages/numpy/core/include \
-    -D PYTHON3_PACKAGES_PATH:PATH=/opt/conda/lib/python3.6/site-packages \
-    -D CMAKE_INSTALL_PREFIX=/usr/local \
-    -D BUILD_opencv_dnn=OFF \
-    -D BUILD_opencv_dnn_modern=OFF \
-    -D BUILD_PROTOBUF=OFF \
-    -D WITH_CUDA=OFF \
-    -D FORCE_VTK=ON \
-    -D WITH_TBB=ON \
-    -D WITH_V4L=ON \
-    -D WITH_OPENGL=ON \
-    -D ENABLE_FAST_MATH=1 \
-    -D CUDA_FAST_MATH=1 \
-    -D WITH_CUBLAS=1 \
-    -D WITH_FFMPEG=1 \
-    -D WITH_JPEG=ON \
-    -D BUILD_JPEG=OFF \
-    -D JPEG_LIBRARY=/opt/libjpeg-turbo/lib64/libturbojpeg.so \
-    -D JPEG_INCLUDE_DIR=/usr/libjpeg-turbo/include \
-    -D BUILD_TIFF=ON \
-    -D WITH_TIFF=ON \
-    -D BUILD_PNG=ON \
-    -D WITH_PNG=ON \
-    -D INSTALL_PYTHON_EXAMPLES=ON \
-    -D BUILD_EXAMPLES=OFF .. \
-  && make -j$(nproc) && sudo make install \
-  && ldconfig
-
-# why this setting?:
-# -D BUILD_opencv_dnn=OFF \
-# Had to turn off BUILD_opencv_dnn, because it uses conflicting version of Protobuf_LIBRARY
-# alternatively, we can try to set these to our local Protobuf_LIBRARY
-# -D Protobuf_LIBRARY=/opt/conda/lib \
-# -D Protobuf_INCLUDE_DIR=/opt/conda/include \
-# -D Protobuf_PROTOC_EXECUTABLE=/opt/conda/bin/protoc \
 
 #--------------------------------------
 # Utilities for optimizing python code:
@@ -619,12 +611,12 @@ RUN /bin/bash -c "source activate python2 \
   && pip install plotly \
   && conda install -c bioconda cufflinks"
 
-RUN pip install wget \
+RUN pip install wget pathlib \
   && conda install -y cookiecutter \
   && conda install -c menpo pathlib \
   && conda clean -tipsy \
   && /bin/bash -c "source activate python2 \
-    && pip install wget \
+    && pip install wget pathlib \
     && conda install -c menpo pathlib \
     && conda clean -tipsy"
 
