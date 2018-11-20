@@ -421,6 +421,10 @@ RUN pip install -U git+git://github.com/loopbio/PyTurboJPEG.git \
 # -D WITH_JPEG=ON
 # -D BUILD_JPEG=OFF
 # -D JPEG_INCLUDE_DIR=/path/to/libjepeg-turbo/include/ -DJPEG_LIBRARY=/usr/lib/x86_64-linux-gnu/libjpeg.a /path/to/OpenCV
+# -D WITH_JPEG=ON \
+# -D BUILD_JPEG=OFF \
+# -D JPEG_INCLUDE_DIR=/opt/conda/ \
+# -D JPEG_LIBRARY=/usr/lib/x86_64-linux-gnu/libjpeg.a \
 
 WORKDIR ~/
 RUN git clone https://github.com/Itseez/opencv.git \
@@ -450,10 +454,6 @@ RUN git clone https://github.com/Itseez/opencv.git \
     -D CUDA_FAST_MATH=1 \
     -D WITH_CUBLAS=1 \
     -D WITH_FFMPEG=1 \
-    -D WITH_JPEG=ON \
-    -D BUILD_JPEG=OFF \
-    -D JPEG_INCLUDE_DIR=/opt/libjpeg-turbo-2.0.0 \
-    -D JPEG_LIBRARY=/usr/lib/x86_64-linux-gnu/libjpeg.a \
     -D INSTALL_PYTHON_EXAMPLES=ON \
     -D BUILD_EXAMPLES=OFF .. \
   && make -j$(nproc) && sudo make install \
