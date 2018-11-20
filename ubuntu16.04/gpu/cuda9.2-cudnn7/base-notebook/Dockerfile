@@ -431,6 +431,8 @@ RUN pip install -U git+git://github.com/loopbio/PyTurboJPEG.git \
 # -D JPEG_LIBRARY=/usr/libjpeg-turbo/lib/libjpeg.a
 
 WORKDIR ~/
+
+# try to force use of our custom installation of ffmpeg
 RUN conda uninstall -y ffmpeg \
   && /bin/bash -c "source activate python2 && conda uninstall -y ffmpeg"
 RUN git clone https://github.com/Itseez/opencv.git \
