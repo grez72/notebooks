@@ -431,6 +431,8 @@ RUN pip install -U git+git://github.com/loopbio/PyTurboJPEG.git \
 # -D JPEG_LIBRARY=/usr/libjpeg-turbo/lib/libjpeg.a
 
 WORKDIR ~/
+RUN conda uninstall -y ffmpeg \
+  && /bin/bash -c "source activate python2 && conda uninstall -y ffmpeg"
 RUN git clone https://github.com/Itseez/opencv.git \
   && cd opencv \
   && git checkout tags/3.4.3 \
@@ -449,7 +451,7 @@ RUN git clone https://github.com/Itseez/opencv.git \
     -D BUILD_opencv_dnn=OFF \
     -D BUILD_opencv_dnn_modern=OFF \
     -D BUILD_PROTOBUF=OFF \
-    -D WITH_CUDA=ON \
+    -D WITH_CUDA=OFF \
     -D FORCE_VTK=ON \
     -D WITH_TBB=ON \
     -D WITH_V4L=ON \
