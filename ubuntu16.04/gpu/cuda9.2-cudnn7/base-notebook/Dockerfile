@@ -32,10 +32,10 @@
 # nvidia-docker run -it --rm grez72/base-notebook:ubuntu16.04-cuda9.2-cudnn7 python genpass.py -p 'supersecretpassword'
 #
 # mount it:
-# nvidia-docker run -it --rm grez72/base-notebook:ubuntu16.04-cuda9.2-cudnn7 bash
+# docker run -it --rm grez72/base-notebook:ubuntu16.04-cuda9.2-cudnn7 bash
 #
 # run it:
-# nvidia-docker run -it --rm -p 8888:8888 grez72/base-notebook:ubuntu16.04-cuda9.2-cudnn7
+# docker run -it --rm -p 8888:8888 grez72/base-notebook:ubuntu16.04-cuda9.2-cudnn7
 #
 # If you are using jupyterhub, this image can be used with Dockerspawner to
 # spawn a single-user notebook.
@@ -359,6 +359,18 @@ USER root
 RUN /bin/bash -c "source activate python2 && ipython kernel install"
 
 #--------------------------------------
+#   Updates needed for opencv
+#--------------------------------------
+
+RUN apt-get update && apt-get install -y cmake \
+  libjpeg8-dev libtiff5-dev libjasper-dev libpng12-dev \
+  libgtk2.0-dev \
+  libavcodec-dev libavformat-dev libswscale-dev libv4l-dev \
+  libatlas-base-dev gfortran \
+  libhdf5-serial-dev \
+  python3-dev python2.7-dev
+
+#--------------------------------------
 #   LIBJPEGTURBO
 #--------------------------------------
 
@@ -398,7 +410,7 @@ RUN pip install -U git+git://github.com/loopbio/PyTurboJPEG.git \
 
 
 #--------------------------------------
-# Install OpenCV with CUDA Support
+# Install OpenCV
 #--------------------------------------
 
 # do we need to set these?
@@ -407,16 +419,11 @@ RUN pip install -U git+git://github.com/loopbio/PyTurboJPEG.git \
 # export LIBRARY_PATH=/usr/local/nvidia:$LIBRARY_PATH
 # export LD_LIBRARY_PATH=/usr/local/nvidia/lib64:/usr/local/cuda/lib64:/usr/local/cuda/lib:$LD_LIBRARY_PATH
 
-# RUN apt-get update
-RUN apt-get update && apt-get install -y cmake \
-  libjpeg8-dev libtiff5-dev libjasper-dev libpng12-dev \
-  libgtk2.0-dev \
-  libavcodec-dev libavformat-dev libswscale-dev libv4l-dev \
-  libatlas-base-dev gfortran \
-  libhdf5-serial-dev \
-  python3-dev python2.7-dev
+# -D WITH_JPEG=ON
+# -D BUILD_JPEG=OFF
+# -D JPEG_INCLUDE_DIR=/path/to/libjepeg-turbo/include/ -DJPEG_LIBRARY=/usr/lib/x86_64-linux-gnu/libjpeg.a /path/to/OpenCV
 
-WORKDIR ~/
+# WORKDIR ~/
 # RUN git clone https://github.com/Itseez/opencv.git \
 #   && cd opencv \
 #   && git checkout tags/3.4.2 \
@@ -435,7 +442,7 @@ WORKDIR ~/
 #     -D BUILD_opencv_dnn=OFF \
 #     -D BUILD_opencv_dnn_modern=OFF \
 #     -D BUILD_PROTOBUF=OFF \
-#     -D WITH_CUDA=ON \
+#     -D WITH_CUDA=OFF \
 #     -D FORCE_VTK=ON \
 #     -D WITH_TBB=ON \
 #     -D WITH_V4L=ON \
@@ -444,6 +451,10 @@ WORKDIR ~/
 #     -D CUDA_FAST_MATH=1 \
 #     -D WITH_CUBLAS=1 \
 #     -D WITH_FFMPEG=1 \
+#     -D WITH_JPEG=ON \
+#     -D BUILD_JPEG=OFF \
+#     -D JPEG_INCLUDE_DIR=/opt/libjpeg-turbo-2.0.0 \
+#     -D JPEG_LIBRARY=/usr/lib/x86_64-linux-gnu/libjpeg.a \
 #     -D INSTALL_PYTHON_EXAMPLES=ON \
 #     -D BUILD_EXAMPLES=OFF .. \
 #   && make -j$(nproc) && sudo make install \
