@@ -391,6 +391,25 @@ RUN apt-get update && apt-get install -y cmake \
 #     && make test \
 #     && make install
 
+# --enable-static --docdir=/usr/share/doc/libjpeg-turbo-1.5.1
+
+# RUN cd /opt \
+#     && wget https://downloads.sourceforge.net/libjpeg-turbo/libjpeg-turbo-2.0.0.tar.gz \
+#     && tar -xzf libjpeg-turbo-2.0.0.tar.gz \
+#     && rm libjpeg-turbo-2.0.0.tar.gz \
+#     && cd libjpeg-turbo-2.0.0 \
+#     && mkdir build \
+#     && cd build \
+#     && cmake -DCMAKE_INSTALL_PREFIX=/usr/libjpeg-turbo \
+#     -DCMAKE_BUILD_TYPE=RELEASE  \
+#     -DENABLE_STATIC=FALSE       \
+#     -DCMAKE_INSTALL_DOCDIR=/usr/share/doc/libjpeg-turbo-2.0.0 \
+#     -DCMAKE_INSTALL_DEFAULT_LIBDIR=lib  \
+#     .. \
+#     && make -j"$(nproc)" \
+#     && make test \
+#     && make install
+
 #--------------------------------------
 # LIBJPEGTURBO && PyTurboJPEG
 #--------------------------------------
@@ -398,234 +417,236 @@ RUN apt-get update && apt-get install -y cmake \
 # http://blog.loopbio.com/video-io-2-jpeg-decoding.html
 # using loopbio's PyTurbojpeg fork! https://github.com/loopbio/PyTurbojpeg
 # pip install -U git+git://github.com/loopbio/PyTurboJPEG.git
-RUN conda config --add channels conda-forge \
-  && conda install -c loopbio libjpeg-turbo \
-  && mkdir -p /opt/libjpeg-turbo/lib64 \
-  && ln -s /opt/conda/lib/libjpeg-turbo/lib/libturbojpeg.so /opt/libjpeg-turbo/lib64/libturbojpeg.so \
-  && /bin/bash -c "source activate python2 && conda config --add channels conda-forge \
-    && conda install -c loopbio libjpeg-turbo"
-
-RUN pip install -U git+git://github.com/loopbio/PyTurboJPEG.git \
-  && /bin/bash -c "source activate python2 && pip install -U git+git://github.com/loopbio/PyTurboJPEG.git"
-
-#--------------------------------------
-# Install OpenCV
-#--------------------------------------
-
-# do we need to set these?
-# export PATH=/usr/local/cuda/bin:$PATH
-# export LPATH=/usr/local/nvidia/lib64:$LPATH
-# export LIBRARY_PATH=/usr/local/nvidia:$LIBRARY_PATH
-# export LD_LIBRARY_PATH=/usr/local/nvidia/lib64:/usr/local/cuda/lib64:/usr/local/cuda/lib:$LD_LIBRARY_PATH
-
-# -D WITH_JPEG=ON
-# -D BUILD_JPEG=OFF
-# -D JPEG_INCLUDE_DIR=/path/to/libjepeg-turbo/include/ -DJPEG_LIBRARY=/usr/lib/x86_64-linux-gnu/libjpeg.a /path/to/OpenCV
-# -D WITH_JPEG=ON \
-# -D BUILD_JPEG=OFF \
-# -D JPEG_INCLUDE_DIR=/opt/conda/ \
-# -D JPEG_LIBRARY=/usr/lib/x86_64-linux-gnu/libjpeg.a \
-
-WORKDIR ~/
-RUN git clone https://github.com/Itseez/opencv.git \
-  && cd opencv \
-  && git checkout tags/3.4.2 \
-  && mkdir build \
-  && cd build/ \
-  && cmake -D CMAKE_BUILD_TYPE=RELEASE \
-    -D PYTHON2_EXECUTABLE:FILEPATH=/opt/conda/envs/python2/bin/python2.7 \
-    -D PYTHON2_INCLUDE_DIR:PATH=/opt/conda/envs/python2/include/python2.7 \
-    -D PYTHON2_NUMPY_INCLUDE_DIRS:PATH=/opt/conda/envs/python2/lib/python2.7/site-packages/numpy/core/include \
-    -D PYTHON2_PACKAGES_PATH:PATH=/opt/conda/envs/python2/lib/python2.7/site-packages \
-    -D PYTHON3_EXECUTABLE:FILEPATH=/opt/conda/bin/python3.6 \
-    -D PYTHON3_INCLUDE_DIR:PATH=/opt/conda/include/python3.6m \
-    -D PYTHON3_NUMPY_INCLUDE_DIRS:PATH=/opt/conda/lib/python3.6/site-packages/numpy/core/include \
-    -D PYTHON3_PACKAGES_PATH:PATH=/opt/conda/lib/python3.6/site-packages \
-    -D CMAKE_INSTALL_PREFIX=/usr/local \
-    -D BUILD_opencv_dnn=OFF \
-    -D BUILD_opencv_dnn_modern=OFF \
-    -D BUILD_PROTOBUF=OFF \
-    -D WITH_CUDA=OFF \
-    -D FORCE_VTK=ON \
-    -D WITH_TBB=ON \
-    -D WITH_V4L=ON \
-    -D WITH_OPENGL=ON \
-    -D ENABLE_FAST_MATH=1 \
-    -D CUDA_FAST_MATH=1 \
-    -D WITH_CUBLAS=1 \
-    -D WITH_FFMPEG=1 \
-    -D INSTALL_PYTHON_EXAMPLES=ON \
-    -D BUILD_EXAMPLES=OFF .. \
-  && make -j$(nproc) && sudo make install \
-  && ldconfig
-
-# why this setting?:
-# -D BUILD_opencv_dnn=OFF \
-
-# Had to turn off BUILD_opencv_dnn, because it uses conflicting version of Protobuf_LIBRARY
-# alternatively, we can try to set these to our local Protobuf_LIBRARY
-# -D Protobuf_LIBRARY=/opt/conda/lib \
-# -D Protobuf_INCLUDE_DIR=/opt/conda/include \
-# -D Protobuf_PROTOC_EXECUTABLE=/opt/conda/bin/protoc \
-
-#--------------------------------------
-# Utilities for optimizing python code:
-#--------------------------------------
-
-# Cupy, PyCuda, Numba
-RUN conda install -y -c lukepfister pycuda \
-  && /bin/bash -c "source activate python2 \
-  && conda install -y -c lukepfister pycuda" \
-  && pip install cupy \
-  && /bin/bash -c "source activate python2 \
-  && pip install cupy" \
-  && conda install -y numba \
-  && /bin/bash -c "source activate python2 \
-  && conda install -y numba"
-
-#--------------------------------------
-# Install Video and Image Utilities
-#--------------------------------------
-
-# Installing all of these dependencies together in one RUN command
-# to avoid limit on number of layers in docker image
-RUN conda install -y -c conda-forge av trackpy ipywidgets \
-  && conda install -y filterpy \
-  && /bin/bash -c "source activate python2 \
-  && conda install -y -c conda-forge av trackpy ipywidgets \
-  && conda install -y filterpy" \
-  && jupyter nbextension enable --py --sys-prefix widgetsnbextension \
-  && pip install --upgrade pip \
-  && pip install \
-    ffmpeg-python \
-    image-attendant \
-    imutils \
-    https://github.com/soft-matter/pims/archive/master.zip \
-    sk-video \
-    tqdm \
-  && cd $HOME \
-  && git clone https://github.com/DheerendraRathor/ffprobe3 \
-  && cd $HOME/ffprobe3 \
-  && python setup.py install \
-  && /bin/bash -c "source activate python2 \
-  && pip install --upgrade pip \
-  && pip install \
-    ffmpeg-python \
-    ffprobe \
-    image-attendant \
-    imutils \
-    https://github.com/soft-matter/pims/archive/master.zip \
-    simplejson \
-    sk-video \
-    tqdm" \
-  && cd $HOME \
-  && git clone https://github.com/jfrelinger/cython-munkres-wrapper \
-  && cd $HOME/cython-munkres-wrapper \
-  && python setup.py install \
-  && /bin/bash -c "source activate python2 && cd $HOME/cython-munkres-wrapper && python setup.py install"
-
-#--------------------------------------
-# Parallel HDF5
-#--------------------------------------
-
-# https://drtiresome.com/2016/08/23/build-and-install-mpi-parallel-hdf5-and-h5py-from-source-on-linux/
-
-WORKDIR /tmp
-
-# install MPICH, so we can pip install mpi4py
-RUN wget http://www.mpich.org/static/downloads/3.2.1/mpich-3.2.1.tar.gz \
-  && tar -xzf mpich-3.2.1.tar.gz \
-  && cd mpich-3.2.1 \
-  && ./configure --enable-romio --enable-shared --with-device=ch3:sock --disable-fortran --prefix=/usr/local \
-  && make -j$(nproc) \
-  && make install \
-  && make clean
-
-# install mpi4py
-RUN pip install mpi4py \
-  && /bin/bash -c "source activate python2 && pip install mpi4py"
-
-# test file:
-# test_mpi4py.py
-# from mpi4py import MPI
-# comm = MPI.COMM_WORLD
-# rank = comm.Get_rank()
-# print("hello world from process ", rank)
-
-# run test:
-# mpiexec -n 5 python test_mpi4py.py
-
-# https://github.com/HDFGroup/
-# h5cc -showconfig
-RUN wget https://support.hdfgroup.org/ftp/HDF5/releases/hdf5-1.10/hdf5-1.10.3/src/hdf5-1.10.3.tar.gz \
-  && tar -xzf hdf5-1.10.3.tar.gz \
-  && cd hdf5-1.10.3 \
-  && ./configure --prefix=/usr/local --enable-parallel --enable-shared --enable-build-mode=production \
-  && make -j$(nproc) \
-  && make install \
-  && make clean
-
-# Test config
-# h5pcc -showconfig
-# wget https://support.hdfgroup.org/ftp/HDF5/examples/parallel/Hyperslab_by_row.c
-# h5pcc Hyperslab_by_row.c
+# RUN conda config --add channels conda-forge \
+#   && conda install -c loopbio libjpeg-turbo \
+#   && mkdir -p /opt/libjpeg-turbo/lib64 \
+#   && ln -s /opt/conda/lib/libjpeg-turbo/lib/libturbojpeg.so /opt/libjpeg-turbo/lib64/libturbojpeg.so \
+#   && /bin/bash -c "source activate python2 && conda config --add channels conda-forge \
+#     && conda install -c loopbio libjpeg-turbo"
 #
-
-# h5dump SDS_row.h5
-
-# RUN conda uninstall h5py hdf5
-# ENV HDF5_DIR=/usr/local
-# ENV CC=mpicc
-# ENV HDF5_MPI="ON"
-# RUN pip install --no-binary=h5py h5py
-
-# link h5py to h5pcc
-# export CC=mpicc
-# RUN wget https://files.pythonhosted.org/packages/74/5d/6f11a5fffc3d8884bb8d6c06abbee0b3d7c8c81bde9819979208ba823a47/h5py-2.8.0.tar.gz \
-#   && tar -xzf h5py-2.8.0.tar.gz \
-#   && cd h5py-2.8.0 \
-#   && python setup.py configure --mpi --hdf5=/usr/local \
-#   && CC=mpicc python setup.py build \
-#   && python setup.py install --user
-
-# mpiexec -n 4 --allow-run-as-root python testh_5py.py
-
-#--------------------------------------
-# Install Additional Packages
-#--------------------------------------
-
-# plotly + dependencies
-RUN apt-get update && apt-get install -y build-essential libcap-dev
-RUN easy_install python-prctl
-RUN pip install plotly msgpack msgpack-numpy lmdb \
-  && pip install --upgrade git+https://github.com/tensorpack/tensorpack.git \
-  && conda install -c bioconda cufflinks
-RUN /bin/bash -c "source activate python2 \
-  && pip install plotly \
-  && conda install -c bioconda cufflinks"
-
-#--------------------------------------
-# Notebook Setup
-#--------------------------------------
-
-USER root
-
-EXPOSE 8888
-WORKDIR $HOME/work
-
-# Configure container startup
-ENTRYPOINT ["tini", "-g", "--"]
-CMD ["start-notebook.sh"]
-
-# Add local files as late as possible to avoid cache busting
-COPY start.sh /usr/local/bin/
-COPY start-notebook.sh /usr/local/bin/
-COPY start-singleuser.sh /usr/local/bin/
-COPY jupyter_notebook_config.py /etc/jupyter/
-COPY genpass.py .
-RUN fix-permissions /etc/jupyter/
-
-WORKDIR $HOME/work
-
-# Switch back to jovyan to avoid accidental container runs as root
-USER $NB_UID
+# RUN pip install -U git+git://github.com/loopbio/PyTurboJPEG.git \
+#   && /bin/bash -c "source activate python2 && pip install -U git+git://github.com/loopbio/PyTurboJPEG.git"
+#
+# #--------------------------------------
+# # Install OpenCV
+# #--------------------------------------
+#
+# # do we need to set these?
+# # export PATH=/usr/local/cuda/bin:$PATH
+# # export LPATH=/usr/local/nvidia/lib64:$LPATH
+# # export LIBRARY_PATH=/usr/local/nvidia:$LIBRARY_PATH
+# # export LD_LIBRARY_PATH=/usr/local/nvidia/lib64:/usr/local/cuda/lib64:/usr/local/cuda/lib:$LD_LIBRARY_PATH
+#
+# # -D WITH_JPEG=ON
+# # -D BUILD_JPEG=OFF
+# # -D JPEG_INCLUDE_DIR=/path/to/libjepeg-turbo/include/ -DJPEG_LIBRARY=/usr/lib/x86_64-linux-gnu/libjpeg.a /path/to/OpenCV
+# # -D WITH_JPEG=ON \
+# # -D BUILD_JPEG=OFF \
+# # -D JPEG_INCLUDE_DIR=/opt/conda/ \
+# # -D JPEG_LIBRARY=/usr/lib/x86_64-linux-gnu/libjpeg.a \
+# # -D JPEG_INCLUDE_DIR=/usr/libjpeg-turbo/include
+# # -D JPEG_LIBRARY=/usr/libjpeg-turbo/lib/libjpeg.a
+#
+# WORKDIR ~/
+# RUN git clone https://github.com/Itseez/opencv.git \
+#   && cd opencv \
+#   && git checkout tags/3.4.2 \
+#   && mkdir build \
+#   && cd build/ \
+#   && cmake -D CMAKE_BUILD_TYPE=RELEASE \
+#     -D PYTHON2_EXECUTABLE:FILEPATH=/opt/conda/envs/python2/bin/python2.7 \
+#     -D PYTHON2_INCLUDE_DIR:PATH=/opt/conda/envs/python2/include/python2.7 \
+#     -D PYTHON2_NUMPY_INCLUDE_DIRS:PATH=/opt/conda/envs/python2/lib/python2.7/site-packages/numpy/core/include \
+#     -D PYTHON2_PACKAGES_PATH:PATH=/opt/conda/envs/python2/lib/python2.7/site-packages \
+#     -D PYTHON3_EXECUTABLE:FILEPATH=/opt/conda/bin/python3.6 \
+#     -D PYTHON3_INCLUDE_DIR:PATH=/opt/conda/include/python3.6m \
+#     -D PYTHON3_NUMPY_INCLUDE_DIRS:PATH=/opt/conda/lib/python3.6/site-packages/numpy/core/include \
+#     -D PYTHON3_PACKAGES_PATH:PATH=/opt/conda/lib/python3.6/site-packages \
+#     -D CMAKE_INSTALL_PREFIX=/usr/local \
+#     -D BUILD_opencv_dnn=OFF \
+#     -D BUILD_opencv_dnn_modern=OFF \
+#     -D BUILD_PROTOBUF=OFF \
+#     -D WITH_CUDA=OFF \
+#     -D FORCE_VTK=ON \
+#     -D WITH_TBB=ON \
+#     -D WITH_V4L=ON \
+#     -D WITH_OPENGL=ON \
+#     -D ENABLE_FAST_MATH=1 \
+#     -D CUDA_FAST_MATH=1 \
+#     -D WITH_CUBLAS=1 \
+#     -D WITH_FFMPEG=1 \
+#     -D INSTALL_PYTHON_EXAMPLES=ON \
+#     -D BUILD_EXAMPLES=OFF .. \
+#   && make -j$(nproc) && sudo make install \
+#   && ldconfig
+#
+# # why this setting?:
+# # -D BUILD_opencv_dnn=OFF \
+#
+# # Had to turn off BUILD_opencv_dnn, because it uses conflicting version of Protobuf_LIBRARY
+# # alternatively, we can try to set these to our local Protobuf_LIBRARY
+# # -D Protobuf_LIBRARY=/opt/conda/lib \
+# # -D Protobuf_INCLUDE_DIR=/opt/conda/include \
+# # -D Protobuf_PROTOC_EXECUTABLE=/opt/conda/bin/protoc \
+#
+# #--------------------------------------
+# # Utilities for optimizing python code:
+# #--------------------------------------
+#
+# # Cupy, PyCuda, Numba
+# RUN conda install -y -c lukepfister pycuda \
+#   && /bin/bash -c "source activate python2 \
+#   && conda install -y -c lukepfister pycuda" \
+#   && pip install cupy \
+#   && /bin/bash -c "source activate python2 \
+#   && pip install cupy" \
+#   && conda install -y numba \
+#   && /bin/bash -c "source activate python2 \
+#   && conda install -y numba"
+#
+# #--------------------------------------
+# # Install Video and Image Utilities
+# #--------------------------------------
+#
+# # Installing all of these dependencies together in one RUN command
+# # to avoid limit on number of layers in docker image
+# RUN conda install -y -c conda-forge av trackpy ipywidgets \
+#   && conda install -y filterpy \
+#   && /bin/bash -c "source activate python2 \
+#   && conda install -y -c conda-forge av trackpy ipywidgets \
+#   && conda install -y filterpy" \
+#   && jupyter nbextension enable --py --sys-prefix widgetsnbextension \
+#   && pip install --upgrade pip \
+#   && pip install \
+#     ffmpeg-python \
+#     image-attendant \
+#     imutils \
+#     https://github.com/soft-matter/pims/archive/master.zip \
+#     sk-video \
+#     tqdm \
+#   && cd $HOME \
+#   && git clone https://github.com/DheerendraRathor/ffprobe3 \
+#   && cd $HOME/ffprobe3 \
+#   && python setup.py install \
+#   && /bin/bash -c "source activate python2 \
+#   && pip install --upgrade pip \
+#   && pip install \
+#     ffmpeg-python \
+#     ffprobe \
+#     image-attendant \
+#     imutils \
+#     https://github.com/soft-matter/pims/archive/master.zip \
+#     simplejson \
+#     sk-video \
+#     tqdm" \
+#   && cd $HOME \
+#   && git clone https://github.com/jfrelinger/cython-munkres-wrapper \
+#   && cd $HOME/cython-munkres-wrapper \
+#   && python setup.py install \
+#   && /bin/bash -c "source activate python2 && cd $HOME/cython-munkres-wrapper && python setup.py install"
+#
+# #--------------------------------------
+# # Parallel HDF5
+# #--------------------------------------
+#
+# # https://drtiresome.com/2016/08/23/build-and-install-mpi-parallel-hdf5-and-h5py-from-source-on-linux/
+#
+# WORKDIR /tmp
+#
+# # install MPICH, so we can pip install mpi4py
+# RUN wget http://www.mpich.org/static/downloads/3.2.1/mpich-3.2.1.tar.gz \
+#   && tar -xzf mpich-3.2.1.tar.gz \
+#   && cd mpich-3.2.1 \
+#   && ./configure --enable-romio --enable-shared --with-device=ch3:sock --disable-fortran --prefix=/usr/local \
+#   && make -j$(nproc) \
+#   && make install \
+#   && make clean
+#
+# # install mpi4py
+# RUN pip install mpi4py \
+#   && /bin/bash -c "source activate python2 && pip install mpi4py"
+#
+# # test file:
+# # test_mpi4py.py
+# # from mpi4py import MPI
+# # comm = MPI.COMM_WORLD
+# # rank = comm.Get_rank()
+# # print("hello world from process ", rank)
+#
+# # run test:
+# # mpiexec -n 5 python test_mpi4py.py
+#
+# # https://github.com/HDFGroup/
+# # h5cc -showconfig
+# RUN wget https://support.hdfgroup.org/ftp/HDF5/releases/hdf5-1.10/hdf5-1.10.3/src/hdf5-1.10.3.tar.gz \
+#   && tar -xzf hdf5-1.10.3.tar.gz \
+#   && cd hdf5-1.10.3 \
+#   && ./configure --prefix=/usr/local --enable-parallel --enable-shared --enable-build-mode=production \
+#   && make -j$(nproc) \
+#   && make install \
+#   && make clean
+#
+# # Test config
+# # h5pcc -showconfig
+# # wget https://support.hdfgroup.org/ftp/HDF5/examples/parallel/Hyperslab_by_row.c
+# # h5pcc Hyperslab_by_row.c
+# #
+#
+# # h5dump SDS_row.h5
+#
+# # RUN conda uninstall h5py hdf5
+# # ENV HDF5_DIR=/usr/local
+# # ENV CC=mpicc
+# # ENV HDF5_MPI="ON"
+# # RUN pip install --no-binary=h5py h5py
+#
+# # link h5py to h5pcc
+# # export CC=mpicc
+# # RUN wget https://files.pythonhosted.org/packages/74/5d/6f11a5fffc3d8884bb8d6c06abbee0b3d7c8c81bde9819979208ba823a47/h5py-2.8.0.tar.gz \
+# #   && tar -xzf h5py-2.8.0.tar.gz \
+# #   && cd h5py-2.8.0 \
+# #   && python setup.py configure --mpi --hdf5=/usr/local \
+# #   && CC=mpicc python setup.py build \
+# #   && python setup.py install --user
+#
+# # mpiexec -n 4 --allow-run-as-root python testh_5py.py
+#
+# #--------------------------------------
+# # Install Additional Packages
+# #--------------------------------------
+#
+# # plotly + dependencies
+# RUN apt-get update && apt-get install -y build-essential libcap-dev
+# RUN easy_install python-prctl
+# RUN pip install plotly msgpack msgpack-numpy lmdb \
+#   && pip install --upgrade git+https://github.com/tensorpack/tensorpack.git \
+#   && conda install -c bioconda cufflinks
+# RUN /bin/bash -c "source activate python2 \
+#   && pip install plotly \
+#   && conda install -c bioconda cufflinks"
+#
+# #--------------------------------------
+# # Notebook Setup
+# #--------------------------------------
+#
+# USER root
+#
+# EXPOSE 8888
+# WORKDIR $HOME/work
+#
+# # Configure container startup
+# ENTRYPOINT ["tini", "-g", "--"]
+# CMD ["start-notebook.sh"]
+#
+# # Add local files as late as possible to avoid cache busting
+# COPY start.sh /usr/local/bin/
+# COPY start-notebook.sh /usr/local/bin/
+# COPY start-singleuser.sh /usr/local/bin/
+# COPY jupyter_notebook_config.py /etc/jupyter/
+# COPY genpass.py .
+# RUN fix-permissions /etc/jupyter/
+#
+# WORKDIR $HOME/work
+#
+# # Switch back to jovyan to avoid accidental container runs as root
+# USER $NB_UID
