@@ -26,7 +26,7 @@
 # docker build -t grez72/base-notebook:ubuntu16.04-cuda9.2-cudnn7 https://github.com/grez72/notebooks.git#master:ubuntu16.04/gpu/cuda9.2-cudnn7/base-notebook
 #
 # test it:
-# nvidia-docker run -it --rm grez72/base-notebook:ubuntu16.04-cuda9.2-cudnn7 nvidia-smi
+# docker run -it --rm grez72/base-notebook:ubuntu16.04-cuda9.2-cudnn7 nvidia-smi
 #
 # generate a password:
 # nvidia-docker run -it --rm grez72/base-notebook:ubuntu16.04-cuda9.2-cudnn7 python genpass.py -p 'supersecretpassword'
@@ -217,6 +217,47 @@ RUN apt-get update -qq && sudo apt-get -y install \
       libopus-dev \
     && rm -rf /var/lib/apt/lists/*
 
+ENV NVIDIA_VISIBLE_DEVICES=all
+ENV NVIDIA_DRIVER_CAPABILITIES=compute,utility,video
+
+RUN apt-get -y update && apt-get install -y wget nano git build-essential yasm pkg-config
+
+RUN git clone https://github.com/FFmpeg/nv-codec-headers /root/nv-codec-headers && \
+  cd /root/nv-codec-headers &&\
+  make -j$(nproc) && \
+  make install -j$(nproc) && \
+  cd /root && rm -rf nv-codec-headers
+
+# Compile and install ffmpeg from source
+RUN git clone https://github.com/FFmpeg/FFmpeg /root/ffmpeg && \
+  cd /root/ffmpeg && ./configure \
+  --enable-nonfree \
+  --disable-shared \
+  --enable-nvenc \
+  --enable-cuda \
+  --enable-cuvid \
+  --enable-libnpp \
+  --extra-cflags=-I/usr/local/cuda/include \
+  --extra-cflags=-I/usr/local/include \
+  --extra-ldflags=-L/usr/local/cuda/lib64 && \
+  make -j$(nproc) && \
+  make install -j$(nproc) && \
+  cd /root && rm -rf ffmpeg
+
+RUN pip install pynvvl-cuda92
+
+# Trying to compile FFmpeg with Nvidia NVENC and cuda hardware acceleration support enabled
+# would also like to use: https://github.com/mitmul/pynvvl
+# https://github.com/lutris/ffmpeg-nvenc
+# https://trac.ffmpeg.org/wiki/HWAccelIntro
+
+# need nasm
+# http://www.linuxfromscratch.org/blfs/view/svn/general/nasm.html
+
+# http://developer.download.nvidia.com/compute/redist/ffmpeg/1511-patch/FFMPEG-with-NVIDIA-Acceleration-on-Ubuntu_UG_v01.pdf
+
+# http://developer.download.nvidia.com/compute/redist/ffmpeg/1511-patch/FFMPEG-with-NVIDIA-Acceleration-on-Ubuntu_UG_v01.pdf
+
 # install nvidia headers so we can supercharge our ffmpeg with cuda
 # RUN mkdir -p ~/nv-codec-headers_build && \
 #   cd $HOME/nv-codec-headers_build && \
@@ -226,6 +267,8 @@ RUN apt-get update -qq && sudo apt-get -y install \
 #   make install
 
   # echo "Installing the NVidia Video SDK"
+  # wget -4 http://developer.download.nvidia.com/assets/cuda/files//nvidia_video_sdk_8.2.16
+
   # sdk_version="8.2.16"
   # sdk_basename="nvidia_video_sdk_${sdk_version}"
   # sdk_url="http://developer.download.nvidia.com/assets/cuda/files/${sdk_basename}.zip"
