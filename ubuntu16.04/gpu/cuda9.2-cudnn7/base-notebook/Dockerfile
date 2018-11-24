@@ -246,8 +246,8 @@ RUN git clone https://github.com/FFmpeg/nv-codec-headers /root/nv-codec-headers 
 #   make install -j$(nproc) && \
 #   cd /root && rm -rf ffmpeg
 
-RUN git clone https://github.com/FFmpeg/FFmpeg /root/ffmpeg && \
-  cd /root/ffmpeg && ./configure \
+RUN git clone https://github.com/FFmpeg/FFmpeg /root/ffmpeg \
+  && cd /root/ffmpeg && ./configure \
   --disable-shared \
   --enable-avresample \
   --enable-gpl \
@@ -268,10 +268,11 @@ RUN git clone https://github.com/FFmpeg/FFmpeg /root/ffmpeg && \
   --enable-libnpp \
   --extra-cflags=-I/usr/local/cuda/include \
   --extra-cflags=-I/usr/local/include \
-  --extra-ldflags=-L/usr/local/cuda/lib64 && \
-  make -j$(nproc) && \
-  make install -j$(nproc) && \
-  cd /root && rm -rf ffmpeg
+  --extra-ldflags=-L/usr/local/cuda/lib64 \
+  --extra-libs="-lpthread -lm" \
+  && make -j$(nproc) \
+  && make install -j$(nproc) \
+  && cd /root && rm -rf ffmpeg
 
 # https://trac.ffmpeg.org/wiki/HWAccelIntro
 # https://trac.ffmpeg.org/wiki/HWAccelIntro#NVENC
