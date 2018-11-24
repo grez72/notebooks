@@ -247,7 +247,7 @@ RUN git clone https://github.com/FFmpeg/nv-codec-headers /root/nv-codec-headers 
 #   cd /root && rm -rf ffmpeg
 
 RUN git clone https://github.com/FFmpeg/FFmpeg /root/ffmpeg && \
-  cd /root/ffmpeg && ./configure \
+  cd /root/ffmpeg && PKG_CONFIG_PATH="/root/ffmpeg/lib/pkgconfig" ./configure \
   --disable-shared \
   --enable-avresample \
   --enable-gpl \
