@@ -182,7 +182,10 @@ RUN apt-get update && apt-get install -yq --no-install-recommends \
     rm -rf /var/lib/apt/lists/*
 
 #--------------------------------------
-#   FFMEG with libx264 support
+# FFMEG with support for: with libx264 (mp4), Nvidia NVENC/NVDEC,
+#   and cuda hardware acceleration:
+#   https://trac.ffmpeg.org/wiki/HWAccelIntro
+#   https://trac.ffmpeg.org/wiki/HWAccelIntro#NVENC
 #--------------------------------------
 
 USER root
@@ -231,6 +234,8 @@ RUN git clone https://github.com/FFmpeg/nv-codec-headers /root/nv-codec-headers 
   cd /root && rm -rf nv-codec-headers
 
 # Compile and install ffmpeg from source
+# This version works, but my original version had more features enabled,
+# so down below I've combined them.
 # RUN git clone https://github.com/FFmpeg/FFmpeg /root/ffmpeg && \
 #   cd /root/ffmpeg && ./configure \
 #   --enable-nonfree \
@@ -246,8 +251,23 @@ RUN git clone https://github.com/FFmpeg/nv-codec-headers /root/nv-codec-headers 
 #   make install -j$(nproc) && \
 #   cd /root && rm -rf ffmpeg
 
+#     PATH="~/bin:$PATH" PKG_CONFIG_PATH="~/ffmpeg_build/lib/pkgconfig" ./configure \
+#     --prefix="~/ffmpeg_build" \
+#     --pkg-config-flags="--static" \
+#     --extra-cflags="-I~/ffmpeg_build/include -I/usr/local/cuda/include" \
+#     --extra-ldflags="-L~/ffmpeg_build/lib -L/usr/local/cuda/lib64" \
+#     --extra-libs="-lpthread -lm" \
+#     --bindir="/bin" \
+
 RUN git clone https://github.com/FFmpeg/FFmpeg /root/ffmpeg \
-  && cd /root/ffmpeg && ./configure \
+  && cd /root/ffmpeg \
+  && PATH="~/bin:$PATH" PKG_CONFIG_PATH="/root/ffmpeg/lib/pkgconfig" ./configure \
+  --prefix="/root/ffmpeg" \
+  --pkg-config-flags="--static" \
+  --extra-cflags="-I/root/ffmpeg/include" \
+  --extra-ldflags="-L/root/ffmpeg/lib" \
+  --extra-libs="-lpthread -lm" \
+  --bindir="/bin" \
   --disable-shared \
   --enable-avresample \
   --enable-gpl \
@@ -274,8 +294,6 @@ RUN git clone https://github.com/FFmpeg/FFmpeg /root/ffmpeg \
   && make install -j$(nproc) \
   && cd /root && rm -rf ffmpeg
 
-# https://trac.ffmpeg.org/wiki/HWAccelIntro
-# https://trac.ffmpeg.org/wiki/HWAccelIntro#NVENC
 # Check for nvidia codecs
 # ffmpeg -encoders 2>/dev/null | grep nvenc
 
@@ -286,7 +304,6 @@ RUN git clone https://github.com/FFmpeg/FFmpeg /root/ffmpeg \
 # ffprobe -v error -select_streams v:0 -show_entries stream=codec_name -of default=nw=1 youtube_epVDutrGlDU.mp4
 # ffmpeg -hwaccel_device 0 -hwaccel nvdec -i youtube_epVDutrGlDU.mp4 -qmin 1 -qmax 1 -qscale:v 1 test/$filename%04d.jpg
 # ffmpeg -hwaccel_device 0 -hwaccel nvdec -c:v h264_cuvid -i youtube_epVDutrGlDU.mp4 output.mkv
-
 
 # ffmpeg -hwaccel_device 0 -hwaccel cuvid -c:v h264_cuvid -i input -vf scale_npp=-1:720 -c:v h264_nvenc -preset slow output.mkv
 # ffmpeg -y -hwaccel cuvid -c:v h264_cuvid -vsync 0 -i <input.mp4> -vf scale_npp=1920:1072 -vcodec h264_nvenc <output0.264> -vf scale_npp=1280:720 -vcodec h264_nvenc <output1.264>
@@ -401,100 +418,100 @@ RUN git clone https://github.com/FFmpeg/FFmpeg /root/ffmpeg \
 # Setup Python 3 Environment
 #--------------------------------------
 
-USER $NB_UID
-WORKDIR $HOME
-
-# Install Python 3 packages
-# Remove pyqt and qt pulled in for matplotlib since we're only ever going to
-# use notebook-friendly backends in these images
-RUN conda install --quiet --yes \
-    'av' \
-    'conda-forge::blas=*=openblas' \
-    'ipywidgets=7.2*' \
-    'pandas=0.23*' \
-    'numexpr=2.6*' \
-    'matplotlib=2.2*' \
-    'scipy=1.1*' \
-    'seaborn=0.9*' \
-    'scikit-learn=0.19*' \
-    'scikit-image=0.14*' \
-    'sk-video=1.1*' \
-    'sympy=1.1*' \
-    'cython=0.28*' \
-    'patsy=0.5*' \
-    'statsmodels=0.9*' \
-    'cloudpickle=0.5*' \
-    'dill=0.2*' \
-    'numba=0.38*' \
-    'bokeh=0.12*' \
-    'sqlalchemy=1.2*' \
-    'hdf5=1.10*' \
-    'h5py=2.7*' \
-    'vincent=0.4.*' \
-    'beautifulsoup4=4.6.*' \
-    'protobuf=3.*' \
-    'xlrd'  && \
-    conda remove --quiet --yes --force qt pyqt && \
-    conda clean -tipsy && \
-    jupyter nbextension enable --py widgetsnbextension --sys-prefix && \
-    jupyter labextension install @jupyter-widgets/jupyterlab-manager@^0.38.1 && \
-    jupyter labextension install jupyterlab_bokeh@^0.6.3 && \
-    npm cache clean --force && \
-    rm -rf $CONDA_DIR/share/jupyter/lab/staging && \
-    rm -rf /home/$NB_USER/.cache/yarn && \
-    rm -rf /home/$NB_USER/.node-gyp && \
-    fix-permissions $CONDA_DIR && \
-    fix-permissions /home/$NB_USER
-
-# Install facets which does not have a pip or conda package at the moment
-RUN cd /tmp && \
-    git clone https://github.com/PAIR-code/facets.git && \
-    cd facets && \
-    jupyter nbextension install facets-dist/ --sys-prefix && \
-    cd && \
-    rm -rf /tmp/facets && \
-    fix-permissions $CONDA_DIR && \
-    fix-permissions /home/$NB_USER
-
-# Import matplotlib the first time to build the font cache.
-ENV XDG_CACHE_HOME /home/$NB_USER/.cache/
-RUN MPLBACKEND=Agg python -c "import matplotlib.pyplot" && \
-    fix-permissions /home/$NB_USER
+# USER $NB_UID
+# WORKDIR $HOME
+#
+# # Install Python 3 packages
+# # Remove pyqt and qt pulled in for matplotlib since we're only ever going to
+# # use notebook-friendly backends in these images
+# RUN conda install --quiet --yes \
+#     'av' \
+#     'conda-forge::blas=*=openblas' \
+#     'ipywidgets=7.2*' \
+#     'pandas=0.23*' \
+#     'numexpr=2.6*' \
+#     'matplotlib=2.2*' \
+#     'scipy=1.1*' \
+#     'seaborn=0.9*' \
+#     'scikit-learn=0.19*' \
+#     'scikit-image=0.14*' \
+#     'sk-video=1.1*' \
+#     'sympy=1.1*' \
+#     'cython=0.28*' \
+#     'patsy=0.5*' \
+#     'statsmodels=0.9*' \
+#     'cloudpickle=0.5*' \
+#     'dill=0.2*' \
+#     'numba=0.38*' \
+#     'bokeh=0.12*' \
+#     'sqlalchemy=1.2*' \
+#     'hdf5=1.10*' \
+#     'h5py=2.7*' \
+#     'vincent=0.4.*' \
+#     'beautifulsoup4=4.6.*' \
+#     'protobuf=3.*' \
+#     'xlrd'  && \
+#     conda remove --quiet --yes --force qt pyqt && \
+#     conda clean -tipsy && \
+#     jupyter nbextension enable --py widgetsnbextension --sys-prefix && \
+#     jupyter labextension install @jupyter-widgets/jupyterlab-manager@^0.38.1 && \
+#     jupyter labextension install jupyterlab_bokeh@^0.6.3 && \
+#     npm cache clean --force && \
+#     rm -rf $CONDA_DIR/share/jupyter/lab/staging && \
+#     rm -rf /home/$NB_USER/.cache/yarn && \
+#     rm -rf /home/$NB_USER/.node-gyp && \
+#     fix-permissions $CONDA_DIR && \
+#     fix-permissions /home/$NB_USER
+#
+# # Install facets which does not have a pip or conda package at the moment
+# RUN cd /tmp && \
+#     git clone https://github.com/PAIR-code/facets.git && \
+#     cd facets && \
+#     jupyter nbextension install facets-dist/ --sys-prefix && \
+#     cd && \
+#     rm -rf /tmp/facets && \
+#     fix-permissions $CONDA_DIR && \
+#     fix-permissions /home/$NB_USER
+#
+# # Import matplotlib the first time to build the font cache.
+# ENV XDG_CACHE_HOME /home/$NB_USER/.cache/
+# RUN MPLBACKEND=Agg python -c "import matplotlib.pyplot" && \
+#     fix-permissions /home/$NB_USER
 
 #--------------------------------------
 # Setup Python 2 Environment
 #--------------------------------------
 
-USER $NB_USER
-
-# Install Python 2 packages
-RUN conda create -p $CONDA_DIR/envs/python2 python=2.7 \
-    'av' \
-    'ipython=4.0*' \
-    'ipywidgets=4.0*' \
-    'pandas=0.16*' \
-    'matplotlib=1.4*' \
-    'scipy=0.15*' \
-    'seaborn=0.6*' \
-    'scikit-learn=0.16*' \
-    'scikit-image=0.11*' \
-    'sk-video=1.1*' \
-    'sympy=0.7*' \
-    'cython=0.22*' \
-    'patsy=0.3*' \
-    'statsmodels=0.6*' \
-    'cloudpickle=0.1*' \
-    'dill=0.2*' \
-    'numba=0.20*' \
-    'bokeh=0.9*' \
-    'libgfortran=1.0.0' \
-    'tornado=4.5.3' \
-    'pyzmq' \
-    && conda clean -yt
-
-USER root
-
-RUN /bin/bash -c "source activate python2 && ipython kernel install"
+# USER $NB_USER
+#
+# # Install Python 2 packages
+# RUN conda create -p $CONDA_DIR/envs/python2 python=2.7 \
+#     'av' \
+#     'ipython=4.0*' \
+#     'ipywidgets=4.0*' \
+#     'pandas=0.16*' \
+#     'matplotlib=1.4*' \
+#     'scipy=0.15*' \
+#     'seaborn=0.6*' \
+#     'scikit-learn=0.16*' \
+#     'scikit-image=0.11*' \
+#     'sk-video=1.1*' \
+#     'sympy=0.7*' \
+#     'cython=0.22*' \
+#     'patsy=0.3*' \
+#     'statsmodels=0.6*' \
+#     'cloudpickle=0.1*' \
+#     'dill=0.2*' \
+#     'numba=0.20*' \
+#     'bokeh=0.9*' \
+#     'libgfortran=1.0.0' \
+#     'tornado=4.5.3' \
+#     'pyzmq' \
+#     && conda clean -yt
+#
+# USER root
+#
+# RUN /bin/bash -c "source activate python2 && ipython kernel install"
 
 #--------------------------------------
 #   Updates needed for opencv
@@ -533,37 +550,37 @@ WORKDIR ~/
 RUN conda uninstall -y ffmpeg \
   && /bin/bash -c "source activate python2 && conda uninstall -y ffmpeg"
 
-# RUN git clone https://github.com/Itseez/opencv.git \
-#   && cd opencv \
-#   && git checkout tags/3.4.3 \
-#   && mkdir build \
-#   && cd build/ \
-#   && cmake -D CMAKE_BUILD_TYPE=RELEASE \
-#     -D PYTHON2_EXECUTABLE:FILEPATH=/opt/conda/envs/python2/bin/python2.7 \
-#     -D PYTHON2_INCLUDE_DIR:PATH=/opt/conda/envs/python2/include/python2.7 \
-#     -D PYTHON2_NUMPY_INCLUDE_DIRS:PATH=/opt/conda/envs/python2/lib/python2.7/site-packages/numpy/core/include \
-#     -D PYTHON2_PACKAGES_PATH:PATH=/opt/conda/envs/python2/lib/python2.7/site-packages \
-#     -D PYTHON3_EXECUTABLE:FILEPATH=/opt/conda/bin/python3.6 \
-#     -D PYTHON3_INCLUDE_DIR:PATH=/opt/conda/include/python3.6m \
-#     -D PYTHON3_NUMPY_INCLUDE_DIRS:PATH=/opt/conda/lib/python3.6/site-packages/numpy/core/include \
-#     -D PYTHON3_PACKAGES_PATH:PATH=/opt/conda/lib/python3.6/site-packages \
-#     -D CMAKE_INSTALL_PREFIX=/usr/local \
-#     -D BUILD_opencv_dnn=OFF \
-#     -D BUILD_opencv_dnn_modern=OFF \
-#     -D BUILD_PROTOBUF=OFF \
-#     -D WITH_CUDA=OFF \
-#     -D FORCE_VTK=ON \
-#     -D WITH_TBB=ON \
-#     -D WITH_V4L=ON \
-#     -D WITH_OPENGL=ON \
-#     -D ENABLE_FAST_MATH=1 \
-#     -D CUDA_FAST_MATH=1 \
-#     -D WITH_CUBLAS=1 \
-#     -D WITH_FFMPEG=1 \
-#     -D INSTALL_PYTHON_EXAMPLES=ON \
-#     -D BUILD_EXAMPLES=OFF .. \
-#   && make -j$(nproc) && sudo make install \
-#   && ldconfig
+RUN git clone https://github.com/Itseez/opencv.git \
+  && cd opencv \
+  && git checkout tags/3.4.3 \
+  && mkdir build \
+  && cd build/ \
+  && cmake -D CMAKE_BUILD_TYPE=RELEASE \
+    -D PYTHON2_EXECUTABLE:FILEPATH=/opt/conda/envs/python2/bin/python2.7 \
+    -D PYTHON2_INCLUDE_DIR:PATH=/opt/conda/envs/python2/include/python2.7 \
+    -D PYTHON2_NUMPY_INCLUDE_DIRS:PATH=/opt/conda/envs/python2/lib/python2.7/site-packages/numpy/core/include \
+    -D PYTHON2_PACKAGES_PATH:PATH=/opt/conda/envs/python2/lib/python2.7/site-packages \
+    -D PYTHON3_EXECUTABLE:FILEPATH=/opt/conda/bin/python3.6 \
+    -D PYTHON3_INCLUDE_DIR:PATH=/opt/conda/include/python3.6m \
+    -D PYTHON3_NUMPY_INCLUDE_DIRS:PATH=/opt/conda/lib/python3.6/site-packages/numpy/core/include \
+    -D PYTHON3_PACKAGES_PATH:PATH=/opt/conda/lib/python3.6/site-packages \
+    -D CMAKE_INSTALL_PREFIX=/usr/local \
+    -D BUILD_opencv_dnn=OFF \
+    -D BUILD_opencv_dnn_modern=OFF \
+    -D BUILD_PROTOBUF=OFF \
+    -D WITH_CUDA=OFF \
+    -D FORCE_VTK=ON \
+    -D WITH_TBB=ON \
+    -D WITH_V4L=ON \
+    -D WITH_OPENGL=ON \
+    -D ENABLE_FAST_MATH=1 \
+    -D CUDA_FAST_MATH=1 \
+    -D WITH_CUBLAS=1 \
+    -D WITH_FFMPEG=1 \
+    -D INSTALL_PYTHON_EXAMPLES=ON \
+    -D BUILD_EXAMPLES=OFF .. \
+  && make -j$(nproc) && sudo make install \
+  && ldconfig
 #
 # # why this setting?:
 # # -D BUILD_opencv_dnn=OFF \
