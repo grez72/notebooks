@@ -247,7 +247,7 @@ RUN git clone https://github.com/FFmpeg/nv-codec-headers /root/nv-codec-headers 
 #   cd /root && rm -rf ffmpeg
 
 RUN git clone https://github.com/FFmpeg/FFmpeg /root/ffmpeg && \
-  cd /root/ffmpeg && PKG_CONFIG_PATH="/root/ffmpeg/lib/pkgconfig" ./configure \
+  cd /root/ffmpeg && ./configure \
   --disable-shared \
   --enable-avresample \
   --enable-gpl \
@@ -269,7 +269,6 @@ RUN git clone https://github.com/FFmpeg/FFmpeg /root/ffmpeg && \
   --extra-cflags=-I/usr/local/cuda/include \
   --extra-cflags=-I/usr/local/include \
   --extra-ldflags=-L/usr/local/cuda/lib64 && \
-  --extra-libs="-lpthread -lm" \
   make -j$(nproc) && \
   make install -j$(nproc) && \
   cd /root && rm -rf ffmpeg
