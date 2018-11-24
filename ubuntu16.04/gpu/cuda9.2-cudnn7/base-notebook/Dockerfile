@@ -220,8 +220,10 @@ RUN apt-get update -qq && sudo apt-get -y install \
 ENV NVIDIA_VISIBLE_DEVICES=all
 ENV NVIDIA_DRIVER_CAPABILITIES=compute,utility,video
 
+# double check to make sure dependencies installed
 RUN apt-get -y update && apt-get install -y wget nano git build-essential yasm pkg-config
 
+# install nvidia headers for nvidia codecs
 RUN git clone https://github.com/FFmpeg/nv-codec-headers /root/nv-codec-headers && \
   cd /root/nv-codec-headers &&\
   make -j$(nproc) && \
@@ -229,21 +231,67 @@ RUN git clone https://github.com/FFmpeg/nv-codec-headers /root/nv-codec-headers 
   cd /root && rm -rf nv-codec-headers
 
 # Compile and install ffmpeg from source
+# RUN git clone https://github.com/FFmpeg/FFmpeg /root/ffmpeg && \
+#   cd /root/ffmpeg && ./configure \
+#   --enable-nonfree \
+#   --disable-shared \
+#   --enable-nvenc \
+#   --enable-cuda \
+#   --enable-cuvid \
+#   --enable-libnpp \
+#   --extra-cflags=-I/usr/local/cuda/include \
+#   --extra-cflags=-I/usr/local/include \
+#   --extra-ldflags=-L/usr/local/cuda/lib64 && \
+#   make -j$(nproc) && \
+#   make install -j$(nproc) && \
+#   cd /root && rm -rf ffmpeg
+
 RUN git clone https://github.com/FFmpeg/FFmpeg /root/ffmpeg && \
   cd /root/ffmpeg && ./configure \
-  --enable-nonfree \
   --disable-shared \
-  --enable-nvenc \
+  --enable-avresample \
+  --enable-gpl \
+  --enable-libass \
+  --enable-libfdk-aac \
+  --enable-libfreetype \
+  --enable-libmp3lame \
+  --enable-libopus \
+  --enable-libvorbis \
+  --enable-libvpx \
+  --enable-libx264 \
+  --enable-libx265 \
+  --enable-nonfree \
   --enable-cuda \
   --enable-cuvid \
+  --enable-nvenc \
+  --enable-nonfree \
   --enable-libnpp \
   --extra-cflags=-I/usr/local/cuda/include \
   --extra-cflags=-I/usr/local/include \
   --extra-ldflags=-L/usr/local/cuda/lib64 && \
+  --extra-libs="-lpthread -lm" \
   make -j$(nproc) && \
   make install -j$(nproc) && \
   cd /root && rm -rf ffmpeg
 
+# https://trac.ffmpeg.org/wiki/HWAccelIntro
+# https://trac.ffmpeg.org/wiki/HWAccelIntro#NVENC
+# Check for nvidia codecs
+# ffmpeg -encoders 2>/dev/null | grep nvenc
+
+# Test hardware acceleration
+# ffmpeg -hwaccel_device 0 -hwaccel cuvid -c:v h264_cuvid -i input -vf scale_npp=-1:720 -c:v h264_nvenc -preset slow output.mkv
+# ffmpeg -y -hwaccel cuvid -c:v h264_cuvid -vsync 0 -i <input.mp4> -vf scale_npp=1920:1072 -vcodec h264_nvenc <output0.264> -vf scale_npp=1280:720 -vcodec h264_nvenc <output1.264>
+# ffmpeg -y -hwaccel cuvid -c:v h264_cuvid -vsync 0 -i VP13_z4LO6M.mp4 -vf scale_npp=1920:1072 -vcodec h264_nvenc VP13_z4LO6M.264 -vf scale_npp=1280:720 -vcodec h264_nvenc VP13_z4LO6M.264
+# ffmpeg -i VP13_z4LO6M.mp4 -c:v h264_nvenc -profile:v high444p -pixel_format yuv444p -preset default output.mp4
+# ffmpeg -c:v h264_cuvid -i input output.mkv
+# ffmpeg -c:v h264_cuvid -i youtube_epVDutrGlDU.mp4 output.mkv
+# ffmpeg -hwaccel_device 0 -hwaccel cuvid -c:v h264_cuvid -i youtube_epVDutrGlDU.mp4 -i "%1" test/$filename%04d.jpg
+# ffmpeg -hwaccel_device 0 -hwaccel cuvid -i youtube_epVDutrGlDU.mp4 -qmin 1 -qmax 1 -qscale:v 1 test/$filename%04d.jpg
+# ffmpeg -hwaccel_device 0 -hwaccel nvdec -i youtube_epVDutrGlDU.mp4 -qmin 1 -qmax 1 -qscale:v 1 test/$filename%04d.jpg
+# ffprobe -v error -select_streams v:0 -show_entries stream=codec_name -of default=nw=1 youtube_epVDutrGlDU.mp4
+
+# PyNVVL is a thin wrapper of NVIDIA Video Loader (NVVL) https://github.com/NVIDIA/nvvl
 RUN pip install pynvvl-cuda92
 
 # Trying to compile FFmpeg with Nvidia NVENC and cuda hardware acceleration support enabled
@@ -251,20 +299,12 @@ RUN pip install pynvvl-cuda92
 # https://github.com/lutris/ffmpeg-nvenc
 # https://trac.ffmpeg.org/wiki/HWAccelIntro
 
-# need nasm
+# need nasm?
 # http://www.linuxfromscratch.org/blfs/view/svn/general/nasm.html
 
 # http://developer.download.nvidia.com/compute/redist/ffmpeg/1511-patch/FFMPEG-with-NVIDIA-Acceleration-on-Ubuntu_UG_v01.pdf
 
 # http://developer.download.nvidia.com/compute/redist/ffmpeg/1511-patch/FFMPEG-with-NVIDIA-Acceleration-on-Ubuntu_UG_v01.pdf
-
-# install nvidia headers so we can supercharge our ffmpeg with cuda
-# RUN mkdir -p ~/nv-codec-headers_build && \
-#   cd $HOME/nv-codec-headers_build && \
-#   git clone https://git.videolan.org/git/ffmpeg/nv-codec-headers.git && \
-#   cd nv-codec-headers && \
-#   make -j$(nproc) && \
-#   make install
 
   # echo "Installing the NVidia Video SDK"
   # wget -4 http://developer.download.nvidia.com/assets/cuda/files//nvidia_video_sdk_8.2.16
@@ -350,18 +390,6 @@ RUN pip install pynvvl-cuda92
     # --enable-libnpp \
     # --extra-cflags="-I/usr/local/cuda/include" \
     # --extra-ldflags="-L/usr/local/cuda/lib64" && \
-
-# https://trac.ffmpeg.org/wiki/HWAccelIntro
-# https://trac.ffmpeg.org/wiki/HWAccelIntro#NVENC
-# Check for nvidia codecs
-# ffmpeg -encoders 2>/dev/null | grep nvenc
-
-# Test hardware acceleration
-# ffmpeg -hwaccel_device 0 -hwaccel cuvid -c:v h264_cuvid -i input -vf scale_npp=-1:720 -c:v h264_nvenc -preset slow output.mkv
-# ffmpeg -y -hwaccel cuvid -c:v h264_cuvid -vsync 0 -i <input.mp4> -vf scale_npp=1920:1072 -vcodec h264_nvenc <output0.264> -vf scale_npp=1280:720 -vcodec h264_nvenc <output1.264>
-# ffmpeg -y -hwaccel cuvid -c:v h264_cuvid -vsync 0 -i VP13_z4LO6M.mp4 -vf scale_npp=1920:1072 -vcodec h264_nvenc VP13_z4LO6M.264 -vf scale_npp=1280:720 -vcodec h264_nvenc VP13_z4LO6M.264
-# ffmpeg -i VP13_z4LO6M.mp4 -c:v h264_nvenc -profile:v high444p -pixel_format yuv444p -preset default output.mp4
-# ffmpeg -c:v h264_cuvid -i input output.mkv
 
 #--------------------------------------
 # Setup Python 3 Environment
