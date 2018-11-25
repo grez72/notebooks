@@ -60,7 +60,6 @@ RUN /bin/bash -c "source activate fastai \
 # ==============================================================
 
 RUN /bin/bash -c "source activate fastai \
-    && conda update conda \
     && conda install -c pytorch pytorch-nightly cuda92 \
     && conda install -c fastai torchvision-nightly \
     && conda install -c fastai fastai \
@@ -69,7 +68,6 @@ RUN /bin/bash -c "source activate fastai \
     && conda install -c conda-forge libjpeg-turbo \
     && CC='cc -mavx2' pip install --no-cache-dir -U --force-reinstall pillow-simd" \
     /bin/bash -c "source activate fastai_v0.7 \
-    && conda update conda \
     && conda install -y scipy scikit-learn bokeh pandas patsy seaborn scikit-image \
     && conda install -y -c conda-forge mock \
     && conda install -y mkl -c intel \
