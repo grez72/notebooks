@@ -59,8 +59,10 @@ RUN /bin/bash -c "source activate fastai \
       && conda install -c fastai fastai \
       && pip uninstall -y pillow \
       && conda uninstall --force jpeg libtiff -y \
-      && conda install -c conda-forge libjpeg-turbo \
+      && conda install -c loopbio libjpeg-turbo \
       && CC='cc -mavx2' pip install --no-cache-dir -U --force-reinstall pillow-simd"
+
+# && conda install -c conda-forge libjpeg-turbo \
 
 # install fastai_v0.7 with pytorch 0.4
 RUN /bin/bash -c "source activate fastai_v0 \
@@ -69,9 +71,13 @@ RUN /bin/bash -c "source activate fastai_v0 \
       && pip install fastai==0.7.0 --user \
       && pip install torchtext==0.2.3 --user \
       && pip uninstall -y pillow \
-      && conda uninstall --force jpeg libtiff -y \
-      && conda install -c conda-forge libjpeg-turbo \
+      && conda install -c loopbio libjpeg-turbo \
       && CC='cc -mavx2' pip install --no-cache-dir -U --force-reinstall pillow-simd"
+
+# && conda install -c conda-forge libjpeg-turbo \
+      # && conda install -y scipy scikit-learn bokeh pandas patsy seaborn scikit-image \
+      # && conda install -y -c conda-forge mock \
+      # && conda install -y mkl -c intel \
 
 # ==============================================================
 #  Install FAST AI
