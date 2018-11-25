@@ -48,14 +48,15 @@ USER $NB_USER
 RUN conda update conda \
     && conda config --add channels intel \
     && conda create -n fastai intelpython3_core python=3 \
-    && conda create -n wtf intelpython3_core python=3
+    && conda create -n fastai_v0 intelpython3_core python=3
 
 RUN /bin/bash -c "source activate fastai \
     && conda install pip ipykernel \
     && python -m ipykernel install --user --name fastai --display-name 'FastAI'" \
-    /bin/bash -c "source activate wtf \
+
+RUN /bin/bash -c "source activate fastai_v0 \
     && conda install pip ipykernel \
-    && python -m ipykernel install --user --name wtf --display-name 'FastAI v0.7'"
+    && python -m ipykernel install --user --name fastai_v0 --display-name 'FastAI v0.7'"
 
 # ==============================================================
 #  Install FAST AI
@@ -69,7 +70,7 @@ RUN /bin/bash -c "source activate fastai \
 #     && conda uninstall --force jpeg libtiff -y \
 #     && conda install -c conda-forge libjpeg-turbo \
 #     && CC='cc -mavx2' pip install --no-cache-dir -U --force-reinstall pillow-simd" \
-#     /bin/bash -c "source activate fastai_v0.7 \
+#     /bin/bash -c "source activate fastai_v0 \
 #     && conda install -y scipy scikit-learn bokeh pandas patsy seaborn scikit-image \
 #     && conda install -y -c conda-forge mock \
 #     && conda install -y mkl -c intel \
