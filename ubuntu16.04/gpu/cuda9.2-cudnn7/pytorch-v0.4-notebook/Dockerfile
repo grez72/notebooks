@@ -48,7 +48,7 @@ USER $NB_USER
 RUN conda update conda \
     && conda config --add channels intel \
     && conda create -n fastai intelpython3_core python=3 \
-    && conda create -n fastai_v0 intelpython3_core python=3
+    && conda create --name fastai_v0 --clone fastai
 
 # install latest fastai with latest pytorch
 RUN /bin/bash -c "source activate fastai \
@@ -62,7 +62,6 @@ RUN /bin/bash -c "source activate fastai \
       && conda install -c conda-forge libjpeg-turbo \
       && CC='cc -mavx2' pip install --no-cache-dir -U --force-reinstall pillow-simd"
 
-# install fastai_v0.7 with pytorch 0.4
 RUN /bin/bash -c "source activate fastai_v0 \
       && conda install pip ipykernel \
       && python -m ipykernel install --user --name fastai_v0 --display-name 'FastAI v0.7' \
