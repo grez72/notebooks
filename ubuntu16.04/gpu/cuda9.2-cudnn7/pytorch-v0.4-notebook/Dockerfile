@@ -63,7 +63,7 @@ RUN /bin/bash -c "source activate fastai \
     && conda install -c pytorch pytorch-nightly cuda92 \
     && conda install -c fastai torchvision-nightly \
     && conda install -c fastai fastai \
-    && pip uninstall pillow \
+    && pip uninstall -y pillow \
     && conda uninstall --force jpeg libtiff -y \
     && conda install -c conda-forge libjpeg-turbo \
     && CC='cc -mavx2' pip install --no-cache-dir -U --force-reinstall pillow-simd" \
@@ -73,7 +73,7 @@ RUN /bin/bash -c "source activate fastai \
     && conda install -y mkl -c intel \
     && pip install fastai==0.7.0 \
     && pip install torchtext==0.2.3 \
-    && pip uninstall pillow \
+    && pip uninstall -y pillow \
     && conda uninstall --force jpeg libtiff -y \
     && conda install -c conda-forge libjpeg-turbo \
     && CC='cc -mavx2' pip install --no-cache-dir -U --force-reinstall pillow-simd"
