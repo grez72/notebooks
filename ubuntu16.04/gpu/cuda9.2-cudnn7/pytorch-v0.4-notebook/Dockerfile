@@ -52,10 +52,10 @@ RUN conda update conda \
 
 RUN /bin/bash -c "source activate fastai \
     && conda install pip ipykernel \
-    && python -m ipykernel install --user --name python3 --display-name 'FastAI'" \
+    && python -m ipykernel install --user --name fastai --display-name 'FastAI'" \
     /bin/bash -c "source activate fastai_v0.7 \
     && conda install pip ipykernel \
-    && python -m ipykernel install --user --name python3 --display-name 'FastAIv0.7'"
+    && python -m ipykernel install --user --name fastai_v0.7 --display-name 'FastAI 0.7'"
 
 # ==============================================================
 #  Install FAST AI
