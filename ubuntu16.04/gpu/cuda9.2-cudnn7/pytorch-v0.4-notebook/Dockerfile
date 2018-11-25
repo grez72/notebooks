@@ -48,14 +48,14 @@ USER $NB_USER
 RUN conda update conda \
     && conda config --add channels intel \
     && conda create -n fastai intelpython3_core python=3 \
-    && conda create -n fastai_v0.7 intelpython3_core python=3
+    && conda create -n fastai_v0 intelpython3_core python=3
 
 RUN /bin/bash -c "source activate fastai \
     && conda install pip ipykernel \
     && python -m ipykernel install --user --name fastai --display-name 'FastAI'" \
-    /bin/bash -c "source activate fastai_v0.7 \
+    /bin/bash -c "source activate fastai_v0 \
     && conda install pip ipykernel \
-    && python -m ipykernel install --user --name fastai_v0.7 --display-name 'FastAI 0.7'"
+    && python -m ipykernel install --user --name fastai_v0 --display-name 'FastAI v0.7'"
 
 # ==============================================================
 #  Install FAST AI
