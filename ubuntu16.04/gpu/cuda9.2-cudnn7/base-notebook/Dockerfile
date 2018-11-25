@@ -552,32 +552,54 @@ RUN /bin/bash -c "source activate python2 && ipython kernel install"
 #     sk-video \
 #     && conda clean -tipsy"
 #
-# RUN /bin/bash -c "source activate python27 \
+
+# Merged my scipy installation & intel installation
+# RUN /bin/bash -c "source activate python2 \
 #     && conda install -y -c intel \
-#     cython \
-#     freetype \
-#     hdf5 \
-#     ipywidgets \
-#     jinja2 \
-#     libpng \
-#     lmdb \
-#     matplotlib \
-#     mpi4py \
-#     numba \
-#     numexpr \
-#     pandas \
-#     protobuf \
-#     pytables \
-#     requests \
-#     scikit-learn \
-#     scikit-image \
+#       cython \
+#       freetype \
+#       hdf5 \
+#       ipywidgets \
+#       jinja2 \
+#       libpng \
+#       lmdb \
+#       matplotlib \
+#       mpi4py \
+#       numba \
+#       numexpr \
+#       pandas \
+#       protobuf \
+#       pytables \
+#       requests \
+#       scikit-learn \
+#       scikit-image \
 #     && conda install -y \
-#     future \
-#     graphviz \
-#     hypothesis \
-#     pydot \
-#     python-nvd3 \
-#     sk-video \
+#       'av' \
+#       'bokeh=0.9*' \
+#       'cloudpickle=0.1*' \
+#       'cython=0.22*' \
+#       'dill=0.2*' \
+#       'future' \
+#       'graphviz' \
+#       'hypothesis' \
+#       'ipython=4.0*' \
+#       'ipywidgets=4.0*' \
+#       'libgfortran=1.0.0' \
+#       'matplotlib=1.4*' \
+#       'numba=0.20*' \
+#       'pandas=0.16*' \
+#       'patsy=0.3*' \
+#       'pydot' \
+#       'python-nvd3' \
+#       'pyzmq' \
+#       'seaborn=0.6*' \
+#       'scipy=0.15*' \
+#       'scikit-learn=0.16*' \
+#       'scikit-image=0.11*' \
+#       'sk-video=1.1*' \
+#       'sympy=0.7*' \
+#       'statsmodels=0.6*' \
+#       'tornado=4.5.3' \
 #     && conda clean -tipsy"
 
 #--------------------------------------
@@ -851,13 +873,13 @@ RUN pip install wget pathlib \
 # Install Optimized Fast PIL
 #--------------------------------------
 
-RUN pip uninstall -y pillow \
-  && conda uninstall --force jpeg libtiff -y \
+RUN conda uninstall --force jpeg libtiff -y \
+  && pip uninstall -y pillow \
   && conda install -y -c conda-forge libjpeg-turbo \
   && CC="cc -mavx2" pip install --no-cache-dir -U --force-reinstall pillow-simd \
   && /bin/bash -c "source activate python2 \
-    && pip uninstall -y pillow \
     && conda uninstall --force jpeg libtiff -y \
+    && pip uninstall -y pillow \
     && conda install -y -c conda-forge libjpeg-turbo \
     && CC='cc -mavx2' pip install --no-cache-dir -U --force-reinstall pillow-simd"
 

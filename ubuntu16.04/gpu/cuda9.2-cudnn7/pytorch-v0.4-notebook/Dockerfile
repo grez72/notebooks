@@ -2,7 +2,7 @@
 #
 # Pytorch jupyter notebook with gpu suppport (nvidia CUDA9.2 cuDNN7).
 #
-# sudo docker build -t grez72/deep-notebooks:ubuntu16.04-cuda9.2-cudnn7-pytorch-v0.4-notebook https://github.com/grez72/notebooks.git#master:ubuntu16.04/gpu/cuda9.2-cudnn7/pytorch-v0.4-notebook
+# docker build -t grez72/deep-notebooks:ubuntu16.04-cuda9.2-cudnn7-pytorch-v0.4-notebook https://github.com/grez72/notebooks.git#master:ubuntu16.04/gpu/cuda9.2-cudnn7/pytorch-v0.4-notebook
 # docker run -it --rm --user root grez72/deep-notebooks:ubuntu16.04-cuda9.2-cudnn7-pytorch-v0.4-notebook bash
 # docker run -it --rm --shm-size=2G -p 8888:8888 grez72/deep-notebooks:ubuntu16.04-cuda9.2-cudnn7-pytorch-v0.4-notebook
 
@@ -60,6 +60,8 @@ RUN /bin/bash -c "source activate fastai \
 # ==============================================================
 
 RUN /bin/bash -c "source activate fastai \
+    && pip install pip -U \
+    && conda update conda \
     && conda install -c pytorch pytorch-nightly cuda92 \
     && conda install -c fastai torchvision-nightly \
     && conda install -c fastai fastai \
@@ -68,17 +70,17 @@ RUN /bin/bash -c "source activate fastai \
     && conda install -c conda-forge libjpeg-turbo \
     && CC='cc -mavx2' pip install --no-cache-dir -U --force-reinstall pillow-simd" \
     /bin/bash -c "source activate fastai_v0.7 \
-    && conda install -c pytorch pytorch-nightly cuda92 \
-    && conda install -c fastai torchvision-nightly \
-    && conda install -c fastai fastai \
+    && pip install pip -U \
+    && conda update conda \
+    && conda install -y scipy scikit-learn bokeh pandas patsy seaborn scikit-image \
+    && conda install -y -c conda-forge mock \
+    && conda install -y mkl -c intel \
+    && pip install fastai==0.7.0 \
+    && pip install torchtext==0.2.3 \
     && pip uninstall pillow \
     && conda uninstall --force jpeg libtiff -y \
     && conda install -c conda-forge libjpeg-turbo \
     && CC='cc -mavx2' pip install --no-cache-dir -U --force-reinstall pillow-simd"
-
-
-
-
 
 # ==============================================================
 #  set workdir and user for jupyter notebook use
