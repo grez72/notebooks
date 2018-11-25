@@ -43,17 +43,17 @@ RUN /bin/bash -c "source activate python2 \
 #  INSTALL FASTAI ENVIRONMENTS
 # ==============================================================
 
-# RUN conda update conda \
-#     && conda config --add channels intel \
-#     && conda create -n fastai intelpython3_core python=3 \
-#     && conda create -n fastai_v0.7 intelpython3_core python=3
-#
-# RUN /bin/bash -c "source activate fastai \
-#     && conda install pip ipykernel \
-#     && python -m ipykernel install --user --name python3 --display-name 'FastAI'" \
-#     /bin/bash -c "source activate fastai_v0.7 \
-#     && conda install pip ipykernel \
-#     && python -m ipykernel install --user --name python3 --display-name 'FastAIv0.7'"
+RUN conda update conda \
+    && conda config --add channels intel \
+    && conda create -n fastai intelpython3_core python=3 \
+    && conda create -n fastai_v0.7 intelpython3_core python=3
+
+RUN /bin/bash -c "source activate fastai \
+    && conda install pip ipykernel \
+    && python -m ipykernel install --user --name python3 --display-name 'FastAI'" \
+    /bin/bash -c "source activate fastai_v0.7 \
+    && conda install pip ipykernel \
+    && python -m ipykernel install --user --name python3 --display-name 'FastAIv0.7'"
 
 # ==============================================================
 #  Install FAST AI
