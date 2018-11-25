@@ -848,6 +848,20 @@ RUN pip install wget pathlib \
     && conda clean -tipsy"
 
 #--------------------------------------
+# Install Optimized Fast PIL
+#--------------------------------------
+
+RUN pip uninstall pillow \
+  && conda uninstall --force jpeg libtiff -y \
+  && conda install -c conda-forge libjpeg-turbo \
+  && CC="cc -mavx2" pip install --no-cache-dir -U --force-reinstall pillow-simd \
+  && /bin/bash -c "source activate python2 \
+    && pip uninstall pillow \
+    && conda uninstall --force jpeg libtiff -y \
+    && conda install -c conda-forge libjpeg-turbo \
+    && CC='cc -mavx2' pip install --no-cache-dir -U --force-reinstall pillow-simd "
+
+#--------------------------------------
 # Notebook Setup
 #--------------------------------------
 

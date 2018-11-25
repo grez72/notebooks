@@ -3,7 +3,8 @@
 # Pytorch jupyter notebook with gpu suppport (nvidia CUDA9.2 cuDNN7).
 #
 # sudo docker build -t grez72/deep-notebooks:ubuntu16.04-cuda9.2-cudnn7-pytorch-v0.4-notebook https://github.com/grez72/notebooks.git#master:ubuntu16.04/gpu/cuda9.2-cudnn7/pytorch-v0.4-notebook
-# nvidia-docker run -it --rm --shm-size=2G -p 8888:8888 grez72/deep-notebooks:ubuntu16.04-gpu-cuda9.2-cudnn7-pytorch-v0.4
+# docker run -it --rm --user root grez72/deep-notebooks:ubuntu16.04-cuda9.2-cudnn7-pytorch-v0.4-notebook bash
+# docker run -it --rm --shm-size=2G -p 8888:8888 grez72/deep-notebooks:ubuntu16.04-cuda9.2-cudnn7-pytorch-v0.4-notebook
 
 FROM grez72/base-notebook:ubuntu16.04-cuda9.2-cudnn7
 
@@ -39,15 +40,45 @@ RUN /bin/bash -c "source activate python2 \
 #  && pip install numpy --upgrade \
 
 # ==============================================================
-#  Late Installtions, Candidates for Base Notebook
+#  INSTALL FASTAI ENVIRONMENTS
 # ==============================================================
 
-# RUN conda install -y cookiecutter \
-#   && conda install -c menpo pathlib \
-#   && conda clean -tipsy \
-#   && /bin/bash -c "source activate python2 \
-#     && conda install -c menpo pathlib \
-#     && conda clean -tipsy"
+RUN conda update conda \
+    && conda config --add channels intel \
+    && conda create -n fastai intelpython3_core python=3 \
+    && conda create -n fastai_v0.7 intelpython3_core python=3
+
+RUN /bin/bash -c "source activate fastai \
+    && conda install pip ipykernel \
+    && python -m ipykernel install --user --name python3 --display-name 'FastAI'" \
+    /bin/bash -c "source activate fastai_v0.7 \
+    && conda install pip ipykernel \
+    && python -m ipykernel install --user --name python3 --display-name 'FastAIv0.7'"
+
+# ==============================================================
+#  Install FAST AI
+# ==============================================================
+
+RUN /bin/bash -c "source activate fastai \
+    && conda install -c pytorch pytorch-nightly cuda92 \
+    && conda install -c fastai torchvision-nightly \
+    && conda install -c fastai fastai \
+    && pip uninstall pillow \
+    && conda uninstall --force jpeg libtiff -y \
+    && conda install -c conda-forge libjpeg-turbo \
+    && CC='cc -mavx2' pip install --no-cache-dir -U --force-reinstall pillow-simd" \
+    /bin/bash -c "source activate fastai_v0.7 \
+    && conda install -c pytorch pytorch-nightly cuda92 \
+    && conda install -c fastai torchvision-nightly \
+    && conda install -c fastai fastai \
+    && pip uninstall pillow \
+    && conda uninstall --force jpeg libtiff -y \
+    && conda install -c conda-forge libjpeg-turbo \
+    && CC='cc -mavx2' pip install --no-cache-dir -U --force-reinstall pillow-simd"
+
+
+
+
 
 # ==============================================================
 #  set workdir and user for jupyter notebook use
