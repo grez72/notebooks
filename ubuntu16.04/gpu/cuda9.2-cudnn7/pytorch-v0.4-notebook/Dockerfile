@@ -50,29 +50,29 @@ RUN conda update conda \
     && conda create -n fastai intelpython3_core python=3 \
     && conda create -n fastai_v0 intelpython3_core python=3
 
-# install latest fastai with latest pytorch
-RUN /bin/bash -c "source activate fastai \
-      && conda install pip ipykernel \
-      && python -m ipykernel install --user --name fastai --display-name 'FastAI' \
-      && conda install -c pytorch pytorch-nightly cuda92 \
-      && conda install -c fastai torchvision-nightly \
-      && conda install -c fastai fastai \
-      && pip uninstall -y pillow \
-      && conda uninstall --force jpeg libtiff -y \
-      && conda install -c loopbio libjpeg-turbo \
-      && CC='cc -mavx2' pip install --no-cache-dir -U --force-reinstall pillow-simd"
-
-# && conda install -c conda-forge libjpeg-turbo \
-
-# install fastai_v0.7 with pytorch 0.4
-RUN /bin/bash -c "source activate fastai_v0 \
-      && conda install pip ipykernel \
-      && python -m ipykernel install --user --name fastai_v0 --display-name 'FastAI v0.7' \
-      && pip install fastai==0.7.0 --user \
-      && pip install torchtext==0.2.3 --user \
-      && pip uninstall -y pillow \
-      && conda install -c loopbio libjpeg-turbo \
-      && CC='cc -mavx2' pip install --no-cache-dir -U --force-reinstall pillow-simd"
+# # install latest fastai with latest pytorch
+# RUN /bin/bash -c "source activate fastai \
+#       && conda install pip ipykernel \
+#       && python -m ipykernel install --user --name fastai --display-name 'FastAI' \
+#       && conda install -c pytorch pytorch-nightly cuda92 \
+#       && conda install -c fastai torchvision-nightly \
+#       && conda install -c fastai fastai \
+#       && pip uninstall -y pillow \
+#       && conda uninstall --force jpeg libtiff -y \
+#       && conda install -c loopbio libjpeg-turbo \
+#       && CC='cc -mavx2' pip install --no-cache-dir -U --force-reinstall pillow-simd"
+#
+# # && conda install -c conda-forge libjpeg-turbo \
+#
+# # install fastai_v0.7 with pytorch 0.4
+# RUN /bin/bash -c "source activate fastai_v0 \
+#       && conda install pip ipykernel \
+#       && python -m ipykernel install --user --name fastai_v0 --display-name 'FastAI v0.7' \
+#       && pip install fastai==0.7.0 --user \
+#       && pip install torchtext==0.2.3 --user \
+#       && pip uninstall -y pillow \
+#       && conda install -c loopbio libjpeg-turbo \
+#       && CC='cc -mavx2' pip install --no-cache-dir -U --force-reinstall pillow-simd"
 
 # && conda install -c conda-forge libjpeg-turbo \
       # && conda install -y scipy scikit-learn bokeh pandas patsy seaborn scikit-image \
