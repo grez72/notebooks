@@ -26,6 +26,7 @@ RUN pip install --upgrade pip \
   && conda install -c conda-forge mock \
   && conda install -y mkl -c intel \
   && conda install pytorch torchvision cuda92 -c pytorch \
+  && conda install -c fastai fastprogress \
   && conda clean -tipsy
 
 # RUN conda update -y conda pytorch torchvision
@@ -101,6 +102,13 @@ RUN conda update conda \
 #     && conda uninstall --force jpeg libtiff -y \
 #     && conda install -c conda-forge libjpeg-turbo \
 #     && CC='cc -mavx2' pip install --no-cache-dir -U --force-reinstall pillow-simd"
+
+# ==============================================================
+#  Late Additions
+# ==============================================================
+
+
+
 
 # ==============================================================
 #  set workdir and user for jupyter notebook use
