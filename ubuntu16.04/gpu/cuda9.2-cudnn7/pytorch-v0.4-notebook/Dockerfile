@@ -107,8 +107,13 @@ RUN conda update conda \
 #  Late Additions
 # ==============================================================
 
+# needed for deeplab-pytorch model:
+# RUN pip install addict pydensecrf
 
-
+# RUN conda install -y -c conda-forge ipympl \
+#   && conda install -y -c conda-forge widgetsnbextension \
+#   && jupyter labextension install @jupyter-widgets/jupyterlab-manager \
+#   && jupyter labextension install jupyter-matplotlib
 
 # ==============================================================
 #  set workdir and user for jupyter notebook use
