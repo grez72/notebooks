@@ -82,7 +82,7 @@ ENV PATH=$CONDA_DIR/bin:$PATH \
     HOME=/home/$NB_USER
 
 ADD fix-permissions /usr/local/bin/fix-permissions
-RUN chmod u+x /usr/local/bin/fix-permissions
+# RUN chmod u+x /usr/local/bin/fix-permissions
 # Create jovyan user with UID=1000 and in the 'users' group
 # and make sure these dirs are writable by the `users` group.
 RUN groupadd wheel -g 11 && \
