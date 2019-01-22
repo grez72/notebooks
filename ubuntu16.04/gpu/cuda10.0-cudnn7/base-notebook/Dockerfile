@@ -890,6 +890,10 @@ RUN conda uninstall --force jpeg libtiff -y \
 
 ENV CUDA_DEVICE_ORDER=PCI_BUS_ID
 
+RUN pip install addict
+RUN conda install -y dask
+RUN jupyter labextension install dask-labextension
+
 #--------------------------------------
 # Notebook Setup
 #--------------------------------------
