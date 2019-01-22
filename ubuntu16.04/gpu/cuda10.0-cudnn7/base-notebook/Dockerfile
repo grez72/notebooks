@@ -885,6 +885,12 @@ RUN conda uninstall --force jpeg libtiff -y \
     && CC='cc -mavx2' pip install --no-cache-dir -U --force-reinstall pillow-simd"
 
 #--------------------------------------
+# Late Additions
+#--------------------------------------
+
+ENV CUDA_DEVICE_ORDER=PCI_BUS_ID
+
+#--------------------------------------
 # Notebook Setup
 #--------------------------------------
 
