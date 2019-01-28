@@ -32,7 +32,7 @@
 # nvidia-docker run -it --rm grez72/nvidia-pytorch:ubuntu16.04-cuda10.0-cudnn7 python genpass.py -p 'supersecretpassword'
 #
 # mount it:
-# docker run -it --rm grez72/nvidia-pytorch:ubuntu16.04-cuda10.0-cudnn7 bash
+# docker run -it --rm --user root grez72/nvidia-pytorch:ubuntu16.04-cuda10.0-cudnn7 bash
 #
 # run it:
 # docker run -it --rm -p 8888:8888 grez72/nvidia-pytorch:ubuntu16.04-cuda10.0-cudnn7
@@ -106,71 +106,72 @@ USER $NB_USER
 # Correct permissions
 # Do all this in a single RUN command to avoid duplicating all of the
 # files across image layers when the permissions change
-# RUN conda install --quiet --yes \
-#     'notebook=5.7.*' \
-#     'jupyterhub=0.9.*' \
-#     'jupyterlab=0.35.*' && \
-#     conda clean -tipsy && \
-#     jupyter labextension install @jupyterlab/hub-extension@^0.12.0 && \
-#     npm cache clean --force && \
-#     jupyter notebook --generate-config && \
-#     rm -rf $CONDA_DIR/share/jupyter/lab/staging && \
-#     rm -rf /home/$NB_USER/.cache/yarn && \
-#     fix-permissions $CONDA_DIR && \
-#     fix-permissions /home/$NB_USER
-#
-# #--------------------------------------
-# # Install all OS dependencies for fully functional notebook server:
-# #--------------------------------------
-#
-# USER root
-#
-# RUN apt-get update && apt-get install -yq --no-install-recommends \
-#     build-essential \
-#     emacs \
-#     git \
-#     inkscape \
-#     jed \
-#     libsm6 \
-#     libxext-dev \
-#     libxrender1 \
-#     lmodern \
-#     netcat \
-#     pandoc \
-#     python-dev \
-#     texlive-fonts-extra \
-#     texlive-fonts-recommended \
-#     texlive-generic-recommended \
-#     texlive-latex-base \
-#     texlive-latex-extra \
-#     texlive-xetex \
-#     unzip \
-#     nano \
-#     && apt-get clean && \
-#     rm -rf /var/lib/apt/lists/*
-#
-# #--------------------------------------
-# # Notebook Setup
-# #--------------------------------------
-#
-# USER root
-#
-# EXPOSE 8888
-# WORKDIR $HOME/work
-#
-# # Configure container startup
-# ENTRYPOINT ["tini", "-g", "--"]
-# CMD ["start-notebook.sh"]
-#
-# # Add local files as late as possible to avoid cache busting
-# COPY start.sh /usr/local/bin/
-# COPY start-notebook.sh /usr/local/bin/
-# COPY start-singleuser.sh /usr/local/bin/
-# COPY jupyter_notebook_config.py /etc/jupyter/
-# COPY genpass.py .
-# RUN fix-permissions /etc/jupyter/
-#
-# WORKDIR $HOME/work
-#
-# # Switch back to jovyan to avoid accidental container runs as root
-# USER $NB_UID
+RUN conda install --quiet --yes \
+    'notebook=5.7.*' \
+    'jupyterhub=0.9.*' \
+    'jupyterlab=0.35.*' && \
+    conda clean -tipsy && \
+    conda install --quiet --yes -c conda-forge nodejs=6.* && \
+    jupyter labextension install @jupyterlab/hub-extension@^0.12.0 && \
+    npm cache clean --force && \
+    jupyter notebook --generate-config && \
+    rm -rf $CONDA_DIR/share/jupyter/lab/staging && \
+    rm -rf /home/$NB_USER/.cache/yarn && \
+    fix-permissions $CONDA_DIR && \
+    fix-permissions /home/$NB_USER
+
+#--------------------------------------
+# Install all OS dependencies for fully functional notebook server:
+#--------------------------------------
+
+USER root
+
+RUN apt-get update && apt-get install -yq --no-install-recommends \
+    build-essential \
+    emacs \
+    git \
+    inkscape \
+    jed \
+    libsm6 \
+    libxext-dev \
+    libxrender1 \
+    lmodern \
+    netcat \
+    pandoc \
+    python-dev \
+    texlive-fonts-extra \
+    texlive-fonts-recommended \
+    texlive-generic-recommended \
+    texlive-latex-base \
+    texlive-latex-extra \
+    texlive-xetex \
+    unzip \
+    nano \
+    && apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
+#--------------------------------------
+# Notebook Setup
+#--------------------------------------
+
+USER root
+
+EXPOSE 8888
+WORKDIR $HOME/work
+
+# Configure container startup
+ENTRYPOINT ["tini", "-g", "--"]
+CMD ["start-notebook.sh"]
+
+# Add local files as late as possible to avoid cache busting
+COPY start.sh /usr/local/bin/
+COPY start-notebook.sh /usr/local/bin/
+COPY start-singleuser.sh /usr/local/bin/
+COPY jupyter_notebook_config.py /etc/jupyter/
+COPY genpass.py .
+RUN fix-permissions /etc/jupyter/
+
+WORKDIR $HOME/work
+
+# Switch back to jovyan to avoid accidental container runs as root
+USER $NB_UID
