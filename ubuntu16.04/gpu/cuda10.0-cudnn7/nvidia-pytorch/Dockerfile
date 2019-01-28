@@ -29,13 +29,13 @@
 # docker run -it --rm grez72/nvidia-pytorch:ubuntu16.04-cuda10.0-cudnn7 nvidia-smi
 #
 # generate a password:
-# nvidia-docker run -it --rm grez72/base-notebook:ubuntu16.04-cuda10.0-cudnn7 python genpass.py -p 'supersecretpassword'
+# nvidia-docker run -it --rm grez72/nvidia-pytorch:ubuntu16.04-cuda10.0-cudnn7 python genpass.py -p 'supersecretpassword'
 #
 # mount it:
 # docker run -it --rm grez72/nvidia-pytorch:ubuntu16.04-cuda10.0-cudnn7 bash
 #
 # run it:
-# docker run -it --rm -p 8888:8888 grez72/base-notebook:ubuntu16.04-cuda10.0-cudnn7
+# docker run -it --rm -p 8888:8888 grez72/nvidia-pytorch:ubuntu16.04-cuda10.0-cudnn7
 #
 # If you are using jupyterhub, this image can be used with Dockerspawner to
 # spawn a single-user notebook.
