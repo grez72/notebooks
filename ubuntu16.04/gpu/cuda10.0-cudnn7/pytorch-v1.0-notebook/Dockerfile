@@ -65,6 +65,15 @@ RUN pip install --extra-index-url https://developer.download.nvidia.com/compute/
 RUN pip install torchsummary torchsummaryX
 
 # ==============================================================
+#  jupyterlab-git integration?
+# ==============================================================
+
+# https://github.com/jupyterlab/jupyterlab-git
+# RUN jupyter labextension install @jupyterlab/git \
+#   && pip install jupyterlab-git \
+#   && jupyter serverextension enable --py jupyterlab_git
+
+# ==============================================================
 #  set workdir and user for jupyter notebook use
 # ==============================================================
 
