@@ -55,9 +55,9 @@ RUN conda update -n base conda -y \
 #  INSTALL NVIDIA HELPERS
 # ==============================================================
 
-WORKDIR /home/$NB_USER/work/
+WORKDIR /home/$NB_USER
 RUN pip install --extra-index-url https://developer.download.nvidia.com/compute/redist nvidia-dali \
-  && git clone https://github.com/NVIDIA/apex.git & cd /home/$NB_USER/work/apex & python setup.py install --cuda_ext --cpp_ext
+  && git clone https://github.com/NVIDIA/apex.git & cd /home/$NB_USER/apex & python setup.py install --cuda_ext --cpp_ext
 
 # ==============================================================
 #  MORE HELPERS
