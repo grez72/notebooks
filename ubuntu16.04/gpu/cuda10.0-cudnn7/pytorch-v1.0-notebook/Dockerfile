@@ -42,10 +42,12 @@ RUN /bin/bash -c "source activate python2 \
 #  && pip install numpy --upgrade \
 
 # ==============================================================
-#  MAKE SURE WE'RE USING OPTIMIZED PILLOW 
+#  MAKE SURE WE'RE USING OPTIMIZED PILLOW
 # ==============================================================
 
-RUN conda uninstall -y --force jpeg libtiff -y \
+RUN conda update -n base conda -y \
+  && pip install --upgrade pip \
+  && conda uninstall -y --force jpeg libtiff \
   && conda install -y -c conda-forge libjpeg-turbo \
   && CC="cc -mavx2" pip install --no-cache-dir -U --force-reinstall --no-binary :all: --compile pillow-simd
 
