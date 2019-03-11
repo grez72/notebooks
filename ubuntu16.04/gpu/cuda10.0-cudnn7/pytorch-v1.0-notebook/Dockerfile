@@ -42,6 +42,28 @@ RUN /bin/bash -c "source activate python2 \
 #  && pip install numpy --upgrade \
 
 # ==============================================================
+#  INSTALL FASTAI
+# ==============================================================
+
+RUN conda install -y -c pytorch -c fastai fastai \
+  && conda uninstall -y --force jpeg libtiff -y \
+  && conda install -y -c conda-forge libjpeg-turbo \
+  && CC="cc -mavx2" pip install --no-cache-dir -U --force-reinstall --no-binary :all: --compile pillow-simd
+
+# ==============================================================
+#  INSTALL NVIDIA HELPERS
+# ==============================================================
+
+RUN pip install --extra-index-url https://developer.download.nvidia.com/compute/redist nvidia-dali \
+  && git clone https://github.com/NVIDIA/apex.git & cd apex & python setup.py install --cuda_ext --cpp_ext
+
+# ==============================================================
+#  MORE HELPERS
+# ==============================================================
+
+RUN pip install torchsummary torchsummaryX
+
+# ==============================================================
 #  set workdir and user for jupyter notebook use
 # ==============================================================
 
