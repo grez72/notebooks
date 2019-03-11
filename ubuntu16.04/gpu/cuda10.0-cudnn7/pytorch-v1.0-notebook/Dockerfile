@@ -27,7 +27,7 @@ RUN pip install --upgrade pip \
   && conda install -c conda-forge mock \
   && conda install -y mkl -c intel \
   && conda install pytorch torchvision cuda100 -c pytorch \
-  && conda install -c fastai fastprogress \
+  && conda install -c fastai fastprogress fastai \
   && conda clean -tipsy
 
 # RUN conda update -y conda pytorch torchvision
@@ -42,11 +42,10 @@ RUN /bin/bash -c "source activate python2 \
 #  && pip install numpy --upgrade \
 
 # ==============================================================
-#  INSTALL FASTAI
+#  MAKE SURE WE'RE USING OPTIMIZED PILLOW 
 # ==============================================================
 
-RUN conda install -y -c pytorch -c fastai fastai \
-  && conda uninstall -y --force jpeg libtiff -y \
+RUN conda uninstall -y --force jpeg libtiff -y \
   && conda install -y -c conda-forge libjpeg-turbo \
   && CC="cc -mavx2" pip install --no-cache-dir -U --force-reinstall --no-binary :all: --compile pillow-simd
 
