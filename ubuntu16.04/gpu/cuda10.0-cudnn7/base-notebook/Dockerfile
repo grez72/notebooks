@@ -890,9 +890,13 @@ RUN conda uninstall --force jpeg libtiff -y \
 
 ENV CUDA_DEVICE_ORDER=PCI_BUS_ID
 
-RUN pip install addict
+RUN pip install addict nvidia-ml-py3
 RUN conda install -y dask
+RUN apt-get -y update && apt-get install -y openssh-client
 RUN jupyter labextension install dask-labextension
+RUN jupyter labextension install @jupyterlab/git
+RUN pip install jupyterlab-git
+RUN jupyter serverextension enable --py jupyterlab_git
 
 #--------------------------------------
 # Notebook Setup
