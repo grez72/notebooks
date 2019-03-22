@@ -5,7 +5,7 @@
 set -e
 
 # run the credential helper to setup github user
-. /usr/local/bin/credential-helper.sh
+exec /usr/local/bin/credential-helper.sh
 
 if [[ ! -z "${JUPYTERHUB_API_TOKEN}" ]]; then
   # launched by JupyterHub, use single-user entrypoint
