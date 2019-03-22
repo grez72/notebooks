@@ -67,7 +67,7 @@ RUN pip install --extra-index-url https://developer.download.nvidia.com/compute/
 
 RUN pip install torchsummary torchsummaryX
 COPY credential-helper.sh /home/jovyan/credential-helper.sh
-RUN git config credential.helper "/bin/bash /home/jovyan/credential-helper.sh"
+# RUN git config --global credential.helper "/bin/bash /home/jovyan/credential-helper.sh"
 
 # ==============================================================
 #  jupyterlab-git integration?
