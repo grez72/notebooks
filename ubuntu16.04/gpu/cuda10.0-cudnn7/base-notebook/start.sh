@@ -4,6 +4,9 @@
 
 set -e
 
+# run the credential helper to setup github user
+/usr/local/bin/credential-helper.sh
+
 # Exec the specified command or fall back on bash
 if [ $# -eq 0 ]; then
     cmd=bash
