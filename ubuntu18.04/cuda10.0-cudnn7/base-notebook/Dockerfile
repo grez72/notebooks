@@ -660,6 +660,8 @@ WORKDIR ~/
 RUN conda uninstall -y ffmpeg
 # && /bin/bash -c "source activate python2 && conda uninstall -y ffmpeg"
 
+USER root
+
 # used to install v3.4.3, now installing latest 4.1.0
 RUN git clone https://github.com/opencv/opencv_contrib.git ~/opencv_contrib \
   && cd ~/opencv_contrib && git checkout tags/4.1.0 \
@@ -696,6 +698,8 @@ RUN git clone https://github.com/opencv/opencv_contrib.git ~/opencv_contrib \
   && ldconfig
 
 RUN rm /opt/conda/lib/libfontconfig.so /opt/conda/lib/libfontconfig.so.1 /opt/conda/lib/libfontconfig.so.1.12.0
+
+USER $NB_USER
 
 #--------------------------------------
 #   LIBJPEGTURBO
