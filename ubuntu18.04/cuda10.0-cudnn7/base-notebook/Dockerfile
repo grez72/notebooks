@@ -748,14 +748,8 @@ USER $NB_USER
 
 # Cupy, PyCuda, Numba
 RUN conda install -y -c lukepfister pycuda \
-  # && /bin/bash -c "source activate python2 \
-  # && conda install -y -c lukepfister pycuda" \
   && pip install cupy \
-  # && /bin/bash -c "source activate python2 \
-  # && pip install cupy" \
-  && conda install -y numba \
-  # && /bin/bash -c "source activate python2 \
-  # && conda install -y numba"
+  && conda install -y numba
 
 #--------------------------------------
 # Install Video and Image Utilities
@@ -765,9 +759,6 @@ RUN conda install -y -c lukepfister pycuda \
 # to avoid limit on number of layers in docker image
 RUN conda install -y -c conda-forge av trackpy ipywidgets \
   && conda install -y filterpy \
-  # && /bin/bash -c "source activate python2 \
-  # && conda install -y -c conda-forge av trackpy ipywidgets \
-  # && conda install -y filterpy" \
   && jupyter nbextension enable --py --sys-prefix widgetsnbextension \
   && pip install --upgrade pip \
   && pip install \
@@ -783,24 +774,10 @@ RUN conda install -y -c conda-forge av trackpy ipywidgets \
   && git clone https://github.com/DheerendraRathor/ffprobe3 \
   && cd $HOME/ffprobe3 \
   && python setup.py install \
-  # && /bin/bash -c "source activate python2 \
-  # && pip install --upgrade pip \
-  # && pip install \
-  #   ffmpeg-python \
-  #   ffprobe \
-  #   image-attendant \
-  #   imutils \
-  #   imageio \
-  #   https://github.com/soft-matter/pims/archive/master.zip \
-  #   pynvvl-cuda92 \
-  #   simplejson \
-  #   sk-video \
-  #   tqdm" \
   && cd $HOME \
   && git clone https://github.com/jfrelinger/cython-munkres-wrapper \
   && cd $HOME/cython-munkres-wrapper \
   && python setup.py install
-  # && /bin/bash -c "source activate python2 && cd $HOME/cython-munkres-wrapper && python setup.py install"
 
 #--------------------------------------
 # Parallel HDF5
@@ -878,18 +855,11 @@ RUN easy_install python-prctl
 RUN pip install plotly msgpack msgpack-numpy lmdb \
   && pip install --upgrade git+https://github.com/tensorpack/tensorpack.git \
   && conda install -c bioconda cufflinks
-# RUN /bin/bash -c "source activate python2 \
-#   && pip install plotly \
-#   && conda install -c bioconda cufflinks"
 
 RUN pip install wget pathlib \
   && conda install -y cookiecutter \
   && conda install -c menpo pathlib \
   && conda clean -tipsy
-  # && /bin/bash -c "source activate python2 \
-  #   && pip install wget pathlib \
-  #   && conda install -c menpo pathlib \
-  #   && conda clean -tipsy"
 
 #--------------------------------------
 # Install Optimized Fast PIL
@@ -899,11 +869,6 @@ RUN conda uninstall --force jpeg libtiff -y \
   && pip uninstall -y pillow \
   && conda install -y -c conda-forge libjpeg-turbo \
   && CC="cc -mavx2" pip install --no-cache-dir -U --force-reinstall pillow-simd
-  # && /bin/bash -c "source activate python2 \
-  #   && conda uninstall --force jpeg libtiff -y \
-  #   && pip uninstall -y pillow \
-  #   && conda install -y -c conda-forge libjpeg-turbo \
-  #   && CC='cc -mavx2' pip install --no-cache-dir -U --force-reinstall pillow-simd"
 
 #--------------------------------------
 # Late Additions
