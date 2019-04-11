@@ -607,6 +607,7 @@ RUN MPLBACKEND=Agg python -c "import matplotlib.pyplot" && \
 #   Updates needed for opencv
 #--------------------------------------
 
+USER root
 RUN apt-get update && apt-get install -y cmake \
   libjpeg8-dev libtiff5-dev libjasper-dev libpng12-dev \
   libgtk2.0-dev \
@@ -634,6 +635,7 @@ RUN apt-get update && apt-get install -y cmake \
 # -D BUILD_PNG=ON \
 # -D WITH_PNG=ON \
 
+USER $NB_USER
 WORKDIR ~/
 
 # try to force use of our custom installation of ffmpeg
