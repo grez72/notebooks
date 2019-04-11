@@ -486,40 +486,40 @@ ENV XDG_CACHE_HOME /home/$NB_USER/.cache/
 RUN MPLBACKEND=Agg python -c "import matplotlib.pyplot" && \
     fix-permissions /home/$NB_USER
 
-#--------------------------------------
-# Setup Python 2 Environment
-#--------------------------------------
-
-USER $NB_USER
-
-# Install Python 2 packages
-RUN conda create -p $CONDA_DIR/envs/python2 python=2.7 \
-    'av' \
-    'ipython=4.0*' \
-    'ipywidgets=4.0*' \
-    'pandas=0.16*' \
-    'matplotlib=1.4*' \
-    'scipy=0.15*' \
-    'seaborn=0.6*' \
-    'scikit-learn=0.16*' \
-    'scikit-image=0.11*' \
-    'sk-video=1.1*' \
-    'sympy=0.7*' \
-    'cython=0.22*' \
-    'patsy=0.3*' \
-    'statsmodels=0.6*' \
-    'cloudpickle=0.1*' \
-    'dill=0.2*' \
-    'numba=0.20*' \
-    'bokeh=0.9*' \
-    'libgfortran=1.0.0' \
-    'tornado=4.5.3' \
-    'pyzmq' \
-    && conda clean -yt
-
-USER root
-
-RUN /bin/bash -c "source activate python2 && ipython kernel install"
+# #--------------------------------------
+# # Setup Python 2 Environment
+# #--------------------------------------
+#
+# USER $NB_USER
+#
+# # Install Python 2 packages
+# RUN conda create -p $CONDA_DIR/envs/python2 python=2.7 \
+#     'av' \
+#     'ipython=4.0*' \
+#     'ipywidgets=4.0*' \
+#     'pandas=0.16*' \
+#     'matplotlib=1.4*' \
+#     'scipy=0.15*' \
+#     'seaborn=0.6*' \
+#     'scikit-learn=0.16*' \
+#     'scikit-image=0.11*' \
+#     'sk-video=1.1*' \
+#     'sympy=0.7*' \
+#     'cython=0.22*' \
+#     'patsy=0.3*' \
+#     'statsmodels=0.6*' \
+#     'cloudpickle=0.1*' \
+#     'dill=0.2*' \
+#     'numba=0.20*' \
+#     'bokeh=0.9*' \
+#     'libgfortran=1.0.0' \
+#     'tornado=4.5.3' \
+#     'pyzmq' \
+#     && conda clean -yt
+#
+# USER root
+#
+# RUN /bin/bash -c "source activate python2 && ipython kernel install"
 
 #--------------------------------------
 #   Install Python Libraries
@@ -646,10 +646,10 @@ RUN git clone https://github.com/Itseez/opencv.git \
   && mkdir build \
   && cd build/ \
   && cmake -D CMAKE_BUILD_TYPE=RELEASE \
-    -D PYTHON2_EXECUTABLE:FILEPATH=/opt/conda/envs/python2/bin/python2.7 \
-    -D PYTHON2_INCLUDE_DIR:PATH=/opt/conda/envs/python2/include/python2.7 \
-    -D PYTHON2_NUMPY_INCLUDE_DIRS:PATH=/opt/conda/envs/python2/lib/python2.7/site-packages/numpy/core/include \
-    -D PYTHON2_PACKAGES_PATH:PATH=/opt/conda/envs/python2/lib/python2.7/site-packages \
+    # -D PYTHON2_EXECUTABLE:FILEPATH=/opt/conda/envs/python2/bin/python2.7 \
+    # -D PYTHON2_INCLUDE_DIR:PATH=/opt/conda/envs/python2/include/python2.7 \
+    # -D PYTHON2_NUMPY_INCLUDE_DIRS:PATH=/opt/conda/envs/python2/lib/python2.7/site-packages/numpy/core/include \
+    # -D PYTHON2_PACKAGES_PATH:PATH=/opt/conda/envs/python2/lib/python2.7/site-packages \
     -D PYTHON3_EXECUTABLE:FILEPATH=/opt/conda/bin/python3.6 \
     -D PYTHON3_INCLUDE_DIR:PATH=/opt/conda/include/python3.6m \
     -D PYTHON3_NUMPY_INCLUDE_DIRS:PATH=/opt/conda/lib/python3.6/site-packages/numpy/core/include \
@@ -717,7 +717,8 @@ RUN cd /opt \
 
 # http://blog.loopbio.com/video-io-2-jpeg-decoding.html
 # using loopbio's PyTurbojpeg fork! https://github.com/loopbio/PyTurbojpeg
-RUN pip install -U git+git://github.com/loopbio/PyTurboJPEG.git \
+RUN pip install -U git+git://github.com/loopbio/PyTurboJPEG.git
+# \
   && /bin/bash -c "source activate python2 && pip install -U git+git://github.com/loopbio/PyTurboJPEG.git"
 
 
@@ -727,14 +728,14 @@ RUN pip install -U git+git://github.com/loopbio/PyTurboJPEG.git \
 
 # Cupy, PyCuda, Numba
 RUN conda install -y -c lukepfister pycuda \
-  && /bin/bash -c "source activate python2 \
-  && conda install -y -c lukepfister pycuda" \
+  # && /bin/bash -c "source activate python2 \
+  # && conda install -y -c lukepfister pycuda" \
   && pip install cupy \
-  && /bin/bash -c "source activate python2 \
-  && pip install cupy" \
+  # && /bin/bash -c "source activate python2 \
+  # && pip install cupy" \
   && conda install -y numba \
-  && /bin/bash -c "source activate python2 \
-  && conda install -y numba"
+  # && /bin/bash -c "source activate python2 \
+  # && conda install -y numba"
 
 #--------------------------------------
 # Install Video and Image Utilities
@@ -744,9 +745,9 @@ RUN conda install -y -c lukepfister pycuda \
 # to avoid limit on number of layers in docker image
 RUN conda install -y -c conda-forge av trackpy ipywidgets \
   && conda install -y filterpy \
-  && /bin/bash -c "source activate python2 \
-  && conda install -y -c conda-forge av trackpy ipywidgets \
-  && conda install -y filterpy" \
+  # && /bin/bash -c "source activate python2 \
+  # && conda install -y -c conda-forge av trackpy ipywidgets \
+  # && conda install -y filterpy" \
   && jupyter nbextension enable --py --sys-prefix widgetsnbextension \
   && pip install --upgrade pip \
   && pip install \
@@ -762,24 +763,24 @@ RUN conda install -y -c conda-forge av trackpy ipywidgets \
   && git clone https://github.com/DheerendraRathor/ffprobe3 \
   && cd $HOME/ffprobe3 \
   && python setup.py install \
-  && /bin/bash -c "source activate python2 \
-  && pip install --upgrade pip \
-  && pip install \
-    ffmpeg-python \
-    ffprobe \
-    image-attendant \
-    imutils \
-    imageio \
-    https://github.com/soft-matter/pims/archive/master.zip \
-    pynvvl-cuda92 \
-    simplejson \
-    sk-video \
-    tqdm" \
+  # && /bin/bash -c "source activate python2 \
+  # && pip install --upgrade pip \
+  # && pip install \
+  #   ffmpeg-python \
+  #   ffprobe \
+  #   image-attendant \
+  #   imutils \
+  #   imageio \
+  #   https://github.com/soft-matter/pims/archive/master.zip \
+  #   pynvvl-cuda92 \
+  #   simplejson \
+  #   sk-video \
+  #   tqdm" \
   && cd $HOME \
   && git clone https://github.com/jfrelinger/cython-munkres-wrapper \
   && cd $HOME/cython-munkres-wrapper \
-  && python setup.py install \
-  && /bin/bash -c "source activate python2 && cd $HOME/cython-munkres-wrapper && python setup.py install"
+  && python setup.py install
+  # && /bin/bash -c "source activate python2 && cd $HOME/cython-munkres-wrapper && python setup.py install"
 
 #--------------------------------------
 # Parallel HDF5
@@ -799,8 +800,8 @@ RUN wget http://www.mpich.org/static/downloads/3.2.1/mpich-3.2.1.tar.gz \
   && make clean
 
 # install mpi4py
-RUN pip install mpi4py \
-  && /bin/bash -c "source activate python2 && pip install mpi4py"
+# RUN pip install mpi4py \
+#   && /bin/bash -c "source activate python2 && pip install mpi4py"
 
 # test file:
 # test_mpi4py.py
@@ -857,18 +858,18 @@ RUN easy_install python-prctl
 RUN pip install plotly msgpack msgpack-numpy lmdb \
   && pip install --upgrade git+https://github.com/tensorpack/tensorpack.git \
   && conda install -c bioconda cufflinks
-RUN /bin/bash -c "source activate python2 \
-  && pip install plotly \
-  && conda install -c bioconda cufflinks"
+# RUN /bin/bash -c "source activate python2 \
+#   && pip install plotly \
+#   && conda install -c bioconda cufflinks"
 
 RUN pip install wget pathlib \
   && conda install -y cookiecutter \
   && conda install -c menpo pathlib \
-  && conda clean -tipsy \
-  && /bin/bash -c "source activate python2 \
-    && pip install wget pathlib \
-    && conda install -c menpo pathlib \
-    && conda clean -tipsy"
+  && conda clean -tipsy
+  # && /bin/bash -c "source activate python2 \
+  #   && pip install wget pathlib \
+  #   && conda install -c menpo pathlib \
+  #   && conda clean -tipsy"
 
 #--------------------------------------
 # Install Optimized Fast PIL
@@ -877,12 +878,12 @@ RUN pip install wget pathlib \
 RUN conda uninstall --force jpeg libtiff -y \
   && pip uninstall -y pillow \
   && conda install -y -c conda-forge libjpeg-turbo \
-  && CC="cc -mavx2" pip install --no-cache-dir -U --force-reinstall pillow-simd \
-  && /bin/bash -c "source activate python2 \
-    && conda uninstall --force jpeg libtiff -y \
-    && pip uninstall -y pillow \
-    && conda install -y -c conda-forge libjpeg-turbo \
-    && CC='cc -mavx2' pip install --no-cache-dir -U --force-reinstall pillow-simd"
+  && CC="cc -mavx2" pip install --no-cache-dir -U --force-reinstall pillow-simd
+  # && /bin/bash -c "source activate python2 \
+  #   && conda uninstall --force jpeg libtiff -y \
+  #   && pip uninstall -y pillow \
+  #   && conda install -y -c conda-forge libjpeg-turbo \
+  #   && CC='cc -mavx2' pip install --no-cache-dir -U --force-reinstall pillow-simd"
 
 #--------------------------------------
 # Late Additions
