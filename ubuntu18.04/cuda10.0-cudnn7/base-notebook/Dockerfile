@@ -719,7 +719,7 @@ RUN cd /opt \
 # using loopbio's PyTurbojpeg fork! https://github.com/loopbio/PyTurbojpeg
 RUN pip install -U git+git://github.com/loopbio/PyTurboJPEG.git
 # \
-  && /bin/bash -c "source activate python2 && pip install -U git+git://github.com/loopbio/PyTurboJPEG.git"
+#  && /bin/bash -c "source activate python2 && pip install -U git+git://github.com/loopbio/PyTurboJPEG.git"
 
 
 #--------------------------------------
