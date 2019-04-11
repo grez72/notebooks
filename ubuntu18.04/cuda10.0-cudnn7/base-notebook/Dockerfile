@@ -695,6 +695,8 @@ RUN git clone https://github.com/opencv/opencv_contrib.git ~/opencv_contrib \
   && make VERBOSE=1 -j$(nproc) && sudo make install \
   && ldconfig
 
+RUN rm /opt/conda/lib/libfontconfig.so /opt/conda/lib/libfontconfig.so.1 /opt/conda/lib/libfontconfig.so.1.12.0
+
 #--------------------------------------
 #   LIBJPEGTURBO
 #--------------------------------------
