@@ -132,7 +132,7 @@ RUN conda install --quiet --yes 'tini=0.18.0' && \
 #   Install Jupyter Notebook, Lab, and Hub
 #--------------------------------------
 
-USER $NB_USER
+USER $NB_UID
 
 # Generate a notebook server config
 # Cleanup temporary files
@@ -785,6 +785,8 @@ RUN conda install -y -c conda-forge av trackpy ipywidgets \
 
 # https://drtiresome.com/2016/08/23/build-and-install-mpi-parallel-hdf5-and-h5py-from-source-on-linux/
 
+USER root
+
 WORKDIR /tmp
 
 # install MPICH, so we can pip install mpi4py
@@ -848,6 +850,8 @@ RUN wget https://support.hdfgroup.org/ftp/HDF5/releases/hdf5-1.10/hdf5-1.10.3/sr
 #--------------------------------------
 # Install Additional Packages
 #--------------------------------------
+
+USER $NB_UID
 
 # plotly + dependencies
 RUN apt-get update && apt-get install -y build-essential libcap-dev
