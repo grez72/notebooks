@@ -851,10 +851,12 @@ RUN wget https://support.hdfgroup.org/ftp/HDF5/releases/hdf5-1.10/hdf5-1.10.3/sr
 # Install Additional Packages
 #--------------------------------------
 
+USER root
+RUN apt-get update && apt-get install -y build-essential libcap-dev openssh-client
+
 USER $NB_UID
 
 # plotly + dependencies
-RUN apt-get update && apt-get install -y build-essential libcap-dev
 RUN easy_install python-prctl
 RUN pip install plotly msgpack msgpack-numpy lmdb \
   && pip install --upgrade git+https://github.com/tensorpack/tensorpack.git \
@@ -882,7 +884,6 @@ ENV CUDA_DEVICE_ORDER=PCI_BUS_ID
 
 RUN pip install addict nvidia-ml-py3
 RUN conda install -y dask
-RUN apt-get -y update && apt-get install -y openssh-client
 RUN jupyter labextension install dask-labextension
 RUN jupyter labextension install @jupyterlab/git
 RUN pip install jupyterlab-git
