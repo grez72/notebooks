@@ -862,9 +862,10 @@ RUN pip install plotly msgpack msgpack-numpy lmdb \
   && pip install --upgrade git+https://github.com/tensorpack/tensorpack.git \
   && conda install -c bioconda cufflinks
 
-RUN pip install wget pathlib \
+RUN pip install wget pathlib addict nvidia-ml-py3 \
   && conda install -y cookiecutter \
   && conda install -c menpo pathlib \
+  && conda install -y dask \
   && conda clean -tipsy
 
 #--------------------------------------
@@ -882,12 +883,14 @@ RUN conda uninstall --force jpeg libtiff -y \
 
 ENV CUDA_DEVICE_ORDER=PCI_BUS_ID
 
-RUN pip install addict nvidia-ml-py3
-RUN conda install -y dask
-RUN jupyter labextension install dask-labextension
-RUN jupyter labextension install @jupyterlab/git
-RUN pip install jupyterlab-git
-RUN jupyter serverextension enable --py jupyterlab_git
+USER root
+
+RUN jupyter labextension install dask-labextension \
+  && jupyter labextension install @jupyterlab/git \
+  && pip install jupyterlab-git \
+  && jupyter serverextension enable --py jupyterlab_git
+
+USER $NB_UID
 
 #--------------------------------------
 #   INSTALL DeepLearning Frameworks
