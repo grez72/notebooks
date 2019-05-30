@@ -22,6 +22,7 @@ WORKDIR $HOME
 # ==============================================================
 
 RUN pip install --upgrade pip \
+  && pip install pytest --upgrade \
   && pip install numpy --upgrade \
   && conda update conda \
   && conda install -c conda-forge mock \
