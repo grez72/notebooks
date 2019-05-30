@@ -24,6 +24,7 @@ WORKDIR $HOME
 RUN pip install --upgrade pip \
   && pip install pillow \
   && pip install pytest --upgrade \
+  && pip install dask --upgrade \
   && pip install numpy --upgrade \
   && conda update conda \
   && conda install -c conda-forge mock \
@@ -37,6 +38,7 @@ RUN /bin/bash -c "source activate python2 \
   && pip install --upgrade pip \
   && pip install pillow \
   && pip install pytest --upgrade \
+  && pip install dask --upgrade \
   && conda install -y mkl -c intel \
   && conda install -c conda-forge mock \
   && conda install pytorch torchvision cuda100 -c pytorch \
