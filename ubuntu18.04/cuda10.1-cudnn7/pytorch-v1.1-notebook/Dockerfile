@@ -26,7 +26,7 @@ RUN pip install --upgrade pip \
   && conda update conda \
   && conda install -c conda-forge mock \
   && conda install -y mkl -c intel \
-  && conda install pytorch=$PYTORCH_VERSION torchvision $CUDA_VERSION -c pytorch \
+  && conda install pytorch=$PYTORCH_VERSION torchvision cuda100 -c pytorch \
   && conda install -c fastai fastprogress fastai \
   && conda clean -tipsy
 
