@@ -3,9 +3,9 @@
 # Pytorch jupyter notebook with gpu suppport (nvidia CUDA10.1 cuDNN7).
 #
 # docker build -t grez72/deep-notebooks:ubuntu18.04-cuda10.1-cudnn7-pytorch-v1.0-notebook https://github.com/grez72/notebooks.git#master:ubuntu18.04/cuda10.1-cudnn7/pytorch-v1.0-notebook
-# docker run -it --rm --user root grez72/deep-notebooks:ubuntu18.04-cuda10.1-cudnn7-pytorch-v1.0-notebook bash
-# docker run -it --rm --user root grez72/deep-notebooks:ubuntu18.04-cuda10.1-cudnn7-pytorch-v1.0-notebook nvidia-smi
-# docker run -it --rm --shm-size=2G -p 8889:8888 grez72/deep-notebooks:ubuntu18.04-cuda10.1-cudnn7-pytorch-v1.0-notebook
+# docker run -it --rm --user root --rm grez72/deep-notebooks:ubuntu18.04-cuda10.1-cudnn7-pytorch-v1.0-notebook bash
+# docker run -it --rm --user root --rm grez72/deep-notebooks:ubuntu18.04-cuda10.1-cudnn7-pytorch-v1.0-notebook nvidia-smi
+# docker run -it --rm --shm-size=2G -p 8889:8888 --rm  grez72/deep-notebooks:ubuntu18.04-cuda10.1-cudnn7-pytorch-v1.0-notebook
 
 FROM grez72/base-notebook:ubuntu18.04-cuda10.1-cudnn7
 
@@ -56,8 +56,10 @@ RUN pip install --upgrade pip \
 # ==============================================================
 
 WORKDIR /home/$NB_USER
-# RUN pip install --extra-index-url https://developer.download.nvidia.com/compute/redist nvidia-dali \
-#   && git clone https://github.com/NVIDIA/apex.git \
+RUN pip install --extra-index-url https://developer.download.nvidia.com/compute/redist nvidia-dali
+
+# not installing APEX because current version not compiled with cuda 10.1
+# RUN git clone https://github.com/NVIDIA/apex.git \
 #   && cd /home/$NB_USER/apex \
 #   && python setup.py install --cuda_ext --cpp_ext
 
@@ -65,16 +67,7 @@ WORKDIR /home/$NB_USER
 #  MORE HELPERS
 # ==============================================================
 
-# RUN pip install torchsummary torchsummaryX
-
-# ==============================================================
-#  jupyterlab-git integration?
-# ==============================================================
-
-# https://github.com/jupyterlab/jupyterlab-git
-# RUN jupyter labextension install @jupyterlab/git \
-#   && pip install jupyterlab-git \
-#   && jupyter serverextension enable --py jupyterlab_git
+RUN pip install torchsummary torchsummaryX
 
 # ==============================================================
 #  set workdir and user for jupyter notebook use

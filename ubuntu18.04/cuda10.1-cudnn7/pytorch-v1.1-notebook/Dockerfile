@@ -56,25 +56,19 @@ RUN pip install --upgrade pip \
 # ==============================================================
 
 WORKDIR /home/$NB_USER
-RUN pip install --extra-index-url https://developer.download.nvidia.com/compute/redist nvidia-dali \
-  && git clone https://github.com/NVIDIA/apex.git \
-  && cd /home/$NB_USER/apex \
-  && python setup.py install --cuda_ext --cpp_ext
+
+RUN pip install --extra-index-url https://developer.download.nvidia.com/compute/redist nvidia-dali
+
+# not installing APEX because current version not compiled with cuda 10.1
+# RUN git clone https://github.com/NVIDIA/apex.git \
+#   && cd /home/$NB_USER/apex \
+#   && python setup.py install --cuda_ext --cpp_ext
 
 # ==============================================================
 #  MORE HELPERS
 # ==============================================================
 
 RUN pip install torchsummary torchsummaryX
-
-# ==============================================================
-#  jupyterlab-git integration?
-# ==============================================================
-
-# https://github.com/jupyterlab/jupyterlab-git
-# RUN jupyter labextension install @jupyterlab/git \
-#   && pip install jupyterlab-git \
-#   && jupyter serverextension enable --py jupyterlab_git
 
 # ==============================================================
 #  set workdir and user for jupyter notebook use
