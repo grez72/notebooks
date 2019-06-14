@@ -31,12 +31,12 @@ RUN pip install --upgrade pip \
   && conda clean -tipsy
 
 # RUN conda update -y conda pytorch torchvision
-RUN /bin/bash -c "source activate python2 \
-  && pip install --upgrade pip \
-  && conda install -y mkl -c intel \
-  && conda install -c conda-forge mock \
-  && conda install pytorch torchvision cuda100 -c pytorch \
-  && conda clean -tipsy"
+# RUN /bin/bash -c "source activate python2 \
+#   && pip install --upgrade pip \
+#   && conda install -y mkl -c intel \
+#   && conda install -c conda-forge mock \
+#   && conda install pytorch torchvision cuda100 -c pytorch \
+#   && conda clean -tipsy"
 
 # python2, couldn't update numpy for some reason:
 #  && pip install numpy --upgrade \
