@@ -897,11 +897,18 @@ USER $NB_UID
 #   INSTALL DeepLearning Frameworks
 #--------------------------------------
 
-RUN conda install -y pytorch torchvision cudatoolkit=10.0 -c pytorch \
-  && conda install -y -c fastai fastai fastprogress
+# RUN conda install -y pytorch torchvision cudatoolkit=10.0 -c pytorch \
+#   && conda install -y -c fastai fastai fastprogress
 
-RUN pip install tensorflow-gpu \
-  && pip install mxnet-cu100
+# RUN pip install tensorflow-gpu \
+#   && pip install mxnet-cu100
+
+#--------------------------------------
+# TIME ZONE!
+#--------------------------------------
+
+ENV TZ=America/New_York
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 #--------------------------------------
 # Notebook Setup
