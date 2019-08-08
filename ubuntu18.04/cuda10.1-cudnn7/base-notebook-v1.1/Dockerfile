@@ -106,10 +106,10 @@ RUN mkdir /home/$NB_USER/work && \
 #--------------------------------------
 
 # Install conda as NB_USER and check the md5 sum provided on the download site
-# ENV MINICONDA_VERSION 4.5.4
-# ENV MINICONDA_CHECKSUM a946ea1d0c4a642ddf0c3a26a18bb16d
-ENV MINICONDA_VERSION 4.7.10
-ENV MINICONDA_CHECKSUM 1c945f2b3335c7b2b15130b1b2dc5cf4
+ENV MINICONDA_VERSION 4.5.4
+ENV MINICONDA_CHECKSUM a946ea1d0c4a642ddf0c3a26a18bb16d
+# ENV MINICONDA_VERSION 4.7.10
+# ENV MINICONDA_CHECKSUM 1c945f2b3335c7b2b15130b1b2dc5cf4
 RUN cd /tmp && \
   wget --quiet https://repo.continuum.io/miniconda/Miniconda3-${MINICONDA_VERSION}-Linux-x86_64.sh && \
   echo "${MINICONDA_CHECKSUM} *Miniconda3-${MINICONDA_VERSION}-Linux-x86_64.sh" | md5sum -c - && \
