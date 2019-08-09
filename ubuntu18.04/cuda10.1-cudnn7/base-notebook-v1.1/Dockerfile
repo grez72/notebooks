@@ -435,47 +435,47 @@ RUN git clone https://github.com/FFmpeg/FFmpeg /root/ffmpeg \
 USER $NB_UID
 WORKDIR $HOME
 
-# Install Python 3 packages
-# Remove pyqt and qt pulled in for matplotlib since we're only ever going to
-# use notebook-friendly backends in these images
-RUN conda install --quiet --yes \
-  'av' \
-  'conda-forge::blas=*=openblas' \
-  'ipywidgets=7.2*' \
-  'pandas=0.23*' \
-  'numexpr=2.6*' \
-  'matplotlib=2.2*' \
-  'scipy=1.1*' \
-  'seaborn=0.9*' \
-  'scikit-learn=0.19*' \
-  'scikit-image=0.14*' \
-  'sk-video=1.1*' \
-  'sympy=1.1*' \
-  'cython=0.28*' \
-  'patsy=0.5*' \
-  'statsmodels=0.9*' \
-  'cloudpickle=0.5*' \
-  'dill=0.2*' \
-  'numba=0.38*' \
-  'bokeh=0.12*' \
-  'sqlalchemy=1.2*' \
-  'hdf5=1.10*' \
-  'h5py=2.7*' \
-  'vincent=0.4.*' \
-  'beautifulsoup4=4.6.*' \
-  'protobuf=3.*' \
-  'xlrd'  && \
-  conda remove --quiet --yes --force qt pyqt && \
-  conda clean -tipsy && \
-  jupyter nbextension enable --py widgetsnbextension --sys-prefix && \
-  jupyter labextension install @jupyter-widgets/jupyterlab-manager@^0.38.1 && \
-  jupyter labextension install jupyterlab_bokeh@^0.6.3 && \
-  npm cache clean --force && \
-  rm -rf $CONDA_DIR/share/jupyter/lab/staging && \
-  rm -rf /home/$NB_USER/.cache/yarn && \
-  rm -rf /home/$NB_USER/.node-gyp && \
-  fix-permissions $CONDA_DIR && \
-  fix-permissions /home/$NB_USER
+# # Install Python 3 packages
+# # Remove pyqt and qt pulled in for matplotlib since we're only ever going to
+# # use notebook-friendly backends in these images
+# RUN conda install --quiet --yes \
+#   'av' \
+#   'conda-forge::blas=*=openblas' \
+#   'ipywidgets=7.2*' \
+#   'pandas=0.23*' \
+#   'numexpr=2.6*' \
+#   'matplotlib=2.2*' \
+#   'scipy=1.1*' \
+#   'seaborn=0.9*' \
+#   'scikit-learn=0.19*' \
+#   'scikit-image=0.14*' \
+#   'sk-video=1.1*' \
+#   'sympy=1.1*' \
+#   'cython=0.28*' \
+#   'patsy=0.5*' \
+#   'statsmodels=0.9*' \
+#   'cloudpickle=0.5*' \
+#   'dill=0.2*' \
+#   'numba=0.38*' \
+#   'bokeh=0.12*' \
+#   'sqlalchemy=1.2*' \
+#   'hdf5=1.10*' \
+#   'h5py=2.7*' \
+#   'vincent=0.4.*' \
+#   'beautifulsoup4=4.6.*' \
+#   'protobuf=3.*' \
+#   'xlrd'  && \
+#   conda remove --quiet --yes --force qt pyqt && \
+#   conda clean -tipsy && \
+#   jupyter nbextension enable --py widgetsnbextension --sys-prefix && \
+#   jupyter labextension install @jupyter-widgets/jupyterlab-manager@^0.38.1 && \
+#   jupyter labextension install jupyterlab_bokeh@^0.6.3 && \
+#   npm cache clean --force && \
+#   rm -rf $CONDA_DIR/share/jupyter/lab/staging && \
+#   rm -rf /home/$NB_USER/.cache/yarn && \
+#   rm -rf /home/$NB_USER/.node-gyp && \
+#   fix-permissions $CONDA_DIR && \
+#   fix-permissions /home/$NB_USER
 
 # # Install facets which does not have a pip or conda package at the moment
 # RUN cd /tmp && \
