@@ -1,0 +1,59 @@
+# grez72/lambda-stack:ubuntu18.04-cuda10.1-cudnn7
+# 
+# lambda-stack jupyter notebook with gpu suppport (nvidia CUDA10.1 cuDNN7)
+# github.com/lambdal/lambda-stack-dockerfiles
+#
+# docker build -t grez72/lambda-stack:ubuntu18.04-cuda10.1-cudnn7 -f Dockerfile.$(lsb_release -cs) https://github.com/grez72/notebooks.git#master:ubuntu18.04/cuda10.1-cudnn7/lambda-stack
+# docker run -it --rm --user root grez72/lambda-stack:ubuntu18.04-cuda10.1-cudnn7 bash
+# docker run -it --rm --user root grez72/lambda-stack:ubuntu18.04-cuda10.1-cudnn7 nvidia-smi
+# docker run -it --rm --shm-size=2G -p 8889:8888 grez72/lambda-stack:ubuntu18.04-cuda10.1-cudnn7
+
+FROM ubuntu:18.04
+
+WORKDIR /root/
+
+# Add libcuda dummy dependency
+ADD control .
+RUN apt-get update && \
+	apt-get install --yes equivs && \
+	equivs-build control && \
+	dpkg -i libcuda1-dummy_10.0_all.deb && \
+	rm control libcuda1-dummy_10.0_all.deb && \
+	apt-get remove --yes --purge --autoremove equivs && \
+	rm -rf /var/lib/apt/lists/*
+
+# Setup Lambda repository
+ADD lambda.gpg .
+RUN apt-get update && \
+	apt-get install --yes gnupg && \
+	apt-key add lambda.gpg && \
+	rm lambda.gpg && \
+	echo "deb http://archive.lambdalabs.com/ubuntu bionic main" > /etc/apt/sources.list.d/lambda.list && \
+	echo "Package: *" > /etc/apt/preferences.d/lambda && \
+	echo "Pin: origin archive.lambdalabs.com" >> /etc/apt/preferences.d/lambda && \
+	echo "Pin-Priority: 1001" >> /etc/apt/preferences.d/lambda && \
+	echo "cudnn cudnn/license_preseed select ACCEPT" | debconf-set-selections && \
+	apt-get update && \
+	DEBIAN_FRONTEND=noninteractive \
+	apt-get install --no-install-recommends --yes lambda-stack-cuda lambda-server && \
+	rm -rf /var/lib/apt/lists/*
+
+# Setup for nvidia-docker
+ENV NVIDIA_VISIBLE_DEVICES all
+ENV NVIDIA_DRIVER_CAPABILITIES compute,utility
+ENV NVIDIA_REQUIRE_CUDA "cuda>=10.0"
+ENV CUDA_DEVICE_ORDER=PCI_BUS_ID
+
+# Setup for JupyterHub / DockerSpawner
+# https://github.com/jupyterhub/dockerspawner
+RUN pip3 install \
+	jupyterhub==0.8.1 \
+	'notebook>=5.0,<=6.0' \
+	'jupyterlab=0.35.*'
+
+RUN useradd -m jovyan
+ENV HOME=/home/jovyan
+WORKDIR $HOME
+USER jovyan
+
+CMD ["jupyterhub-singleuser"]
