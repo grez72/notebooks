@@ -49,7 +49,7 @@ ENV CUDA_DEVICE_ORDER=PCI_BUS_ID
 RUN pip3 install \
 	jupyterhub==0.8.1 \
 	'notebook>=5.0,<=6.0' \
-	'jupyterlab=0.35.*'
+	'jupyterlab==0.35.*'
 
 RUN useradd -m jovyan
 ENV HOME=/home/jovyan
