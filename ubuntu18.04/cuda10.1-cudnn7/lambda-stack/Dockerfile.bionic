@@ -6,7 +6,7 @@
 # docker build -t grez72/lambda-stack:ubuntu18.04-cuda10.1-cudnn7 -f Dockerfile.$(lsb_release -cs) https://github.com/grez72/notebooks.git#master:ubuntu18.04/cuda10.1-cudnn7/lambda-stack
 # docker run -it --rm --user root grez72/lambda-stack:ubuntu18.04-cuda10.1-cudnn7 bash
 # docker run -it --rm --user root grez72/lambda-stack:ubuntu18.04-cuda10.1-cudnn7 nvidia-smi
-# docker run -it --rm --shm-size=2G -p 8889:8888 grez72/lambda-stack:ubuntu18.04-cuda10.1-cudnn7
+# docker run -it --rm --shm-size=2G -p 8889:8888 -e JUPYTERHUB_API_TOKEN=testing123 grez72/lambda-stack:ubuntu18.04-cuda10.1-cudnn7
 
 FROM ubuntu:18.04
 
@@ -50,6 +50,9 @@ RUN pip3 install \
 	jupyterhub==0.8.1 \
 	'notebook>=5.0,<=6.0' \
 	'jupyterlab==0.35.*'
+RUN jupyter labextension install @jupyterlab/hub-extension@^0.12.0 && \
+	jupyter labextension install @jupyter-widgets/jupyterlab-manager@^0.38.1 && \
+	jupyter labextension install jupyterlab_bokeh@^0.6.3
 
 RUN useradd -m jovyan
 ENV HOME=/home/jovyan
