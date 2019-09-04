@@ -63,7 +63,8 @@ RUN apt-get update && \
 #   Configure for notebook use
 #--------------------------------------
 
-RUN echo "en_US.UTF-8 UTF-8" > /etc/locale.gen && \
+RUN apt-get clean && apt-get update && apt-get install -y locales && \
+	echo "en_US.UTF-8 UTF-8" > /etc/locale.gen && \
 	locale-gen
 
 ENV SHELL=/bin/bash \
