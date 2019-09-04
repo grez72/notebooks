@@ -107,6 +107,7 @@ RUN mkdir /home/$NB_USER/work && \
 
 # Install conda as NB_USER and check the md5 sum provided on the download site
 ENV MINICONDA_VERSION 4.5.4
+ENV MINICONDA_CHECKSUM a946ea1d0c4a642ddf0c3a26a18bb16d
 RUN cd /tmp && \
   wget --quiet https://repo.continuum.io/miniconda/Miniconda3-${MINICONDA_VERSION}-Linux-x86_64.sh && \
   echo "a946ea1d0c4a642ddf0c3a26a18bb16d *Miniconda3-${MINICONDA_VERSION}-Linux-x86_64.sh" | md5sum -c - && \
@@ -194,6 +195,7 @@ WORKDIR $HOME
 # Remove pyqt and qt pulled in for matplotlib since we're only ever going to
 # use notebook-friendly backends in these images
 RUN conda install --quiet --yes \
+  "conda=${MINICONDA_VERSION}" \
   'av' \
   'conda-forge::blas=*=openblas' \
   'ipywidgets=7.2*' \
