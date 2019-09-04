@@ -63,6 +63,9 @@ RUN apt-get update && \
 #   Configure for notebook use
 #--------------------------------------
 
+RUN echo "en_US.UTF-8 UTF-8" > /etc/locale.gen && \
+	locale-gen
+
 ENV SHELL=/bin/bash \
 	NB_USER=jovyan \
 	NB_UID=1000 \
