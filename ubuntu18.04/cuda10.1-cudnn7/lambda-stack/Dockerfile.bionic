@@ -56,7 +56,6 @@ RUN pip3 install \
 
 RUN apt-get update && \
 	apt-get install --yes nodejs npm && \
-	jupyter labextension install @jupyterlab/hub-extension@^0.12.0 && \
 	jupyter labextension install @jupyter-widgets/jupyterlab-manager@^0.38.1 && \
 	jupyter labextension install jupyterlab_bokeh@^0.6.3
 

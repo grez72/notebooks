@@ -148,8 +148,6 @@ RUN conda install --quiet --yes \
   'jupyterhub=1.0.*' \
   'jupyterlab=1.1.*' && \
   conda clean -tipsy && \
-  jupyter labextension install @jupyterlab/hub-extension@^0.12.0 && \
-  npm cache clean --force && \
   jupyter notebook --generate-config && \
   rm -rf $CONDA_DIR/share/jupyter/lab/staging && \
   rm -rf /home/$NB_USER/.cache/yarn && \
