@@ -64,7 +64,7 @@ ENV HOME=/home/jovyan
 WORKDIR $HOME
 USER jovyan
 
-CMD ["jupyterhub-singleuser"]
+CMD ["jupyterhub-singleuser", "--ip", "0.0.0.0"]
 
 # RUN pip install jupyter -U && pip install jupyterlab
 # ENTRYPOINT ["jupyter", "lab","--ip=0.0.0.0","--allow-root"]
