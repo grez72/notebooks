@@ -50,10 +50,15 @@ ENV CUDA_DEVICE_ORDER=PCI_BUS_ID
 # Setup for JupyterHub / DockerSpawner
 # https://github.com/jupyterhub/dockerspawner
 RUN pip3 install \
-	tini \
 	jupyterhub==1.0.* \
 	'notebook>=5.0,<=6.0' \
 	'jupyterlab==1.1.*'
+
+ENV TINI_VERSION v0.18.0
+ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini /tini
+ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini.asc /tini.asc
+RUN gpg --batch --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 595E85A6B1B4779EA4DAAEC70B588DFF0527A9B7 \
+	&& gpg --batch --verify /tini.asc /tini
 
 RUN apt-get update && \
 	apt-get install --yes nodejs npm && \
