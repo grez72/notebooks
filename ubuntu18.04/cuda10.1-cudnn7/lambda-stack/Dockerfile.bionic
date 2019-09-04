@@ -101,23 +101,23 @@ RUN mkdir /home/$NB_USER/work && \
 USER root
 WORKDIR $HOME/work
 
-# # Configure container startup
-# ENTRYPOINT ["tini", "-g", "--"]
-# CMD ["start-notebook.sh"]
+# Configure container startup
+ENTRYPOINT ["/tini", "-g", "--"]
+CMD ["start-notebook.sh"]
 
-# # Add local files as late as possible to avoid cache busting
-# COPY credential-helper.sh /usr/local/bin/
-# COPY start.sh /usr/local/bin/
-# COPY start-notebook.sh /usr/local/bin/
-# COPY start-singleuser.sh /usr/local/bin/
-# COPY jupyter_notebook_config.py /etc/jupyter/
-# COPY genpass.py .
-# RUN fix-permissions /etc/jupyter/
+# Add local files as late as possible to avoid cache busting
+COPY credential-helper.sh /usr/local/bin/
+COPY start.sh /usr/local/bin/
+COPY start-notebook.sh /usr/local/bin/
+COPY start-singleuser.sh /usr/local/bin/
+COPY jupyter_notebook_config.py /etc/jupyter/
+COPY genpass.py .
+RUN fix-permissions /etc/jupyter/
 
-# WORKDIR $HOME/work
+WORKDIR $HOME/work
 
-# # Switch back to jovyan to avoid accidental container runs as root
-# USER $NB_UID
+# Switch back to jovyan to avoid accidental container runs as root
+USER $NB_UID
 
 # CMD ["jupyterhub-singleuser", "--ip", "0.0.0.0"]
 # RUN pip install jupyter -U && pip install jupyterlab
