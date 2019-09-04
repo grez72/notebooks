@@ -225,8 +225,7 @@ RUN conda install --quiet --yes \
   conda remove --quiet --yes --force qt pyqt && \
   conda clean -tipsy && \
   jupyter nbextension enable --py widgetsnbextension --sys-prefix && \
-  jupyter labextension install @jupyter-widgets/jupyterlab-manager@^0.38.1 && \
-  jupyter labextension install jupyterlab_bokeh@^0.6.3 && \
+  jupyter labextension install @jupyter-widgets/jupyterlab-manager@1.0 && \
   npm cache clean --force && \
   rm -rf $CONDA_DIR/share/jupyter/lab/staging && \
   rm -rf /home/$NB_USER/.cache/yarn && \

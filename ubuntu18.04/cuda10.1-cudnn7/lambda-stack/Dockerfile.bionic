@@ -56,8 +56,8 @@ RUN pip3 install \
 
 RUN apt-get update && \
 	apt-get install --yes nodejs npm && \
-	jupyter labextension install @jupyter-widgets/jupyterlab-manager@^0.38.1 && \
-	jupyter labextension install jupyterlab_bokeh@^0.6.3
+	jupyter labextension install @jupyter-widgets/jupyterlab-manager@1.0 && \
+	npm cache clean --force
 
 RUN useradd -m jovyan
 ENV HOME=/home/jovyan
