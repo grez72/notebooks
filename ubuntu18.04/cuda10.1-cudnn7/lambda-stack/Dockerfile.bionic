@@ -6,7 +6,10 @@
 # docker build -t grez72/lambda-stack:ubuntu18.04-cuda10.1-cudnn7 -f Dockerfile.$(lsb_release -cs) https://github.com/grez72/notebooks.git#master:ubuntu18.04/cuda10.1-cudnn7/lambda-stack
 # docker run -it --rm --user root grez72/lambda-stack:ubuntu18.04-cuda10.1-cudnn7 bash
 # docker run -it --rm --user root grez72/lambda-stack:ubuntu18.04-cuda10.1-cudnn7 nvidia-smi
-# docker run -it --rm --shm-size=2G -p 8889:8888 -e JUPYTERHUB_API_TOKEN=testing123 grez72/lambda-stack:ubuntu18.04-cuda10.1-cudnn7
+# docker run -it --rm --shm-size=2G -p 8889:8888 grez72/lambda-stack:ubuntu18.04-cuda10.1-cudnn7 jupyterhub
+# docker run -it --rm --shm-size=2G -p 8889:8888 -e JUPYTERHUB_API_TOKEN=testing123 -e CLIENT_ID=testing123 grez72/lambda-stack:ubuntu18.04-cuda10.1-cudnn7
+# docker run -it --rm --shm-size=2G -p 8889:8888 grez72/lambda-stack:ubuntu18.04-cuda10.1-cudnn7 jupyter lab --ip=0.0.0.0 --allow-root
+# ENTRYPOINT ["jupyter", "lab","--ip=0.0.0.0","--allow-root"]
 
 FROM ubuntu:18.04
 
@@ -63,3 +66,6 @@ WORKDIR $HOME
 USER jovyan
 
 CMD ["jupyterhub-singleuser"]
+
+# RUN pip install jupyter -U && pip install jupyterlab
+# ENTRYPOINT ["jupyter", "lab","--ip=0.0.0.0","--allow-root"]

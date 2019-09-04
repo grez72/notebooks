@@ -468,15 +468,16 @@ RUN conda install --quiet --yes \
   'xlrd'  && \
   conda remove --quiet --yes --force qt pyqt && \
   conda clean -tipsy && \
-  jupyter nbextension enable --py widgetsnbextension --sys-prefix && \
-  jupyter labextension install @jupyter-widgets/jupyterlab-manager@^0.38.1 && \
-  jupyter labextension install jupyterlab_bokeh@^0.6.3 && \
   npm cache clean --force && \
   rm -rf $CONDA_DIR/share/jupyter/lab/staging && \
   rm -rf /home/$NB_USER/.cache/yarn && \
   rm -rf /home/$NB_USER/.node-gyp && \
   fix-permissions $CONDA_DIR && \
   fix-permissions /home/$NB_USER
+
+# jupyter nbextension enable --py widgetsnbextension --sys-prefix && \
+# jupyter labextension install @jupyter-widgets/jupyterlab-manager@^0.38.1 && \
+# jupyter labextension install jupyterlab_bokeh@^0.6.3 && \
 
 # Install facets which does not have a pip or conda package at the moment
 RUN cd /tmp && \
@@ -892,10 +893,10 @@ ENV CUDA_DEVICE_ORDER=PCI_BUS_ID
 
 USER root
 
-RUN jupyter labextension install dask-labextension \
-  && jupyter labextension install @jupyterlab/git \
-  && pip install jupyterlab-git \
-  && jupyter serverextension enable --py jupyterlab_git
+# RUN jupyter labextension install dask-labextension \
+#   && jupyter labextension install @jupyterlab/git \
+#   && pip install jupyterlab-git \
+#   && jupyter serverextension enable --py jupyterlab_git
 
 USER $NB_UID
 
