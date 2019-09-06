@@ -89,7 +89,7 @@ RUN groupadd wheel -g 11 && \
 	fix-permissions $HOME
 
 # Setup work directory
-USER $NB_UID
+USER root
 
 RUN mkdir /home/$NB_USER/work && \
 	fix-permissions /home/$NB_USER
