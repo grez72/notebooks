@@ -47,6 +47,9 @@ ENV NVIDIA_DRIVER_CAPABILITIES compute,utility
 ENV NVIDIA_REQUIRE_CUDA "cuda>=10.0"
 ENV CUDA_DEVICE_ORDER=PCI_BUS_ID
 
+# install latest of all packages
+RUN apt-get update && sudo apt-get dist-upgrade && sudo apt-get autoremove
+
 #--------------------------------------
 #   Configure for notebook use
 #--------------------------------------
