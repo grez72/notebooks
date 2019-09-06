@@ -48,7 +48,7 @@ ENV NVIDIA_REQUIRE_CUDA "cuda>=10.0"
 ENV CUDA_DEVICE_ORDER=PCI_BUS_ID
 
 # install latest of all packages
-RUN apt-get update && sudo apt-get dist-upgrade && sudo apt-get autoremove
+RUN apt-get update && apt-get dist-upgrade && apt-get autoremove
 
 #--------------------------------------
 #   A few extras
