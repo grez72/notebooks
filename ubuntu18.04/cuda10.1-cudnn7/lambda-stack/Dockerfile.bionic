@@ -75,6 +75,7 @@ ENV SHELL=/bin/bash \
 	LANG=en_US.UTF-8 \
 	LANGUAGE=en_US.UTF-8 \
 	JUPYTER_ENABLE_LAB=1
+ENV HOME=/home/$NB_USER
 
 ADD fix-permissions /usr/local/bin/fix-permissions
 # RUN chmod u+x /usr/local/bin/fix-permissions
