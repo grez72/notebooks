@@ -54,12 +54,6 @@ RUN pip3 install \
 	'notebook>=5.0,<=6.0' \
 	'jupyterlab==1.1.*'
 
-ENV TINI_VERSION v0.18.0
-ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini /tini
-ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini.asc /tini.asc
-RUN gpg --batch --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 595E85A6B1B4779EA4DAAEC70B588DFF0527A9B7 \
-	&& gpg --batch --verify /tini.asc /tini
-
 RUN apt-get update && \
 	apt-get install --yes nodejs npm && \
 	jupyter labextension install @jupyter-widgets/jupyterlab-manager@1.0 && \
@@ -101,7 +95,10 @@ RUN mkdir /home/$NB_USER/work && \
 USER root
 WORKDIR $HOME/work
 
-# Configure container startup
+# Add Tini
+ENV TINI_VERSION v0.18.0
+ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini /tini
+RUN chmod +x /tini
 ENTRYPOINT ["/tini", "-g", "--"]
 CMD ["start-notebook.sh"]
 
