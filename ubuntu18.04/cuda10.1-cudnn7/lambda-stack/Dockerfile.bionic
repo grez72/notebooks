@@ -51,6 +51,16 @@ ENV CUDA_DEVICE_ORDER=PCI_BUS_ID
 RUN apt-get update && sudo apt-get dist-upgrade && sudo apt-get autoremove
 
 #--------------------------------------
+#   A few extras
+#--------------------------------------
+
+RUN conda uninstall -y --force pillow pil jpeg libtiff libjpeg-turbo \
+	&& pip uninstall -y pillow pil jpeg libtiff libjpeg-turbo \
+	&& conda install -yc conda-forge libjpeg-turbo \
+	&& CFLAGS="${CFLAGS} -mavx2" pip install --upgrade --no-cache-dir --force-reinstall --no-binary :all: --compile pillow-simd \
+	&& conda install -y jpeg libtiff
+
+#--------------------------------------
 #   Configure for notebook use
 #--------------------------------------
 
