@@ -94,7 +94,6 @@ USER root
 RUN mkdir /home/$NB_USER/work && \
 	fix-permissions /home/$NB_USER
 
-USER root
 WORKDIR $HOME/work
 
 # Add Tini
