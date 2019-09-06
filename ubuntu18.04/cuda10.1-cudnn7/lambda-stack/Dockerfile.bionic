@@ -47,6 +47,10 @@ ENV NVIDIA_DRIVER_CAPABILITIES compute,utility
 ENV NVIDIA_REQUIRE_CUDA "cuda>=10.0"
 ENV CUDA_DEVICE_ORDER=PCI_BUS_ID
 
+#--------------------------------------
+#   Configure for notebook use
+#--------------------------------------
+
 # Setup for JupyterHub / DockerSpawner
 # https://github.com/jupyterhub/dockerspawner
 RUN pip3 install \
@@ -58,10 +62,6 @@ RUN apt-get update && \
 	apt-get install --yes nodejs npm && \
 	jupyter labextension install @jupyter-widgets/jupyterlab-manager@1.0 && \
 	npm cache clean --force
-
-#--------------------------------------
-#   Configure for notebook use
-#--------------------------------------
 
 RUN apt-get clean && apt-get update && apt-get install -y locales && \
 	echo "en_US.UTF-8 UTF-8" > /etc/locale.gen && \
@@ -75,6 +75,7 @@ ENV SHELL=/bin/bash \
 	LANG=en_US.UTF-8 \
 	LANGUAGE=en_US.UTF-8 \
 	JUPYTER_ENABLE_LAB=1
+
 ENV HOME=/home/$NB_USER
 
 ADD fix-permissions /usr/local/bin/fix-permissions
