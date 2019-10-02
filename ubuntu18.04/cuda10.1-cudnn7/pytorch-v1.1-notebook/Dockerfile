@@ -68,7 +68,7 @@ RUN pip install --extra-index-url https://developer.download.nvidia.com/compute/
 #  MORE HELPERS
 # ==============================================================
 
-RUN pip install torchsummary torchsummaryX
+RUN pip install torchsummary torchsummaryX streamlit fire
 
 # ==============================================================
 #  set workdir and user for jupyter notebook use
