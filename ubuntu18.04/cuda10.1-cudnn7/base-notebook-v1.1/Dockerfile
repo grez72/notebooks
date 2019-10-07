@@ -119,7 +119,7 @@ RUN cd /tmp && \
   $CONDA_DIR/bin/conda config --system --set auto_update_conda false && \
   $CONDA_DIR/bin/conda config --system --set show_channel_urls true && \
   $CONDA_DIR/bin/conda install --quiet --yes conda="${MINICONDA_VERSION%.*}.*" && \
-  conda install -y -c conda-forge libiconv && \  
+  conda install -y -c conda-forge libiconv && \
   conda clean -tipsy && \
   rm -rf /home/$NB_USER/.cache/yarn && \
   fix-permissions $CONDA_DIR && \
@@ -916,6 +916,60 @@ USER $NB_UID
 
 # ENV TZ=America/New_York
 # RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
+#--------------------------------------
+# Additional Kernels
+#--------------------------------------
+
+# RUN wget https://julialang-s3.julialang.org/bin/linux/x64/1.2/julia-1.2.0-linux-x86_64.tar.gz \
+#   && tar xvzf julia-1.2.0-linux-x86_64.tar.gz \
+#   && ln -s ./bin/julia /usr/local/bin/julia
+#RUN apt-get update && apt-get install julia
+# RUN conda install -y -c r r-essentials
+
+# R pre-requisites
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+    fonts-dejavu \
+    gfortran \
+    gcc && \
+    rm -rf /var/lib/apt/lists/*
+
+USER $NB_UID
+
+# R packages including IRKernel which gets installed globally.
+RUN conda install --quiet --yes \
+    'r-base=3.6.1' \
+    'r-caret=6.0*' \
+    'r-crayon=1.3*' \
+    'r-devtools=2.1*' \
+    'r-forecast=8.7*' \
+    'r-hexbin=1.27*' \
+    'r-htmltools=0.3*' \
+    'r-htmlwidgets=1.3*' \
+    'r-irkernel=1.0*' \
+    'r-lme4' \
+    'r-lmerTest' \
+    'r-lsmeans' \
+    'r-nycflights13=1.0*' \
+    'r-plyr=1.8*' \
+    'r-randomforest=4.6*' \
+    'r-rcurl=1.95*' \
+    'r-reshape2=1.4*' \
+    'r-rmarkdown=1.14*' \
+    'r-rsqlite=2.1*' \
+    'r-shiny=1.3*' \
+    'r-sparklyr=1.0*' \
+    'r-tidyverse=1.2*' \
+    'rpy2=2.9*' \
+    && \
+    conda clean --all -f -y && \
+    fix-permissions $CONDA_DIR && \
+    fix-permissions /home/$NB_USER
+
+RUN pip install pymer4
+
+# python -c "from pymer4.test_install import test_install; test_install()"
 
 #--------------------------------------
 # Notebook Setup
