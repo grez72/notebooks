@@ -964,7 +964,7 @@ RUN conda install --quiet --yes \
     'rpy2=2.9*' \
     'unixodbc=2.3.*' \
     && \
-    conda clean --all -f -y && \
+    conda clean --all -y && \
     fix-permissions $CONDA_DIR && \
     fix-permissions /home/$NB_USER
 
