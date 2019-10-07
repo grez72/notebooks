@@ -1026,6 +1026,9 @@ RUN julia -e 'import Pkg; Pkg.update()' && \
 # modin = faster pandas; https://modin.readthedocs.io/en/latest/
 RUN pip install modin
 
+# seems we need to run this build command:
+RUN jupyter lab clean && jupyter lab build
+
 #--------------------------------------
 # Notebook Setup
 #--------------------------------------
