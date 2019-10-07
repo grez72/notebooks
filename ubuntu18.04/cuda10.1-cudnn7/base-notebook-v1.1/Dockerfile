@@ -1020,6 +1020,13 @@ RUN julia -e 'import Pkg; Pkg.update()' && \
     fix-permissions $JULIA_PKGDIR $CONDA_DIR/share/jupyter
 
 #--------------------------------------
+#  Late Additions
+#--------------------------------------
+
+# modin = faster pandas; https://modin.readthedocs.io/en/latest/
+RUN pip install modin
+
+#--------------------------------------
 # Notebook Setup
 #--------------------------------------
 
