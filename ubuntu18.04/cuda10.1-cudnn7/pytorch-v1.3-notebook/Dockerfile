@@ -30,26 +30,15 @@ RUN pip install --upgrade pip \
   && conda install -c fastai fastprogress fastai \
   && conda clean -tipsy
 
-# RUN conda update -y conda pytorch torchvision
-# RUN /bin/bash -c "source activate python2 \
-#   && pip install --upgrade pip \
-#   && conda install -y mkl -c intel \
-#   && conda install -c conda-forge mock \
-#   && conda install pytorch torchvision cuda100 -c pytorch \
-#   && conda clean -tipsy"
-
-# python2, couldn't update numpy for some reason:
-#  && pip install numpy --upgrade \
-
 # ==============================================================
 #  MAKE SURE WE'RE USING OPTIMIZED PILLOW
 # ==============================================================
 
-# RUN conda update -n base conda -y \
-#   && pip install --upgrade pip \
-#   && conda uninstall -y --force jpeg libtiff \
-#   && conda install -y -c conda-forge libjpeg-turbo \
-#   && CC="cc -mavx2" pip install --no-cache-dir -U --force-reinstall --no-binary :all: --compile pillow-simd
+RUN conda update -n base conda -y \
+  && pip install --upgrade pip \
+  && conda uninstall -y --force jpeg libtiff \
+  && conda install -y -c conda-forge libjpeg-turbo \
+  && CC="cc -mavx2" pip install --no-cache-dir -U --force-reinstall --no-binary :all: --compile pillow-simd
 
 # ==============================================================
 #  INSTALL NVIDIA HELPERS
@@ -68,7 +57,7 @@ RUN pip install --extra-index-url https://developer.download.nvidia.com/compute/
 #  MORE HELPERS
 # ==============================================================
 
-RUN pip install torchsummary torchsummaryX streamlit fire
+RUN pip install torchsummary torchsummaryX streamlit fire pretrainedmodels
 
 # ==============================================================
 #  set workdir and user for jupyter notebook use
