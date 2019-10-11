@@ -54,6 +54,17 @@ RUN pip install --extra-index-url https://developer.download.nvidia.com/compute/
 #   && python setup.py install --cuda_ext --cpp_ext
 
 # ==============================================================
+#  Install Detectron
+# ==============================================================
+
+RUN pip install 'git+https://github.com/facebookresearch/fvcore' && \
+    pip install cython; pip install 'git+https://github.com/cocodataset/cocoapi.git#subdirectory=PythonAPI' && \
+    cd /tmp && \
+    git clone git@github.com:facebookresearch/detectron2.git && \
+    cd detectron2 && \
+    python setup.py build develop
+
+# ==============================================================
 #  MORE HELPERS
 # ==============================================================
 
