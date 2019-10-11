@@ -955,7 +955,7 @@ RUN mv $HOME/.local/share/jupyter/kernels/ir* $CONDA_DIR/share/jupyter/kernels/ 
       rm -rf $HOME/.local && \
       fix-permissions /home/$NB_USER $CONDA_DIR/share/jupyter
 
-RUN RUN conda install --quiet --yes 'r-rpy2=2.9.4' && \
+RUN conda install --quiet --yes 'r-rpy2=2.9.4' && \
       conda clean --all -y && \
       pip install pymer4 && \
       fix-permissions $CONDA_DIR && \
