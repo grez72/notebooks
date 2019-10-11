@@ -947,11 +947,7 @@ RUN apt-get update && \
 # RUN R -e "install.packages('IRkernel')" && \
 #     R -e "IRkernel::installspec()"
 
-RUN R -e "install.packages(c('arm', 'caret','crayon','devtools','forecast','hexbin',
-'htmltools', 'htmltools', 'htmlwidgets', 'irkernel', 'lme4', 'lmerTest', 'lsmeans',
-'nycflights13','plyr', 'randomforest', 'rcurl', 'reshape2', 'rmarkdown', 'rodbc',
-'rsqlite', 'shiny', 'sparklyr', 'tidyverse', 'unixodbc'),
-dependencies=TRUE, repos='http://cran.rstudio.com/')"
+RUN R -e "install.packages(c('arm', 'caret','crayon','devtools','forecast','hexbin','htmltools', 'htmltools', 'htmlwidgets', 'irkernel', 'lme4', 'lmerTest', 'lsmeans','nycflights13','plyr', 'randomforest', 'rcurl', 'reshape2', 'rmarkdown', 'rodbc','rsqlite', 'shiny', 'sparklyr', 'tidyverse', 'unixodbc'), dependencies=TRUE, repos='http://cran.rstudio.com/')"
 #
 # RUN R -e "devtools::install_github('IRkernel/IRkernel')"
 
