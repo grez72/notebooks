@@ -955,8 +955,8 @@ RUN mv $HOME/.local/share/jupyter/kernels/ir* $CONDA_DIR/share/jupyter/kernels/ 
       rm -rf $HOME/.local && \
       fix-permissions /home/$NB_USER $CONDA_DIR/share/jupyter
 
-RUN R -e "install.packages('lmerTest')" && \
-      pip install -y tzlocal pymer4
+# RUN R -e "install.packages('lmerTest')" && \
+#       pip install tzlocal pymer4
 
 # python -c "from pymer4.test_install import test_install; test_install()"
 
