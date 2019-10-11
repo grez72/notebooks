@@ -918,23 +918,36 @@ USER $NB_UID
 # RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 #--------------------------------------
+#  Late Additions
+#--------------------------------------
+
+# modin = faster pandas; https://modin.readthedocs.io/en/latest/
+RUN pip install modin
+
+# seems we need to run this build command:
+RUN jupyter lab clean && jupyter lab build
+
+#--------------------------------------
 # Install R Kernel
 #--------------------------------------
 
-# USER root
-#
-# # R pre-requisites
-# RUN apt-get update && \
-#     apt-get install -y --no-install-recommends \
-#     fonts-dejavu \
-#     unixodbc \
-#     unixodbc-dev \
-#     r-cran-rodbc \
-#     gfortran \
-#     gcc && \
-#     rm -rf /var/lib/apt/lists/*
-#
-# USER $NB_UID
+USER root
+
+# install R
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+    fonts-dejavu \
+    unixodbc \
+    unixodbc-dev \
+    r-cran-rodbc \
+    gfortran \
+    gcc && \
+    rm -rf /var/lib/apt/lists/*
+
+RUN R -e "install.packages('IRkernel')" && \
+    R -e "IRkernel::installspec(user = FALSE)"
+
+USER $NB_UID
 
 # RUN R -e "install.packages(c('arm', 'caret','crayon','devtools','forecast','hexbin'
 # 'htmltools', 'htmltools', 'htmlwidgets', 'lme4', 'lmerTest', 'lsmeans', 'nycflights13',
@@ -1026,16 +1039,6 @@ USER $NB_UID
 #     chmod -R go+rx $CONDA_DIR/share/jupyter && \
 #     rm -rf $HOME/.local && \
 #     fix-permissions $JULIA_PKGDIR $CONDA_DIR/share/jupyter
-
-#--------------------------------------
-#  Late Additions
-#--------------------------------------
-
-# modin = faster pandas; https://modin.readthedocs.io/en/latest/
-RUN pip install modin
-
-# seems we need to run this build command:
-RUN jupyter lab clean && jupyter lab build
 
 #--------------------------------------
 # Notebook Setup
