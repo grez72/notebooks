@@ -58,7 +58,8 @@ RUN pip install --extra-index-url https://developer.download.nvidia.com/compute/
 # ==============================================================
 
 RUN pip install 'git+https://github.com/facebookresearch/fvcore' && \
-    pip install cython; pip install 'git+https://github.com/cocodataset/cocoapi.git#subdirectory=PythonAPI' && \
+    pip install cython && \
+    pip install 'git+https://github.com/cocodataset/cocoapi.git#subdirectory=PythonAPI' && \
     cd /tmp && \
     git clone git@github.com:facebookresearch/detectron2.git && \
     cd detectron2 && \
