@@ -34,11 +34,11 @@ RUN pip install --upgrade pip \
 #  MAKE SURE WE'RE USING OPTIMIZED PILLOW
 # ==============================================================
 
-RUN conda update -n base conda -y \
-  && pip install --upgrade pip \
-  && conda uninstall -y --force jpeg libtiff \
-  && conda install -y -c conda-forge libjpeg-turbo \
-  && CC="cc -mavx2" pip install --no-cache-dir -U --force-reinstall --no-binary :all: --compile pillow-simd
+# RUN conda update -n base conda -y \
+#   && pip install --upgrade pip \
+#   && conda uninstall -y --force jpeg libtiff \
+#   && conda install -y -c conda-forge libjpeg-turbo \
+#   && CC="cc -mavx2" pip install --no-cache-dir -U --force-reinstall --no-binary :all: --compile pillow-simd
 
 # ==============================================================
 #  INSTALL NVIDIA HELPERS
