@@ -944,8 +944,8 @@ RUN apt-get update && \
     gcc && \
     rm -rf /var/lib/apt/lists/*
 
-RUN R -e "install.packages('IRkernel')" && \
-    R -e "IRkernel::installspec(user = FALSE)"
+# RUN R -e "install.packages('IRkernel')" && \
+#     R -e "IRkernel::installspec()"
 
 USER $NB_UID
 
