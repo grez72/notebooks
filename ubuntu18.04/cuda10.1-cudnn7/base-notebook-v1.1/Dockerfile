@@ -955,11 +955,7 @@ RUN mv $HOME/.local/share/jupyter/kernels/ir* $CONDA_DIR/share/jupyter/kernels/ 
       rm -rf $HOME/.local && \
       fix-permissions /home/$NB_USER $CONDA_DIR/share/jupyter
 
-RUN conda install --quiet --yes -c r rpy2=2.9.4 && \
-      conda clean --all -y && \
-      pip install pymer4 && \
-      fix-permissions $CONDA_DIR && \
-      fix-permissions /home/$NB_USER
+RUN R -e "install.packages('lmerTest')"
 
 # python -c "from pymer4.test_install import test_install; test_install()"
 
