@@ -61,7 +61,7 @@ RUN pip install 'git+https://github.com/facebookresearch/fvcore' && \
     pip install cython && \
     pip install 'git+https://github.com/cocodataset/cocoapi.git#subdirectory=PythonAPI' && \
     cd /tmp && \
-    git clone git@github.com:facebookresearch/detectron2.git && \
+    git clone https://github.com/facebookresearch/detectron2.git && \
     cd detectron2 && \
     python setup.py build develop
 
