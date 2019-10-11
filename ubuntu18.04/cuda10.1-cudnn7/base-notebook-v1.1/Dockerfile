@@ -949,7 +949,11 @@ RUN R -e "install.packages(c('arm', 'caret','crayon','devtools','forecast','hexb
 RUN R -e "install.packages('IRkernel')" && \
     R -e "IRkernel::installspec()"
 
-RUN fix-permissions /home/$NB_USER
+# RUN fix-permissions /home/$NB_USER
+
+RUN mv $HOME/.local/share/jupyter/kernels/ir* $CONDA_DIR/share/jupyter/kernels/ && \
+      rm -rf $HOME/.local && \
+      fix-permissions /home/$NB_USER $CONDA_DIR/share/jupyter
 
 # R packages including IRKernel which gets installed globally.
 # RUN conda install --quiet --yes \
