@@ -24,7 +24,7 @@ RUN pip install https://s3.amazonaws.com/h2o-release/h2o4gpu/releases/stable/ai/
 
 RUN conda install -y -c rapidsai -c nvidia -c conda-forge \
     -c defaults rapids=0.10 python=3.6
-    
+
 # ==============================================================
 #  set workdir and user for jupyter notebook use
 # ==============================================================
