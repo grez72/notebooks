@@ -90,8 +90,7 @@ RUN groupadd wheel -g 11 && \
 RUN pip3 install \
 	jupyterhub==1.0.* \
 	'notebook>=5.0,<=6.0' \
-	'jupyterlab==1.1.*' \
-	'jupyter_server'
+	'jupyterlab==1.1.*'
 
 RUN apt-get update && \
 	apt-get install --yes nodejs npm
