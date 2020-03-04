@@ -397,7 +397,7 @@ RUN /bin/bash -c "source activate base && mamba install --quiet --yes \
   hdf5=1.10.* \
   h5py=2.10.* \
   ipywidgets=7.5* \
-  matplotlib=3.1.* && \
+  matplotlib=3.1.* \
   numba=0.48.* \
   numexpr=2.7.* \
   pandas=1.0.* \
