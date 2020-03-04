@@ -613,26 +613,26 @@ RUN /bin/bash -c "source activate base && mamba install --quiet --yes \
   mamba install -y filterpy && \
   mamba clean --all -f -y"
 
-RUN pip install --no-cache pynvvl-cuda92 \
-  && jupyter nbextension enable --py --sys-prefix widgetsnbextension \
-  && pip install --upgrade pip \
-  && pip install \
-  ffmpeg-python \
-  image-attendant \
-  imutils \
-  imageio \
-  https://github.com/soft-matter/pims/archive/master.zip \
-  cupy \
-  sk-video \
-  tqdm \
-  && cd $HOME \
-  && git clone https://github.com/DheerendraRathor/ffprobe3 \
-  && cd $HOME/ffprobe3 \
-  && python setup.py install \
-  && cd $HOME \
-  && git clone https://github.com/jfrelinger/cython-munkres-wrapper \
-  && cd $HOME/cython-munkres-wrapper \
-  && python setup.py install
+RUN pip install --no-cache pynvvl-cuda92
+# RUN jupyter nbextension enable --py --sys-prefix widgetsnbextension \
+#   && pip install --upgrade pip \
+#   && pip install \
+#   ffmpeg-python \
+#   image-attendant \
+#   imutils \
+#   imageio \
+#   https://github.com/soft-matter/pims/archive/master.zip \
+#   cupy \
+#   sk-video \
+#   tqdm \
+#   && cd $HOME \
+#   && git clone https://github.com/DheerendraRathor/ffprobe3 \
+#   && cd $HOME/ffprobe3 \
+#   && python setup.py install \
+#   && cd $HOME \
+#   && git clone https://github.com/jfrelinger/cython-munkres-wrapper \
+#   && cd $HOME/cython-munkres-wrapper \
+#   && python setup.py install
 
 # #--------------------------------------
 # # Install Additional Packages
