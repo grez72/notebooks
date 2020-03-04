@@ -442,108 +442,108 @@ ENV XDG_CACHE_HOME /home/$NB_USER/.cache/
 RUN MPLBACKEND=Agg python -c "import matplotlib.pyplot" && \
   fix-permissions /home/$NB_USER
 
-#--------------------------------------
-#   Updates needed for opencv
-#--------------------------------------
+# #--------------------------------------
+# #   Updates needed for opencv
+# #--------------------------------------
 
-USER root
+# USER root
 
-RUN apt-get update && apt-get install -y \
-  build-essential \
-  cmake \
-  git \
-  pkg-config \
-  libgtk-3-dev \
-  libavcodec-dev \
-  libavformat-dev \
-  libswscale-dev \
-  libv4l-dev \
-  libxvidcore-dev \
-  libx264-dev \
-  libjpeg-dev \
-  libpng-dev \
-  libtiff-dev \
-  libhdf5-serial-dev \
-  gfortran \
-  openexr \
-  libatlas-base-dev \
-  python3-dev \
-  python3-numpy \
-  libtbb2 \
-  libtbb-dev \
-  libdc1394-22-dev
+# RUN apt-get update && apt-get install -y \
+#   build-essential \
+#   cmake \
+#   git \
+#   pkg-config \
+#   libgtk-3-dev \
+#   libavcodec-dev \
+#   libavformat-dev \
+#   libswscale-dev \
+#   libv4l-dev \
+#   libxvidcore-dev \
+#   libx264-dev \
+#   libjpeg-dev \
+#   libpng-dev \
+#   libtiff-dev \
+#   libhdf5-serial-dev \
+#   gfortran \
+#   openexr \
+#   libatlas-base-dev \
+#   python3-dev \
+#   python3-numpy \
+#   libtbb2 \
+#   libtbb-dev \
+#   libdc1394-22-dev
 
-#--------------------------------------
-# Install OpenCV
-#--------------------------------------
+# #--------------------------------------
+# # Install OpenCV
+# #--------------------------------------
 
-# do we need to set these?
-# export PATH=/usr/local/cuda/bin:$PATH
-# export LPATH=/usr/local/nvidia/lib64:$LPATH
-# export LIBRARY_PATH=/usr/local/nvidia:$LIBRARY_PATH
-# export LD_LIBRARY_PATH=/usr/local/nvidia/lib64:/usr/local/cuda/lib64:/usr/local/cuda/lib:$LD_LIBRARY_PATH
+# # do we need to set these?
+# # export PATH=/usr/local/cuda/bin:$PATH
+# # export LPATH=/usr/local/nvidia/lib64:$LPATH
+# # export LIBRARY_PATH=/usr/local/nvidia:$LIBRARY_PATH
+# # export LD_LIBRARY_PATH=/usr/local/nvidia/lib64:/usr/local/cuda/lib64:/usr/local/cuda/lib:$LD_LIBRARY_PATH
 
-# -D WITH_JPEG=ON \
-# -D BUILD_JPEG=OFF \
-# -D JPEG_LIBRARY=/opt/libjpeg-turbo/lib64/libturbojpeg.so \
-# -D JPEG_INCLUDE_DIR=/usr/libjpeg-turbo/include \
-# -D BUILD_TIFF=ON \
-# -D WITH_TIFF=ON \
-# -D BUILD_PNG=ON \
-# -D WITH_PNG=ON \
+# # -D WITH_JPEG=ON \
+# # -D BUILD_JPEG=OFF \
+# # -D JPEG_LIBRARY=/opt/libjpeg-turbo/lib64/libturbojpeg.so \
+# # -D JPEG_INCLUDE_DIR=/usr/libjpeg-turbo/include \
+# # -D BUILD_TIFF=ON \
+# # -D WITH_TIFF=ON \
+# # -D BUILD_PNG=ON \
+# # -D WITH_PNG=ON \
 
-USER $NB_USER
-WORKDIR ~/
+# USER $NB_USER
+# WORKDIR ~/
 
-# try to force use of our custom installation of ffmpeg
-RUN /bin/bash -c "source activate base && mamba uninstall -y ffmpeg"
-# RUN conda uninstall -y ffmpeg
-# && /bin/bash -c "source activate python2 && conda uninstall -y ffmpeg"
+# # try to force use of our custom installation of ffmpeg
+# RUN /bin/bash -c "source activate base && mamba uninstall -y ffmpeg"
+# # RUN conda uninstall -y ffmpeg
+# # && /bin/bash -c "source activate python2 && conda uninstall -y ffmpeg"
 
-USER root
+# USER root
 
-# used to install v3.4.3, now installing latest 4.1.0
-RUN git clone https://github.com/opencv/opencv_contrib.git ~/opencv_contrib \
-  && cd ~/opencv_contrib && git checkout tags/4.2.0 \
-  && git clone https://github.com/Itseez/opencv.git ~/opencv \
-  && cd ~/opencv \
-  && git checkout tags/4.2.0 \
-  && mkdir build \
-  && cd build/ \
-  && cmake -D CMAKE_BUILD_TYPE=RELEASE \
-  -D PYTHON3_EXECUTABLE:FILEPATH=/opt/conda/bin/python3.6 \
-  -D PYTHON3_INCLUDE_DIR:PATH=/opt/conda/include/python3.6m \
-  -D PYTHON3_NUMPY_INCLUDE_DIRS:PATH=/opt/conda/lib/python3.6/site-packages/numpy/core/include \
-  -D PYTHON3_PACKAGES_PATH:PATH=/opt/conda/lib/python3.6/site-packages \
-  -D OPENCV_EXTRA_MODULES_PATH=~/opencv_contrib/modules \
-  -D CMAKE_INSTALL_PREFIX=/usr/local \
-  -D CUDA_ARCH_BIN=5.3,6.0,6.1,7.0,7.5 \
-  -D CUDA_ARCH_PTX=7.5 \
-  -D BUILD_opencv_dnn=ON \
-  -D BUILD_opencv_dnn_modern=ON \
-  -D BUILD_LIBPROTOBUF_FROM_SOURCES=ON \
-  -D WITH_CUDA=ON \
-  -D WITH_CUFFT=ON \
-  -D WITH_CUBLAS=ON \
-  -D WITH_NVCUVID=ON \
-  -D FORCE_VTK=OFF \
-  -D WITH_TBB=ON \
-  -D WITH_V4L=ON \
-  -D WITH_OPENGL=ON \
-  -D ENABLE_FAST_MATH=1 \
-  -D CUDA_FAST_MATH=1 \
-  -D WITH_CUBLAS=1 \
-  -D WITH_FFMPEG=1 \
-  -D INSTALL_PYTHON_EXAMPLES=ON \
-  -D BUILD_EXAMPLES=OFF .. \
-  && make -j$(nproc) && make install \
-  && ldconfig
+# # used to install v3.4.3, now installing latest 4.1.0
+# RUN git clone https://github.com/opencv/opencv_contrib.git ~/opencv_contrib \
+#   && cd ~/opencv_contrib && git checkout tags/4.2.0 \
+#   && git clone https://github.com/Itseez/opencv.git ~/opencv \
+#   && cd ~/opencv \
+#   && git checkout tags/4.2.0 \
+#   && mkdir build \
+#   && cd build/ \
+#   && cmake -D CMAKE_BUILD_TYPE=RELEASE \
+#   -D PYTHON3_EXECUTABLE:FILEPATH=/opt/conda/bin/python3.6 \
+#   -D PYTHON3_INCLUDE_DIR:PATH=/opt/conda/include/python3.6m \
+#   -D PYTHON3_NUMPY_INCLUDE_DIRS:PATH=/opt/conda/lib/python3.6/site-packages/numpy/core/include \
+#   -D PYTHON3_PACKAGES_PATH:PATH=/opt/conda/lib/python3.6/site-packages \
+#   -D OPENCV_EXTRA_MODULES_PATH=~/opencv_contrib/modules \
+#   -D CMAKE_INSTALL_PREFIX=/usr/local \
+#   -D CUDA_ARCH_BIN=5.3,6.0,6.1,7.0,7.5 \
+#   -D CUDA_ARCH_PTX=7.5 \
+#   -D BUILD_opencv_dnn=ON \
+#   -D BUILD_opencv_dnn_modern=ON \
+#   -D BUILD_LIBPROTOBUF_FROM_SOURCES=ON \
+#   -D WITH_CUDA=ON \
+#   -D WITH_CUFFT=ON \
+#   -D WITH_CUBLAS=ON \
+#   -D WITH_NVCUVID=ON \
+#   -D FORCE_VTK=OFF \
+#   -D WITH_TBB=ON \
+#   -D WITH_V4L=ON \
+#   -D WITH_OPENGL=ON \
+#   -D ENABLE_FAST_MATH=1 \
+#   -D CUDA_FAST_MATH=1 \
+#   -D WITH_CUBLAS=1 \
+#   -D WITH_FFMPEG=1 \
+#   -D INSTALL_PYTHON_EXAMPLES=ON \
+#   -D BUILD_EXAMPLES=OFF .. \
+#   && make -j$(nproc) && make install \
+#   && ldconfig
 
-RUN rm /opt/conda/lib/libfontconfig.so /opt/conda/lib/libfontconfig.so.1 /opt/conda/lib/libfontconfig.so.1.12.0
+# RUN rm /opt/conda/lib/libfontconfig.so /opt/conda/lib/libfontconfig.so.1 /opt/conda/lib/libfontconfig.so.1.12.0
 
-#--------------------------------------
-#   LIBJPEGTURBO
-#--------------------------------------
+# #--------------------------------------
+# #   LIBJPEGTURBO
+# #--------------------------------------
 
 # RUN cd /opt \
 #   && wget https://downloads.sourceforge.net/libjpeg-turbo/libjpeg-turbo-2.0.0.tar.gz \
@@ -582,38 +582,38 @@ RUN rm /opt/conda/lib/libfontconfig.so /opt/conda/lib/libfontconfig.so.1 /opt/co
 # # \
 # #  && /bin/bash -c "source activate python2 && pip install -U git+git://github.com/loopbio/PyTurboJPEG.git"
 
-#--------------------------------------
-# Utilities for optimizing python code:
-# ...skipping in this iteration
-#--------------------------------------
+# #--------------------------------------
+# # Utilities for optimizing python code:
+# # ...skipping in this iteration
+# #--------------------------------------
 
-# USER $NB_USER
+# # USER $NB_USER
 
-# Cupy, PyCuda, Numba
+# # Cupy, PyCuda, Numba
+# # RUN /bin/bash -c "source activate base && mamba install --quiet --yes \
+# #   lukepfister pycuda && \
+# #   pip install cupy && \
+# #   conda install -y numba && \
+# #   mamba clean --all -f -y"
+
+# # RUN conda install -y -c lukepfister pycuda \
+# #   && pip install cupy \
+# #   && conda install -y numba
+
+# #--------------------------------------
+# # Install Video and Image Utilities
+# #--------------------------------------
+
+# # Installing all of these dependencies together in one RUN command
+# # to avoid limit on number of layers in docker image
+# # RUN conda install -y -c conda-forge av trackpy ipywidgets \
+# #   && conda install -y filterpy \
 # RUN /bin/bash -c "source activate base && mamba install --quiet --yes \
-#   lukepfister pycuda && \
-#   pip install cupy && \
-#   conda install -y numba && \
+#   -c conda-forge av trackpy ipywidgets && \
+#   mamba install -y filterpy && \
 #   mamba clean --all -f -y"
 
-# RUN conda install -y -c lukepfister pycuda \
-#   && pip install cupy \
-#   && conda install -y numba
-
-#--------------------------------------
-# Install Video and Image Utilities
-#--------------------------------------
-
-# Installing all of these dependencies together in one RUN command
-# to avoid limit on number of layers in docker image
-# RUN conda install -y -c conda-forge av trackpy ipywidgets \
-#   && conda install -y filterpy \
-RUN /bin/bash -c "source activate base && mamba install --quiet --yes \
-  -c conda-forge av trackpy ipywidgets && \
-  mamba install -y filterpy && \
-  mamba clean --all -f -y"
-
-# RUN pip install --no-cache pynvvl-cuda92
+# RUN pip install pynvvl-cuda92
 # RUN jupyter nbextension enable --py --sys-prefix widgetsnbextension \
 #   && pip install --upgrade pip \
 #   && pip install \
