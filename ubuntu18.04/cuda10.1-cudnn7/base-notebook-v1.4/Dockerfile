@@ -545,42 +545,42 @@ RUN rm /opt/conda/lib/libfontconfig.so /opt/conda/lib/libfontconfig.so.1 /opt/co
 #   LIBJPEGTURBO
 #--------------------------------------
 
-RUN cd /opt \
-  && wget https://downloads.sourceforge.net/libjpeg-turbo/libjpeg-turbo-2.0.0.tar.gz \
-  && tar -xzf libjpeg-turbo-2.0.0.tar.gz \
-  && rm libjpeg-turbo-2.0.0.tar.gz \
-  && cd libjpeg-turbo-2.0.0 \
-  && mkdir build \
-  && cd build \
-  && cmake -DCMAKE_INSTALL_PREFIX=/usr/libjpeg-turbo \
-  -DCMAKE_BUILD_TYPE=RELEASE  \
-  -DENABLE_STATIC=FALSE       \
-  -DCMAKE_INSTALL_DOCDIR=/usr/share/doc/libjpeg-turbo-2.0.0 \
-  -DCMAKE_INSTALL_DEFAULT_LIBDIR=lib  \
-  .. \
-  && make -j"$(nproc)" \
-  && make test \
-  && make install \
-  && mkdir -p /opt/libjpeg-turbo/lib64 \
-  && ln -s /usr/libjpeg-turbo/lib/libturbojpeg.so /opt/libjpeg-turbo/lib64/libturbojpeg.so
-
-#--------------------------------------
-# PyTurboJPEG
-#--------------------------------------
-
-# pip install -U git+git://github.com/loopbio/PyTurboJPEG.git
-# RUN conda config --add channels conda-forge \
-#   && conda install -c loopbio libjpeg-turbo \
+# RUN cd /opt \
+#   && wget https://downloads.sourceforge.net/libjpeg-turbo/libjpeg-turbo-2.0.0.tar.gz \
+#   && tar -xzf libjpeg-turbo-2.0.0.tar.gz \
+#   && rm libjpeg-turbo-2.0.0.tar.gz \
+#   && cd libjpeg-turbo-2.0.0 \
+#   && mkdir build \
+#   && cd build \
+#   && cmake -DCMAKE_INSTALL_PREFIX=/usr/libjpeg-turbo \
+#   -DCMAKE_BUILD_TYPE=RELEASE  \
+#   -DENABLE_STATIC=FALSE       \
+#   -DCMAKE_INSTALL_DOCDIR=/usr/share/doc/libjpeg-turbo-2.0.0 \
+#   -DCMAKE_INSTALL_DEFAULT_LIBDIR=lib  \
+#   .. \
+#   && make -j"$(nproc)" \
+#   && make test \
+#   && make install \
 #   && mkdir -p /opt/libjpeg-turbo/lib64 \
-#   && ln -s /opt/conda/lib/libjpeg-turbo/lib/libturbojpeg.so /opt/libjpeg-turbo/lib64/libturbojpeg.so \
-#   && /bin/bash -c "source activate python2 && conda config --add channels conda-forge \
-#     && conda install -c loopbio libjpeg-turbo"
+#   && ln -s /usr/libjpeg-turbo/lib/libturbojpeg.so /opt/libjpeg-turbo/lib64/libturbojpeg.so
 
-# http://blog.loopbio.com/video-io-2-jpeg-decoding.html
-# using loopbio's PyTurbojpeg fork! https://github.com/loopbio/PyTurbojpeg
-RUN pip install -U git+git://github.com/loopbio/PyTurboJPEG.git
-# \
-#  && /bin/bash -c "source activate python2 && pip install -U git+git://github.com/loopbio/PyTurboJPEG.git"
+# #--------------------------------------
+# # PyTurboJPEG
+# #--------------------------------------
+
+# # pip install -U git+git://github.com/loopbio/PyTurboJPEG.git
+# # RUN conda config --add channels conda-forge \
+# #   && conda install -c loopbio libjpeg-turbo \
+# #   && mkdir -p /opt/libjpeg-turbo/lib64 \
+# #   && ln -s /opt/conda/lib/libjpeg-turbo/lib/libturbojpeg.so /opt/libjpeg-turbo/lib64/libturbojpeg.so \
+# #   && /bin/bash -c "source activate python2 && conda config --add channels conda-forge \
+# #     && conda install -c loopbio libjpeg-turbo"
+
+# # http://blog.loopbio.com/video-io-2-jpeg-decoding.html
+# # using loopbio's PyTurbojpeg fork! https://github.com/loopbio/PyTurbojpeg
+# RUN pip install -U git+git://github.com/loopbio/PyTurboJPEG.git
+# # \
+# #  && /bin/bash -c "source activate python2 && pip install -U git+git://github.com/loopbio/PyTurboJPEG.git"
 
 #--------------------------------------
 # Utilities for optimizing python code:
