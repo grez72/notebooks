@@ -651,7 +651,6 @@ RUN easy_install python-prctl \
   && pip install --upgrade git+https://github.com/tensorpack/tensorpack.git \
   && /bin/bash -c "source activate base && mamba install --quiet --yes bioconda cufflinks"
 
-USER $NB_UID
 RUN /bin/bash -c "source activate base && mamba install --quiet --yes cookiecutter \
     && mamba install --quiet --yes -c menpo pathlib \
     && mamba install --quiet --yes cookiecutter \
@@ -678,14 +677,14 @@ RUN /bin/bash -c "source activate base && mamba uninstall --force jpeg libtiff -
 
 ENV CUDA_DEVICE_ORDER=PCI_BUS_ID
 
-USER root
+# USER root
 
 # RUN jupyter labextension install dask-labextension \
 #   && jupyter labextension install @jupyterlab/git \
 #   && pip install jupyterlab-git \
 #   && jupyter serverextension enable --py jupyterlab_git
 
-USER $NB_UID
+# USER $NB_UID
 
 #--------------------------------------
 #   INSTALL DeepLearning Frameworks
