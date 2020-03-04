@@ -393,13 +393,13 @@ RUN /bin/bash -c "source activate base && mamba install --quiet --yes \
   cloudpickle=1.3.* \
   conda-forge::blas=*=openblas \
   cython=0.29* \
-  dask=2.11.* \
-  dill=0.3* \
-  hdf5=2.10* \
-  h5py=2.7* \
   matplotlib=3.1.* && \
   conda clean --all -f -y"
 
+# dask=2.11.* \
+# dill=0.3* \
+# hdf5=2.10* \
+# h5py=2.7* \
 # ipywidgets=7.5* \
 
 RUN MPLBACKEND=Agg python -c "import matplotlib.pyplot" && \
