@@ -394,6 +394,7 @@ RUN /bin/bash -c "source activate base && mamba install --quiet --yes \
   conda-forge::blas=*=openblas \
   cython=0.29* \
   dill=0.3* \
+  hdf5=1.10.* \
   matplotlib=3.1.* && \
   conda clean --all -f -y"
 
