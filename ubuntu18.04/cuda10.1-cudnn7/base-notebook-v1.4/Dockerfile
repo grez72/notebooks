@@ -398,7 +398,7 @@ RUN /bin/bash -c "source activate base && mamba install --quiet --yes \
   h5py=2.10.* \
   ipywidgets=7.5* \
   matplotlib=3.1.* && \
-  conda clean --all -f -y &&
+  conda clean --all -f -y && \
   mamba install --quiet --yes dask=2.11.*"
 
 RUN MPLBACKEND=Agg python -c "import matplotlib.pyplot" && \
