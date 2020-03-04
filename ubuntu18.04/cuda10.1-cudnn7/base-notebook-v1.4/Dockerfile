@@ -413,53 +413,15 @@ RUN /bin/bash -c "source activate base && mamba install --quiet --yes \
   sympy=1.5.* \
   vincent=0.4.* \
   xlrd \
-  conda clean --all -f -y && \
-  mamba install --quiet --yes dask=2.11.*" && \
+  mamba clean --all -f -y && \
+  mamba install --quiet --yes dask=2.11.* && \
+  mamba clean --all -f -y" && \
   npm cache clean --force && \
   rm -rf $CONDA_DIR/share/jupyter/lab/staging && \
   rm -rf /home/$NB_USER/.cache/yarn && \
   rm -rf /home/$NB_USER/.node-gyp && \
   fix-permissions $CONDA_DIR && \
   fix-permissions /home/$NB_USER
-
-RUN MPLBACKEND=Agg python -c "import matplotlib.pyplot" && \
-  fix-permissions /home/$NB_USER
-  
-# RUN /bin/bash -c "source activate base && mamba install --quiet --yes \  
-#   'av=7.0.0' \
-#   'beautifulsoup4=4.8.*' \
-#   'bokeh=0.12*' \
-#   'cloudpickle=1.3.*' \
-#   'conda-forge::blas=*=openblas' \
-#   'cython=0.29*' \
-#   'dask=2.11.*' \
-#   'dill=0.3*' \
-#   'hdf5=1.10.*' \
-#   'h5py=2.7*' \
-#   'ipywidgets=7.5*' \
-#   'matplotlib=3.1.*' \
-#   'numba=0.48.*' \  
-#   'numexpr=2.7.*' \
-#   'pandas=1.0.*' \
-#   'patsy=0.5.*' \
-#   'protobuf=3.11.*' \
-#   'seaborn=0.10.*' \
-#   'scikit-image=0.16.*' \
-#   'scikit-learn=0.22.*' \
-#   'scipy=1.4.*' \
-#   'sk-video=1.1*' \
-#   'sqlalchemy=1.3.*' \
-#   'statsmodels=0.11.*' \
-#   'sympy=1.5.*' \
-#   'vincent=0.4.*' \
-#   'xlrd'  && \
-#   conda clean --all -f -y" && \
-#   npm cache clean --force && \
-#   rm -rf $CONDA_DIR/share/jupyter/lab/staging && \
-#   rm -rf /home/$NB_USER/.cache/yarn && \
-#   rm -rf /home/$NB_USER/.node-gyp && \
-#   fix-permissions $CONDA_DIR && \
-#   fix-permissions /home/$NB_USER
 
 # jupyter nbextension enable --py widgetsnbextension --sys-prefix && \
 # jupyter labextension install @jupyter-widgets/jupyterlab-manager@^0.38.1 && \
@@ -480,153 +442,159 @@ ENV XDG_CACHE_HOME /home/$NB_USER/.cache/
 RUN MPLBACKEND=Agg python -c "import matplotlib.pyplot" && \
   fix-permissions /home/$NB_USER
 
-# #--------------------------------------
-# #   Updates needed for opencv
-# #--------------------------------------
+#--------------------------------------
+#   Updates needed for opencv
+#--------------------------------------
 
-# USER root
+USER root
 
-# RUN apt-get update && apt-get install -y \
-#   build-essential \
-#   cmake \
-#   git \
-#   pkg-config \
-#   libgtk-3-dev \
-#   libavcodec-dev \
-#   libavformat-dev \
-#   libswscale-dev \
-#   libv4l-dev \
-#   libxvidcore-dev \
-#   libx264-dev \
-#   libjpeg-dev \
-#   libpng-dev \
-#   libtiff-dev \
-#   libhdf5-serial-dev \
-#   gfortran \
-#   openexr \
-#   libatlas-base-dev \
-#   python3-dev \
-#   python3-numpy \
-#   libtbb2 \
-#   libtbb-dev \
-#   libdc1394-22-dev
+RUN apt-get update && apt-get install -y \
+  build-essential \
+  cmake \
+  git \
+  pkg-config \
+  libgtk-3-dev \
+  libavcodec-dev \
+  libavformat-dev \
+  libswscale-dev \
+  libv4l-dev \
+  libxvidcore-dev \
+  libx264-dev \
+  libjpeg-dev \
+  libpng-dev \
+  libtiff-dev \
+  libhdf5-serial-dev \
+  gfortran \
+  openexr \
+  libatlas-base-dev \
+  python3-dev \
+  python3-numpy \
+  libtbb2 \
+  libtbb-dev \
+  libdc1394-22-dev
 
-# #--------------------------------------
-# # Install OpenCV
-# #--------------------------------------
+#--------------------------------------
+# Install OpenCV
+#--------------------------------------
 
-# # do we need to set these?
-# # export PATH=/usr/local/cuda/bin:$PATH
-# # export LPATH=/usr/local/nvidia/lib64:$LPATH
-# # export LIBRARY_PATH=/usr/local/nvidia:$LIBRARY_PATH
-# # export LD_LIBRARY_PATH=/usr/local/nvidia/lib64:/usr/local/cuda/lib64:/usr/local/cuda/lib:$LD_LIBRARY_PATH
+# do we need to set these?
+# export PATH=/usr/local/cuda/bin:$PATH
+# export LPATH=/usr/local/nvidia/lib64:$LPATH
+# export LIBRARY_PATH=/usr/local/nvidia:$LIBRARY_PATH
+# export LD_LIBRARY_PATH=/usr/local/nvidia/lib64:/usr/local/cuda/lib64:/usr/local/cuda/lib:$LD_LIBRARY_PATH
 
-# # -D WITH_JPEG=ON \
-# # -D BUILD_JPEG=OFF \
-# # -D JPEG_LIBRARY=/opt/libjpeg-turbo/lib64/libturbojpeg.so \
-# # -D JPEG_INCLUDE_DIR=/usr/libjpeg-turbo/include \
-# # -D BUILD_TIFF=ON \
-# # -D WITH_TIFF=ON \
-# # -D BUILD_PNG=ON \
-# # -D WITH_PNG=ON \
+# -D WITH_JPEG=ON \
+# -D BUILD_JPEG=OFF \
+# -D JPEG_LIBRARY=/opt/libjpeg-turbo/lib64/libturbojpeg.so \
+# -D JPEG_INCLUDE_DIR=/usr/libjpeg-turbo/include \
+# -D BUILD_TIFF=ON \
+# -D WITH_TIFF=ON \
+# -D BUILD_PNG=ON \
+# -D WITH_PNG=ON \
 
-# USER $NB_USER
-# WORKDIR ~/
+USER $NB_USER
+WORKDIR ~/
 
-# # try to force use of our custom installation of ffmpeg
-# RUN conda uninstall -y ffmpeg
-# # && /bin/bash -c "source activate python2 && conda uninstall -y ffmpeg"
+# try to force use of our custom installation of ffmpeg
+RUN conda uninstall -y ffmpeg
+# && /bin/bash -c "source activate python2 && conda uninstall -y ffmpeg"
 
-# USER root
+USER root
 
-# # used to install v3.4.3, now installing latest 4.1.0
-# RUN git clone https://github.com/opencv/opencv_contrib.git ~/opencv_contrib \
-#   && cd ~/opencv_contrib && git checkout tags/4.2.0 \
-#   && git clone https://github.com/Itseez/opencv.git ~/opencv \
-#   && cd ~/opencv \
-#   && git checkout tags/4.2.0 \
-#   && mkdir build \
-#   && cd build/ \
-#   && cmake -D CMAKE_BUILD_TYPE=RELEASE \
-#   -D PYTHON3_EXECUTABLE:FILEPATH=/opt/conda/bin/python3.6 \
-#   -D PYTHON3_INCLUDE_DIR:PATH=/opt/conda/include/python3.6m \
-#   -D PYTHON3_NUMPY_INCLUDE_DIRS:PATH=/opt/conda/lib/python3.6/site-packages/numpy/core/include \
-#   -D PYTHON3_PACKAGES_PATH:PATH=/opt/conda/lib/python3.6/site-packages \
-#   -D OPENCV_EXTRA_MODULES_PATH=~/opencv_contrib/modules \
-#   -D CMAKE_INSTALL_PREFIX=/usr/local \
-#   -D BUILD_opencv_dnn=ON \
-#   -D BUILD_opencv_dnn_modern=ON \
-#   -D BUILD_LIBPROTOBUF_FROM_SOURCES=ON \
-#   -D WITH_CUDA=ON \
-#   -D WITH_CUFFT=ON \
-#   -D WITH_CUBLAS=ON \
-#   -D WITH_NVCUVID=ON \
-#   -D FORCE_VTK=OFF \
-#   -D WITH_TBB=ON \
-#   -D WITH_V4L=ON \
-#   -D WITH_OPENGL=ON \
-#   -D ENABLE_FAST_MATH=1 \
-#   -D CUDA_FAST_MATH=1 \
-#   -D WITH_CUBLAS=1 \
-#   -D WITH_FFMPEG=1 \
-#   -D INSTALL_PYTHON_EXAMPLES=ON \
-#   -D BUILD_EXAMPLES=OFF .. \
-#   && make -j$(nproc) && make install \
-#   && ldconfig
+# used to install v3.4.3, now installing latest 4.1.0
+RUN git clone https://github.com/opencv/opencv_contrib.git ~/opencv_contrib \
+  && cd ~/opencv_contrib && git checkout tags/4.2.0 \
+  && git clone https://github.com/Itseez/opencv.git ~/opencv \
+  && cd ~/opencv \
+  && git checkout tags/4.2.0 \
+  && mkdir build \
+  && cd build/ \
+  && cmake -D CMAKE_BUILD_TYPE=RELEASE \
+  -D PYTHON3_EXECUTABLE:FILEPATH=/opt/conda/bin/python3.6 \
+  -D PYTHON3_INCLUDE_DIR:PATH=/opt/conda/include/python3.6m \
+  -D PYTHON3_NUMPY_INCLUDE_DIRS:PATH=/opt/conda/lib/python3.6/site-packages/numpy/core/include \
+  -D PYTHON3_PACKAGES_PATH:PATH=/opt/conda/lib/python3.6/site-packages \
+  -D OPENCV_EXTRA_MODULES_PATH=~/opencv_contrib/modules \
+  -D CMAKE_INSTALL_PREFIX=/usr/local \
+  -D BUILD_opencv_dnn=ON \
+  -D BUILD_opencv_dnn_modern=ON \
+  -D BUILD_LIBPROTOBUF_FROM_SOURCES=ON \
+  -D WITH_CUDA=ON \
+  -D WITH_CUFFT=ON \
+  -D WITH_CUBLAS=ON \
+  -D WITH_NVCUVID=ON \
+  -D FORCE_VTK=OFF \
+  -D WITH_TBB=ON \
+  -D WITH_V4L=ON \
+  -D WITH_OPENGL=ON \
+  -D ENABLE_FAST_MATH=1 \
+  -D CUDA_FAST_MATH=1 \
+  -D WITH_CUBLAS=1 \
+  -D WITH_FFMPEG=1 \
+  -D INSTALL_PYTHON_EXAMPLES=ON \
+  -D BUILD_EXAMPLES=OFF .. \
+  && make -j$(nproc) && make install \
+  && ldconfig
 
-# RUN rm /opt/conda/lib/libfontconfig.so /opt/conda/lib/libfontconfig.so.1 /opt/conda/lib/libfontconfig.so.1.12.0
+RUN rm /opt/conda/lib/libfontconfig.so /opt/conda/lib/libfontconfig.so.1 /opt/conda/lib/libfontconfig.so.1.12.0
 
-# #--------------------------------------
-# #   LIBJPEGTURBO
-# #--------------------------------------
+#--------------------------------------
+#   LIBJPEGTURBO
+#--------------------------------------
 
-# RUN cd /opt \
-#   && wget https://downloads.sourceforge.net/libjpeg-turbo/libjpeg-turbo-2.0.0.tar.gz \
-#   && tar -xzf libjpeg-turbo-2.0.0.tar.gz \
-#   && rm libjpeg-turbo-2.0.0.tar.gz \
-#   && cd libjpeg-turbo-2.0.0 \
-#   && mkdir build \
-#   && cd build \
-#   && cmake -DCMAKE_INSTALL_PREFIX=/usr/libjpeg-turbo \
-#   -DCMAKE_BUILD_TYPE=RELEASE  \
-#   -DENABLE_STATIC=FALSE       \
-#   -DCMAKE_INSTALL_DOCDIR=/usr/share/doc/libjpeg-turbo-2.0.0 \
-#   -DCMAKE_INSTALL_DEFAULT_LIBDIR=lib  \
-#   .. \
-#   && make -j"$(nproc)" \
-#   && make test \
-#   && make install \
+RUN cd /opt \
+  && wget https://downloads.sourceforge.net/libjpeg-turbo/libjpeg-turbo-2.0.0.tar.gz \
+  && tar -xzf libjpeg-turbo-2.0.0.tar.gz \
+  && rm libjpeg-turbo-2.0.0.tar.gz \
+  && cd libjpeg-turbo-2.0.0 \
+  && mkdir build \
+  && cd build \
+  && cmake -DCMAKE_INSTALL_PREFIX=/usr/libjpeg-turbo \
+  -DCMAKE_BUILD_TYPE=RELEASE  \
+  -DENABLE_STATIC=FALSE       \
+  -DCMAKE_INSTALL_DOCDIR=/usr/share/doc/libjpeg-turbo-2.0.0 \
+  -DCMAKE_INSTALL_DEFAULT_LIBDIR=lib  \
+  .. \
+  && make -j"$(nproc)" \
+  && make test \
+  && make install \
+  && mkdir -p /opt/libjpeg-turbo/lib64 \
+  && ln -s /usr/libjpeg-turbo/lib/libturbojpeg.so /opt/libjpeg-turbo/lib64/libturbojpeg.so
+
+#--------------------------------------
+# PyTurboJPEG
+#--------------------------------------
+
+# pip install -U git+git://github.com/loopbio/PyTurboJPEG.git
+# RUN conda config --add channels conda-forge \
+#   && conda install -c loopbio libjpeg-turbo \
 #   && mkdir -p /opt/libjpeg-turbo/lib64 \
-#   && ln -s /usr/libjpeg-turbo/lib/libturbojpeg.so /opt/libjpeg-turbo/lib64/libturbojpeg.so
+#   && ln -s /opt/conda/lib/libjpeg-turbo/lib/libturbojpeg.so /opt/libjpeg-turbo/lib64/libturbojpeg.so \
+#   && /bin/bash -c "source activate python2 && conda config --add channels conda-forge \
+#     && conda install -c loopbio libjpeg-turbo"
 
-# #--------------------------------------
-# # PyTurboJPEG
-# #--------------------------------------
+# http://blog.loopbio.com/video-io-2-jpeg-decoding.html
+# using loopbio's PyTurbojpeg fork! https://github.com/loopbio/PyTurbojpeg
+RUN pip install -U git+git://github.com/loopbio/PyTurboJPEG.git
+# \
+#  && /bin/bash -c "source activate python2 && pip install -U git+git://github.com/loopbio/PyTurboJPEG.git"
 
-# # pip install -U git+git://github.com/loopbio/PyTurboJPEG.git
-# # RUN conda config --add channels conda-forge \
-# #   && conda install -c loopbio libjpeg-turbo \
-# #   && mkdir -p /opt/libjpeg-turbo/lib64 \
-# #   && ln -s /opt/conda/lib/libjpeg-turbo/lib/libturbojpeg.so /opt/libjpeg-turbo/lib64/libturbojpeg.so \
-# #   && /bin/bash -c "source activate python2 && conda config --add channels conda-forge \
-# #     && conda install -c loopbio libjpeg-turbo"
+#--------------------------------------
+# Utilities for optimizing python code:
+#--------------------------------------
 
-# # http://blog.loopbio.com/video-io-2-jpeg-decoding.html
-# # using loopbio's PyTurbojpeg fork! https://github.com/loopbio/PyTurbojpeg
-# RUN pip install -U git+git://github.com/loopbio/PyTurboJPEG.git
-# # \
-# #  && /bin/bash -c "source activate python2 && pip install -U git+git://github.com/loopbio/PyTurboJPEG.git"
-
-# #--------------------------------------
-# # Utilities for optimizing python code:
-# #--------------------------------------
-
-# USER $NB_USER
+USER $NB_USER
 
 # # Cupy, PyCuda, Numba
-# RUN conda install -y -c lukepfister pycuda \
-#   && pip install cupy \
-#   && conda install -y numba
+# RUN RUN /bin/bash -c "source activate base && mamba install --quiet --yes \
+#   lukepfister pycuda && \
+#   pip install cupy && \
+#   conda install -y numba && \
+#   mamba clean --all -f -y"
+
+# # RUN conda install -y -c lukepfister pycuda \
+# #   && pip install cupy \
+# #   && conda install -y numba
 
 # #--------------------------------------
 # # Install Video and Image Utilities
