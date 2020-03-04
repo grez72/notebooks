@@ -613,8 +613,8 @@ RUN /bin/bash -c "source activate base && mamba install --quiet --yes \
   mamba install -y filterpy && \
   mamba clean --all -f -y"
 
-RUN jupyter nbextension enable --py --sys-prefix widgetsnbextension \
-  && /bin/bash -c "source activate base && pip install pynvvl-cuda92 -H" \
+RUN pip install pynvvl-cuda92 \
+  && jupyter nbextension enable --py --sys-prefix widgetsnbextension \
   && pip install --upgrade pip \
   && pip install \
   ffmpeg-python \
