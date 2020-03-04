@@ -387,10 +387,7 @@ WORKDIR $HOME
 #   fix-permissions /home/$NB_USER
 
 RUN /bin/bash -c "source activate base && mamba install --quiet --yes \
-  av=7.0.0 \
-  beautifulsoup4=4.8.* \
-  bokeh=0.12* \
-  cloudpickle=1.3.* \
+  av=7.0.0 beautifulsoup4=4.8.* bokeh=0.12* cloudpickle=1.3.* \
   conda-forge::blas=*=openblas \
   cython=0.29* \
   dill=0.3* \
