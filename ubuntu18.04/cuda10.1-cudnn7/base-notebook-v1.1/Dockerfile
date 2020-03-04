@@ -679,10 +679,10 @@ RUN git clone https://github.com/opencv/opencv_contrib.git ~/opencv_contrib \
   && mkdir build \
   && cd build/ \
   && cmake -D CMAKE_BUILD_TYPE=RELEASE \
-  -D PYTHON3_EXECUTABLE:FILEPATH=/opt/conda/bin/python3.7 \
-  -D PYTHON3_INCLUDE_DIR:PATH=/opt/conda/include/python3.7m \
-  -D PYTHON3_NUMPY_INCLUDE_DIRS:PATH=/opt/conda/lib/python3.7/site-packages/numpy/core/include \
-  -D PYTHON3_PACKAGES_PATH:PATH=/opt/conda/lib/python3.7/site-packages \
+  -D PYTHON3_EXECUTABLE:FILEPATH=/opt/conda/bin/python3.6 \
+  -D PYTHON3_INCLUDE_DIR:PATH=/opt/conda/include/python3.6m \
+  -D PYTHON3_NUMPY_INCLUDE_DIRS:PATH=/opt/conda/lib/python3.6/site-packages/numpy/core/include \
+  -D PYTHON3_PACKAGES_PATH:PATH=/opt/conda/lib/python3.6/site-packages \
   -D OPENCV_EXTRA_MODULES_PATH=~/opencv_contrib/modules \
   -D CMAKE_INSTALL_PREFIX=/usr/local \
   -D BUILD_opencv_dnn=ON \
@@ -707,367 +707,367 @@ RUN git clone https://github.com/opencv/opencv_contrib.git ~/opencv_contrib \
 
 RUN rm /opt/conda/lib/libfontconfig.so /opt/conda/lib/libfontconfig.so.1 /opt/conda/lib/libfontconfig.so.1.12.0
 
-# #--------------------------------------
-# #   LIBJPEGTURBO
-# #--------------------------------------
+#--------------------------------------
+#   LIBJPEGTURBO
+#--------------------------------------
 
-# RUN cd /opt \
-#   && wget https://downloads.sourceforge.net/libjpeg-turbo/libjpeg-turbo-2.0.0.tar.gz \
-#   && tar -xzf libjpeg-turbo-2.0.0.tar.gz \
-#   && rm libjpeg-turbo-2.0.0.tar.gz \
-#   && cd libjpeg-turbo-2.0.0 \
-#   && mkdir build \
-#   && cd build \
-#   && cmake -DCMAKE_INSTALL_PREFIX=/usr/libjpeg-turbo \
-#   -DCMAKE_BUILD_TYPE=RELEASE  \
-#   -DENABLE_STATIC=FALSE       \
-#   -DCMAKE_INSTALL_DOCDIR=/usr/share/doc/libjpeg-turbo-2.0.0 \
-#   -DCMAKE_INSTALL_DEFAULT_LIBDIR=lib  \
-#   .. \
-#   && make -j"$(nproc)" \
-#   && make test \
-#   && make install \
+RUN cd /opt \
+  && wget https://downloads.sourceforge.net/libjpeg-turbo/libjpeg-turbo-2.0.0.tar.gz \
+  && tar -xzf libjpeg-turbo-2.0.0.tar.gz \
+  && rm libjpeg-turbo-2.0.0.tar.gz \
+  && cd libjpeg-turbo-2.0.0 \
+  && mkdir build \
+  && cd build \
+  && cmake -DCMAKE_INSTALL_PREFIX=/usr/libjpeg-turbo \
+  -DCMAKE_BUILD_TYPE=RELEASE  \
+  -DENABLE_STATIC=FALSE       \
+  -DCMAKE_INSTALL_DOCDIR=/usr/share/doc/libjpeg-turbo-2.0.0 \
+  -DCMAKE_INSTALL_DEFAULT_LIBDIR=lib  \
+  .. \
+  && make -j"$(nproc)" \
+  && make test \
+  && make install \
+  && mkdir -p /opt/libjpeg-turbo/lib64 \
+  && ln -s /usr/libjpeg-turbo/lib/libturbojpeg.so /opt/libjpeg-turbo/lib64/libturbojpeg.so
+
+#--------------------------------------
+# PyTurboJPEG
+#--------------------------------------
+
+# pip install -U git+git://github.com/loopbio/PyTurboJPEG.git
+# RUN conda config --add channels conda-forge \
+#   && conda install -c loopbio libjpeg-turbo \
 #   && mkdir -p /opt/libjpeg-turbo/lib64 \
-#   && ln -s /usr/libjpeg-turbo/lib/libturbojpeg.so /opt/libjpeg-turbo/lib64/libturbojpeg.so
+#   && ln -s /opt/conda/lib/libjpeg-turbo/lib/libturbojpeg.so /opt/libjpeg-turbo/lib64/libturbojpeg.so \
+#   && /bin/bash -c "source activate python2 && conda config --add channels conda-forge \
+#     && conda install -c loopbio libjpeg-turbo"
 
-# #--------------------------------------
-# # PyTurboJPEG
-# #--------------------------------------
+# http://blog.loopbio.com/video-io-2-jpeg-decoding.html
+# using loopbio's PyTurbojpeg fork! https://github.com/loopbio/PyTurbojpeg
+RUN pip install -U git+git://github.com/loopbio/PyTurboJPEG.git
+# \
+#  && /bin/bash -c "source activate python2 && pip install -U git+git://github.com/loopbio/PyTurboJPEG.git"
 
-# # pip install -U git+git://github.com/loopbio/PyTurboJPEG.git
-# # RUN conda config --add channels conda-forge \
-# #   && conda install -c loopbio libjpeg-turbo \
-# #   && mkdir -p /opt/libjpeg-turbo/lib64 \
-# #   && ln -s /opt/conda/lib/libjpeg-turbo/lib/libturbojpeg.so /opt/libjpeg-turbo/lib64/libturbojpeg.so \
-# #   && /bin/bash -c "source activate python2 && conda config --add channels conda-forge \
-# #     && conda install -c loopbio libjpeg-turbo"
+#--------------------------------------
+# Utilities for optimizing python code:
+#--------------------------------------
 
-# # http://blog.loopbio.com/video-io-2-jpeg-decoding.html
-# # using loopbio's PyTurbojpeg fork! https://github.com/loopbio/PyTurbojpeg
-# RUN pip install -U git+git://github.com/loopbio/PyTurboJPEG.git
-# # \
-# #  && /bin/bash -c "source activate python2 && pip install -U git+git://github.com/loopbio/PyTurboJPEG.git"
+USER $NB_USER
 
-# #--------------------------------------
-# # Utilities for optimizing python code:
-# #--------------------------------------
+# Cupy, PyCuda, Numba
+RUN conda install -y -c lukepfister pycuda \
+  && pip install cupy \
+  && conda install -y numba
 
-# USER $NB_USER
+#--------------------------------------
+# Install Video and Image Utilities
+#--------------------------------------
 
-# # Cupy, PyCuda, Numba
-# RUN conda install -y -c lukepfister pycuda \
-#   && pip install cupy \
-#   && conda install -y numba
+# Installing all of these dependencies together in one RUN command
+# to avoid limit on number of layers in docker image
+RUN conda install -y -c conda-forge av trackpy ipywidgets \
+  && conda install -y filterpy \
+  && jupyter nbextension enable --py --sys-prefix widgetsnbextension \
+  && pip install --upgrade pip \
+  && pip install \
+  ffmpeg-python \
+  image-attendant \
+  imutils \
+  imageio \
+  https://github.com/soft-matter/pims/archive/master.zip \
+  pynvvl-cuda92 \
+  sk-video \
+  tqdm \
+  && cd $HOME \
+  && git clone https://github.com/DheerendraRathor/ffprobe3 \
+  && cd $HOME/ffprobe3 \
+  && python setup.py install \
+  && cd $HOME \
+  && git clone https://github.com/jfrelinger/cython-munkres-wrapper \
+  && cd $HOME/cython-munkres-wrapper \
+  && python setup.py install
 
-# #--------------------------------------
-# # Install Video and Image Utilities
-# #--------------------------------------
+#--------------------------------------
+# Parallel HDF5
+#--------------------------------------
 
-# # Installing all of these dependencies together in one RUN command
-# # to avoid limit on number of layers in docker image
-# RUN conda install -y -c conda-forge av trackpy ipywidgets \
-#   && conda install -y filterpy \
-#   && jupyter nbextension enable --py --sys-prefix widgetsnbextension \
-#   && pip install --upgrade pip \
-#   && pip install \
-#   ffmpeg-python \
-#   image-attendant \
-#   imutils \
-#   imageio \
-#   https://github.com/soft-matter/pims/archive/master.zip \
-#   pynvvl-cuda92 \
-#   sk-video \
-#   tqdm \
-#   && cd $HOME \
-#   && git clone https://github.com/DheerendraRathor/ffprobe3 \
-#   && cd $HOME/ffprobe3 \
-#   && python setup.py install \
-#   && cd $HOME \
-#   && git clone https://github.com/jfrelinger/cython-munkres-wrapper \
-#   && cd $HOME/cython-munkres-wrapper \
-#   && python setup.py install
+# https://drtiresome.com/2016/08/23/build-and-install-mpi-parallel-hdf5-and-h5py-from-source-on-linux/
 
-# #--------------------------------------
-# # Parallel HDF5
-# #--------------------------------------
+USER root
 
-# # https://drtiresome.com/2016/08/23/build-and-install-mpi-parallel-hdf5-and-h5py-from-source-on-linux/
+WORKDIR /tmp
 
-# USER root
+# install MPICH, so we can pip install mpi4py
+RUN wget http://www.mpich.org/static/downloads/3.2.1/mpich-3.2.1.tar.gz \
+  && tar -xzf mpich-3.2.1.tar.gz \
+  && cd mpich-3.2.1 \
+  && ./configure --enable-romio --enable-shared --with-device=ch3:sock --disable-fortran --prefix=/usr/local \
+  && make -j$(nproc) \
+  && make install \
+  && make clean
 
-# WORKDIR /tmp
+# install mpi4py
+# RUN pip install mpi4py \
+#   && /bin/bash -c "source activate python2 && pip install mpi4py"
 
-# # install MPICH, so we can pip install mpi4py
-# RUN wget http://www.mpich.org/static/downloads/3.2.1/mpich-3.2.1.tar.gz \
-#   && tar -xzf mpich-3.2.1.tar.gz \
-#   && cd mpich-3.2.1 \
-#   && ./configure --enable-romio --enable-shared --with-device=ch3:sock --disable-fortran --prefix=/usr/local \
-#   && make -j$(nproc) \
-#   && make install \
-#   && make clean
+# test file:
+# test_mpi4py.py
+# from mpi4py import MPI
+# comm = MPI.COMM_WORLD
+# rank = comm.Get_rank()
+# print("hello world from process ", rank)
 
-# # install mpi4py
-# # RUN pip install mpi4py \
-# #   && /bin/bash -c "source activate python2 && pip install mpi4py"
+# run test:
+# mpiexec -n 5 python test_mpi4py.py
 
-# # test file:
-# # test_mpi4py.py
-# # from mpi4py import MPI
-# # comm = MPI.COMM_WORLD
-# # rank = comm.Get_rank()
-# # print("hello world from process ", rank)
+# https://github.com/HDFGroup/
+# h5cc -showconfig
+RUN wget https://support.hdfgroup.org/ftp/HDF5/releases/hdf5-1.10/hdf5-1.10.3/src/hdf5-1.10.3.tar.gz \
+  && tar -xzf hdf5-1.10.3.tar.gz \
+  && cd hdf5-1.10.3 \
+  && ./configure --prefix=/usr/local --enable-parallel --enable-shared --enable-build-mode=production \
+  && make -j$(nproc) \
+  && make install \
+  && make clean
 
-# # run test:
-# # mpiexec -n 5 python test_mpi4py.py
+# Test config
+# h5pcc -showconfig
+# wget https://support.hdfgroup.org/ftp/HDF5/examples/parallel/Hyperslab_by_row.c
+# h5pcc Hyperslab_by_row.c
+#
 
-# # https://github.com/HDFGroup/
-# # h5cc -showconfig
-# RUN wget https://support.hdfgroup.org/ftp/HDF5/releases/hdf5-1.10/hdf5-1.10.3/src/hdf5-1.10.3.tar.gz \
-#   && tar -xzf hdf5-1.10.3.tar.gz \
-#   && cd hdf5-1.10.3 \
-#   && ./configure --prefix=/usr/local --enable-parallel --enable-shared --enable-build-mode=production \
-#   && make -j$(nproc) \
-#   && make install \
-#   && make clean
+# h5dump SDS_row.h5
 
-# # Test config
-# # h5pcc -showconfig
-# # wget https://support.hdfgroup.org/ftp/HDF5/examples/parallel/Hyperslab_by_row.c
-# # h5pcc Hyperslab_by_row.c
-# #
+# RUN conda uninstall h5py hdf5
+# ENV HDF5_DIR=/usr/local
+# ENV CC=mpicc
+# ENV HDF5_MPI="ON"
+# RUN pip install --no-binary=h5py h5py
 
-# # h5dump SDS_row.h5
+# link h5py to h5pcc
+# export CC=mpicc
+# RUN wget https://files.pythonhosted.org/packages/74/5d/6f11a5fffc3d8884bb8d6c06abbee0b3d7c8c81bde9819979208ba823a47/h5py-2.8.0.tar.gz \
+#   && tar -xzf h5py-2.8.0.tar.gz \
+#   && cd h5py-2.8.0 \
+#   && python setup.py configure --mpi --hdf5=/usr/local \
+#   && CC=mpicc python setup.py build \
+#   && python setup.py install --user
 
-# # RUN conda uninstall h5py hdf5
-# # ENV HDF5_DIR=/usr/local
-# # ENV CC=mpicc
-# # ENV HDF5_MPI="ON"
-# # RUN pip install --no-binary=h5py h5py
+# mpiexec -n 4 --allow-run-as-root python testh_5py.py
 
-# # link h5py to h5pcc
-# # export CC=mpicc
-# # RUN wget https://files.pythonhosted.org/packages/74/5d/6f11a5fffc3d8884bb8d6c06abbee0b3d7c8c81bde9819979208ba823a47/h5py-2.8.0.tar.gz \
-# #   && tar -xzf h5py-2.8.0.tar.gz \
-# #   && cd h5py-2.8.0 \
-# #   && python setup.py configure --mpi --hdf5=/usr/local \
-# #   && CC=mpicc python setup.py build \
-# #   && python setup.py install --user
+#--------------------------------------
+# Install Additional Packages
+#--------------------------------------
 
-# # mpiexec -n 4 --allow-run-as-root python testh_5py.py
+USER root
+RUN apt-get update && apt-get install -y build-essential libcap-dev openssh-client
 
-# #--------------------------------------
-# # Install Additional Packages
-# #--------------------------------------
+USER $NB_UID
 
-# USER root
-# RUN apt-get update && apt-get install -y build-essential libcap-dev openssh-client
+# plotly + dependencies
+RUN easy_install python-prctl
+RUN pip install plotly msgpack msgpack-numpy lmdb \
+  && pip install --upgrade git+https://github.com/tensorpack/tensorpack.git \
+  && conda install -c bioconda cufflinks
 
-# USER $NB_UID
+RUN pip install wget pathlib addict nvidia-ml-py3 \
+  && conda install -y cookiecutter \
+  && conda install -c menpo pathlib \
+  && conda install -y dask \
+  && conda clean -tipsy
 
-# # plotly + dependencies
-# RUN easy_install python-prctl
-# RUN pip install plotly msgpack msgpack-numpy lmdb \
-#   && pip install --upgrade git+https://github.com/tensorpack/tensorpack.git \
-#   && conda install -c bioconda cufflinks
+#--------------------------------------
+# Install Optimized Fast PIL
+#--------------------------------------
 
-# RUN pip install wget pathlib addict nvidia-ml-py3 \
-#   && conda install -y cookiecutter \
-#   && conda install -c menpo pathlib \
-#   && conda install -y dask \
-#   && conda clean -tipsy
+RUN conda uninstall --force jpeg libtiff -y \
+  && pip uninstall -y pillow \
+  && conda install -y -c conda-forge libjpeg-turbo \
+  && CC="cc -mavx2" pip install --no-cache-dir -U --force-reinstall pillow-simd
 
-# #--------------------------------------
-# # Install Optimized Fast PIL
-# #--------------------------------------
+#--------------------------------------
+# Late Additions
+#--------------------------------------
 
-# RUN conda uninstall --force jpeg libtiff -y \
-#   && pip uninstall -y pillow \
-#   && conda install -y -c conda-forge libjpeg-turbo \
-#   && CC="cc -mavx2" pip install --no-cache-dir -U --force-reinstall pillow-simd
+ENV CUDA_DEVICE_ORDER=PCI_BUS_ID
 
-# #--------------------------------------
-# # Late Additions
-# #--------------------------------------
+USER root
 
-# ENV CUDA_DEVICE_ORDER=PCI_BUS_ID
+# RUN jupyter labextension install dask-labextension \
+#   && jupyter labextension install @jupyterlab/git \
+#   && pip install jupyterlab-git \
+#   && jupyter serverextension enable --py jupyterlab_git
 
-# USER root
+USER $NB_UID
 
-# # RUN jupyter labextension install dask-labextension \
-# #   && jupyter labextension install @jupyterlab/git \
-# #   && pip install jupyterlab-git \
-# #   && jupyter serverextension enable --py jupyterlab_git
+#--------------------------------------
+#   INSTALL DeepLearning Frameworks
+#--------------------------------------
 
-# USER $NB_UID
+# RUN conda install -y pytorch torchvision cudatoolkit=10.0 -c pytorch \
+#   && conda install -y -c fastai fastai fastprogress
 
-# #--------------------------------------
-# #   INSTALL DeepLearning Frameworks
-# #--------------------------------------
+# RUN pip install tensorflow-gpu \
+#   && pip install mxnet-cu100
 
-# # RUN conda install -y pytorch torchvision cudatoolkit=10.0 -c pytorch \
-# #   && conda install -y -c fastai fastai fastprogress
+#--------------------------------------
+# TIME ZONE!
+#--------------------------------------
 
-# # RUN pip install tensorflow-gpu \
-# #   && pip install mxnet-cu100
+# ENV TZ=America/New_York
+# RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
-# #--------------------------------------
-# # TIME ZONE!
-# #--------------------------------------
+#--------------------------------------
+#  Late Additions
+#--------------------------------------
 
-# # ENV TZ=America/New_York
-# # RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+# modin = faster pandas; https://modin.readthedocs.io/en/latest/
+RUN pip install modin
 
-# #--------------------------------------
-# #  Late Additions
-# #--------------------------------------
+# seems we need to run this build command:
+RUN jupyter lab clean && jupyter lab build
 
-# # modin = faster pandas; https://modin.readthedocs.io/en/latest/
-# RUN pip install modin
+#--------------------------------------
+# Install R Kernel
+#--------------------------------------
 
-# # seems we need to run this build command:
-# RUN jupyter lab clean && jupyter lab build
+USER root
 
-# #--------------------------------------
-# # Install R Kernel
-# #--------------------------------------
+# install R
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+    fonts-dejavu \
+    unixodbc \
+    unixodbc-dev \
+    r-cran-rodbc \
+    gfortran \
+    gcc && \
+    rm -rf /var/lib/apt/lists/*
 
-# USER root
+RUN R -e "install.packages(c('arm', 'caret','crayon','devtools','forecast','hexbin','htmltools', 'htmltools', 'htmlwidgets', 'irkernel', 'lme4', 'lmerTest', 'lsmeans','nycflights13','plyr', 'randomforest', 'rcurl', 'reshape2', 'rmarkdown', 'rodbc','rsqlite', 'shiny', 'sparklyr', 'tidyverse', 'unixodbc'), dependencies=TRUE, repos='http://cran.rstudio.com/')"
 
-# # install R
-# RUN apt-get update && \
-#     apt-get install -y --no-install-recommends \
-#     fonts-dejavu \
-#     unixodbc \
-#     unixodbc-dev \
-#     r-cran-rodbc \
-#     gfortran \
-#     gcc && \
-#     rm -rf /var/lib/apt/lists/*
+RUN R -e "install.packages('IRkernel')" && \
+    R -e "IRkernel::installspec()"
 
-# RUN R -e "install.packages(c('arm', 'caret','crayon','devtools','forecast','hexbin','htmltools', 'htmltools', 'htmlwidgets', 'irkernel', 'lme4', 'lmerTest', 'lsmeans','nycflights13','plyr', 'randomforest', 'rcurl', 'reshape2', 'rmarkdown', 'rodbc','rsqlite', 'shiny', 'sparklyr', 'tidyverse', 'unixodbc'), dependencies=TRUE, repos='http://cran.rstudio.com/')"
+# RUN fix-permissions /home/$NB_USER
 
-# RUN R -e "install.packages('IRkernel')" && \
-#     R -e "IRkernel::installspec()"
+RUN mv $HOME/.local/share/jupyter/kernels/ir* $CONDA_DIR/share/jupyter/kernels/ && \
+      rm -rf $HOME/.local && \
+      fix-permissions /home/$NB_USER $CONDA_DIR/share/jupyter
 
-# # RUN fix-permissions /home/$NB_USER
+# RUN R -e "install.packages('lmerTest')" && \
+#       pip install tzlocal pymer4
 
-# RUN mv $HOME/.local/share/jupyter/kernels/ir* $CONDA_DIR/share/jupyter/kernels/ && \
-#       rm -rf $HOME/.local && \
-#       fix-permissions /home/$NB_USER $CONDA_DIR/share/jupyter
+# python -c "from pymer4.test_install import test_install; test_install()"
 
-# # RUN R -e "install.packages('lmerTest')" && \
-# #       pip install tzlocal pymer4
+# R packages including IRKernel which gets installed globally.
+# RUN conda install --quiet --yes \
+#     'r-base=3.6.1' \
+#     'r-caret=6.0*' \
+#     'r-crayon=1.3*' \
+#     'r-devtools=2.1*' \
+#     'r-forecast=8.7*' \
+#     'r-hexbin=1.27*' \
+#     'r-htmltools=0.3*' \
+#     'r-htmlwidgets=1.3*' \
+#     'r-irkernel=1.0*' \
+#     'r-lme4' \
+#     'r-lmerTest' \
+#     'r-lsmeans' \
+#     'r-nycflights13=1.0*' \
+#     'r-plyr=1.8*' \
+#     'r-randomforest=4.6*' \
+#     'r-rcurl=1.95*' \
+#     'r-reshape2=1.4*' \
+#     'r-rmarkdown=1.14*' \
+#     'r-rodbc=1.3*' \
+#     'r-rsqlite=2.1*' \
+#     'r-shiny=1.3*' \
+#     'r-sparklyr=1.0*' \
+#     'r-tidyverse=1.2*' \
+#     'rpy2=2.9*' \
+#     'unixodbc=2.3.*' \
+#     && \
+#     conda clean --all -y && \
+#     fix-permissions $CONDA_DIR && \
+#     fix-permissions /home/$NB_USER
+#
+# # Install e1071 R package (dependency of the caret R package)
+# # RUN conda install --quiet --yes r-e1071
+#
+# RUN pip install pymer4
 
-# # python -c "from pymer4.test_install import test_install; test_install()"
+# python -c "from pymer4.test_install import test_install; test_install()"
 
-# # R packages including IRKernel which gets installed globally.
-# # RUN conda install --quiet --yes \
-# #     'r-base=3.6.1' \
-# #     'r-caret=6.0*' \
-# #     'r-crayon=1.3*' \
-# #     'r-devtools=2.1*' \
-# #     'r-forecast=8.7*' \
-# #     'r-hexbin=1.27*' \
-# #     'r-htmltools=0.3*' \
-# #     'r-htmlwidgets=1.3*' \
-# #     'r-irkernel=1.0*' \
-# #     'r-lme4' \
-# #     'r-lmerTest' \
-# #     'r-lsmeans' \
-# #     'r-nycflights13=1.0*' \
-# #     'r-plyr=1.8*' \
-# #     'r-randomforest=4.6*' \
-# #     'r-rcurl=1.95*' \
-# #     'r-reshape2=1.4*' \
-# #     'r-rmarkdown=1.14*' \
-# #     'r-rodbc=1.3*' \
-# #     'r-rsqlite=2.1*' \
-# #     'r-shiny=1.3*' \
-# #     'r-sparklyr=1.0*' \
-# #     'r-tidyverse=1.2*' \
-# #     'rpy2=2.9*' \
-# #     'unixodbc=2.3.*' \
-# #     && \
-# #     conda clean --all -y && \
-# #     fix-permissions $CONDA_DIR && \
-# #     fix-permissions /home/$NB_USER
-# #
-# # # Install e1071 R package (dependency of the caret R package)
-# # # RUN conda install --quiet --yes r-e1071
-# #
-# # RUN pip install pymer4
+USER $NB_UID
 
-# # python -c "from pymer4.test_install import test_install; test_install()"
-
-# USER $NB_UID
-
-# #--------------------------------------
-# # Install Julia Kernel
-# #--------------------------------------
-
-# # USER root
-# #
-# # # Julia dependencies
-# # # install Julia packages in /opt/julia instead of $HOME
-# # ENV JULIA_DEPOT_PATH=/opt/julia
-# # ENV JULIA_PKGDIR=/opt/julia
-# # ENV JULIA_VERSION=1.2.0
-# #
-# # RUN mkdir /opt/julia-${JULIA_VERSION} && \
-# #     cd /tmp && \
-# #     wget -q https://julialang-s3.julialang.org/bin/linux/x64/`echo ${JULIA_VERSION} | cut -d. -f 1,2`/julia-${JULIA_VERSION}-linux-x86_64.tar.gz && \
-# #     echo "926ced5dec5d726ed0d2919e849ff084a320882fb67ab048385849f9483afc47 *julia-${JULIA_VERSION}-linux-x86_64.tar.gz" | sha256sum -c - && \
-# #     tar xzf julia-${JULIA_VERSION}-linux-x86_64.tar.gz -C /opt/julia-${JULIA_VERSION} --strip-components=1 && \
-# #     rm /tmp/julia-${JULIA_VERSION}-linux-x86_64.tar.gz
-# # RUN ln -fs /opt/julia-*/bin/julia /usr/local/bin/julia
-# #
-# # # Show Julia where conda libraries are \
-# # RUN mkdir /etc/julia && \
-# #     echo "push!(Libdl.DL_LOAD_PATH, \"$CONDA_DIR/lib\")" >> /etc/julia/juliarc.jl && \
-# #     # Create JULIA_PKGDIR \
-# #     mkdir $JULIA_PKGDIR && \
-# #     chown $NB_USER $JULIA_PKGDIR && \
-# #     fix-permissions $JULIA_PKGDIR
-# #
-# # # Add Julia packages. Only add HDF5 if this is not a test-only build since
-# # # it takes roughly half the entire build time of all of the images on Travis
-# # # to add this one package and often causes Travis to timeout.
-# # #
-# # # Install IJulia as jovyan and then move the kernelspec out
-# # # to the system share location. Avoids problems with runtime UID change not
-# # # taking effect properly on the .local folder in the jovyan home dir.
-# # RUN julia -e 'import Pkg; Pkg.update()' && \
-# #     (test $TEST_ONLY_BUILD || julia -e 'import Pkg; Pkg.add("HDF5")') && \
-# #     julia -e "using Pkg; pkg\"add IJulia\"; pkg\"precompile\"" && \
-# #     # move kernelspec out of home \
-# #     mv $HOME/.local/share/jupyter/kernels/julia* $CONDA_DIR/share/jupyter/kernels/ && \
-# #     chmod -R go+rx $CONDA_DIR/share/jupyter && \
-# #     rm -rf $HOME/.local && \
-# #     fix-permissions $JULIA_PKGDIR $CONDA_DIR/share/jupyter
-
-# #--------------------------------------
-# # Notebook Setup
-# #--------------------------------------
+#--------------------------------------
+# Install Julia Kernel
+#--------------------------------------
 
 # USER root
+#
+# # Julia dependencies
+# # install Julia packages in /opt/julia instead of $HOME
+# ENV JULIA_DEPOT_PATH=/opt/julia
+# ENV JULIA_PKGDIR=/opt/julia
+# ENV JULIA_VERSION=1.2.0
+#
+# RUN mkdir /opt/julia-${JULIA_VERSION} && \
+#     cd /tmp && \
+#     wget -q https://julialang-s3.julialang.org/bin/linux/x64/`echo ${JULIA_VERSION} | cut -d. -f 1,2`/julia-${JULIA_VERSION}-linux-x86_64.tar.gz && \
+#     echo "926ced5dec5d726ed0d2919e849ff084a320882fb67ab048385849f9483afc47 *julia-${JULIA_VERSION}-linux-x86_64.tar.gz" | sha256sum -c - && \
+#     tar xzf julia-${JULIA_VERSION}-linux-x86_64.tar.gz -C /opt/julia-${JULIA_VERSION} --strip-components=1 && \
+#     rm /tmp/julia-${JULIA_VERSION}-linux-x86_64.tar.gz
+# RUN ln -fs /opt/julia-*/bin/julia /usr/local/bin/julia
+#
+# # Show Julia where conda libraries are \
+# RUN mkdir /etc/julia && \
+#     echo "push!(Libdl.DL_LOAD_PATH, \"$CONDA_DIR/lib\")" >> /etc/julia/juliarc.jl && \
+#     # Create JULIA_PKGDIR \
+#     mkdir $JULIA_PKGDIR && \
+#     chown $NB_USER $JULIA_PKGDIR && \
+#     fix-permissions $JULIA_PKGDIR
+#
+# # Add Julia packages. Only add HDF5 if this is not a test-only build since
+# # it takes roughly half the entire build time of all of the images on Travis
+# # to add this one package and often causes Travis to timeout.
+# #
+# # Install IJulia as jovyan and then move the kernelspec out
+# # to the system share location. Avoids problems with runtime UID change not
+# # taking effect properly on the .local folder in the jovyan home dir.
+# RUN julia -e 'import Pkg; Pkg.update()' && \
+#     (test $TEST_ONLY_BUILD || julia -e 'import Pkg; Pkg.add("HDF5")') && \
+#     julia -e "using Pkg; pkg\"add IJulia\"; pkg\"precompile\"" && \
+#     # move kernelspec out of home \
+#     mv $HOME/.local/share/jupyter/kernels/julia* $CONDA_DIR/share/jupyter/kernels/ && \
+#     chmod -R go+rx $CONDA_DIR/share/jupyter && \
+#     rm -rf $HOME/.local && \
+#     fix-permissions $JULIA_PKGDIR $CONDA_DIR/share/jupyter
 
-# EXPOSE 8888
-# WORKDIR $HOME/work
+#--------------------------------------
+# Notebook Setup
+#--------------------------------------
 
-# # Configure container startup
-# ENTRYPOINT ["tini", "-g", "--"]
-# CMD ["start-notebook.sh"]
+USER root
 
-# # Add local files as late as possible to avoid cache busting
-# COPY credential-helper.sh /usr/local/bin/
-# COPY start.sh /usr/local/bin/
-# COPY start-notebook.sh /usr/local/bin/
-# COPY start-singleuser.sh /usr/local/bin/
-# COPY jupyter_notebook_config.py /etc/jupyter/
-# COPY genpass.py .
-# RUN fix-permissions /etc/jupyter/
+EXPOSE 8888
+WORKDIR $HOME/work
 
-# WORKDIR $HOME/work
+# Configure container startup
+ENTRYPOINT ["tini", "-g", "--"]
+CMD ["start-notebook.sh"]
 
-# # Switch back to jovyan to avoid accidental container runs as root
-# USER $NB_UID
+# Add local files as late as possible to avoid cache busting
+COPY credential-helper.sh /usr/local/bin/
+COPY start.sh /usr/local/bin/
+COPY start-notebook.sh /usr/local/bin/
+COPY start-singleuser.sh /usr/local/bin/
+COPY jupyter_notebook_config.py /etc/jupyter/
+COPY genpass.py .
+RUN fix-permissions /etc/jupyter/
+
+WORKDIR $HOME/work
+
+# Switch back to jovyan to avoid accidental container runs as root
+USER $NB_UID
