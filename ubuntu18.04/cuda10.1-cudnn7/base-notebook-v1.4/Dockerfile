@@ -387,7 +387,6 @@ WORKDIR $HOME
 #   fix-permissions /home/$NB_USER
 
 RUN /bin/bash -c "source activate base && mamba install --quiet --yes \
-  av=7.0.0 beautifulsoup4=4.8.* bokeh=0.12* cloudpickle=1.3.* \
   conda-forge::blas=*=openblas \
   cython=0.29* \
   dill=0.3* \
@@ -396,6 +395,8 @@ RUN /bin/bash -c "source activate base && mamba install --quiet --yes \
   ipywidgets=7.5* \
   matplotlib=3.1.* && \
   conda clean --all -f -y"
+
+#  av=7.0.0 beautifulsoup4=4.8.* bokeh=0.12* cloudpickle=1.3.* \
 
 # dask=2.11.* \
 
