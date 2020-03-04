@@ -583,10 +583,10 @@ RUN pip install -U git+git://github.com/loopbio/PyTurboJPEG.git
 # Utilities for optimizing python code:
 #--------------------------------------
 
-USER $NB_USER
+# USER $NB_USER
 
 # # Cupy, PyCuda, Numba
-# RUN RUN /bin/bash -c "source activate base && mamba install --quiet --yes \
+# RUN /bin/bash -c "source activate base && mamba install --quiet --yes \
 #   lukepfister pycuda && \
 #   pip install cupy && \
 #   conda install -y numba && \
@@ -602,8 +602,12 @@ USER $NB_USER
 
 # # Installing all of these dependencies together in one RUN command
 # # to avoid limit on number of layers in docker image
-# RUN conda install -y -c conda-forge av trackpy ipywidgets \
-#   && conda install -y filterpy \
+# # RUN conda install -y -c conda-forge av trackpy ipywidgets \
+# #   && conda install -y filterpy \
+# RUN /bin/bash -c "source activate base && mamba install --quiet --yes \
+#   -c conda-forge av trackpy ipywidgets && \
+#   mamba install -y filterpy && \
+#   mamba clean --all -f -y" \
 #   && jupyter nbextension enable --py --sys-prefix widgetsnbextension \
 #   && pip install --upgrade pip \
 #   && pip install \
