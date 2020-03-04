@@ -386,7 +386,7 @@ WORKDIR $HOME
 #   fix-permissions $CONDA_DIR && \
 #   fix-permissions /home/$NB_USER
 
-RUN mamba install --quiet --yes \  
+RUN /bin/bash -c "source activate base && mamba install --quiet --yes \  
   'av=7.0.0' \
   'beautifulsoup4=4.8.*' \
   'bokeh=0.12*' \
@@ -414,7 +414,7 @@ RUN mamba install --quiet --yes \
   'sympy=1.5.*' \
   'vincent=0.4.*' \
   'xlrd'  && \
-  conda clean --all -f -y && \
+  conda clean --all -f -y" && \
   npm cache clean --force && \
   rm -rf $CONDA_DIR/share/jupyter/lab/staging && \
   rm -rf /home/$NB_USER/.cache/yarn && \
@@ -435,8 +435,6 @@ RUN cd /tmp && \
   rm -rf /tmp/facets && \
   fix-permissions $CONDA_DIR && \
   fix-permissions /home/$NB_USER
-
-RUN /bin/bash -c "source activate base && mamba install --quiet --yes matplotlib=3.1.*"
 
 # Import matplotlib the first time to build the font cache.
 ENV XDG_CACHE_HOME /home/$NB_USER/.cache/
