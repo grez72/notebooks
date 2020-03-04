@@ -588,48 +588,48 @@ RUN pip install -U git+git://github.com/loopbio/PyTurboJPEG.git
 
 # USER $NB_USER
 
-# # Cupy, PyCuda, Numba
-# RUN /bin/bash -c "source activate base && mamba install --quiet --yes \
-#   lukepfister pycuda && \
-#   pip install cupy && \
-#   conda install -y numba && \
-#   mamba clean --all -f -y"
+# Cupy, PyCuda, Numba
+RUN /bin/bash -c "source activate base && mamba install --quiet --yes \
+  lukepfister pycuda && \
+  pip install cupy && \
+  conda install -y numba && \
+  mamba clean --all -f -y"
 
-# # RUN conda install -y -c lukepfister pycuda \
-# #   && pip install cupy \
-# #   && conda install -y numba
+# RUN conda install -y -c lukepfister pycuda \
+#   && pip install cupy \
+#   && conda install -y numba
 
-# #--------------------------------------
-# # Install Video and Image Utilities
-# #--------------------------------------
+#--------------------------------------
+# Install Video and Image Utilities
+#--------------------------------------
 
-# # Installing all of these dependencies together in one RUN command
-# # to avoid limit on number of layers in docker image
-# # RUN conda install -y -c conda-forge av trackpy ipywidgets \
-# #   && conda install -y filterpy \
-# RUN /bin/bash -c "source activate base && mamba install --quiet --yes \
-#   -c conda-forge av trackpy ipywidgets && \
-#   mamba install -y filterpy && \
-#   mamba clean --all -f -y" \
-#   && jupyter nbextension enable --py --sys-prefix widgetsnbextension \
-#   && pip install --upgrade pip \
-#   && pip install \
-#   ffmpeg-python \
-#   image-attendant \
-#   imutils \
-#   imageio \
-#   https://github.com/soft-matter/pims/archive/master.zip \
-#   pynvvl-cuda92 \
-#   sk-video \
-#   tqdm \
-#   && cd $HOME \
-#   && git clone https://github.com/DheerendraRathor/ffprobe3 \
-#   && cd $HOME/ffprobe3 \
-#   && python setup.py install \
-#   && cd $HOME \
-#   && git clone https://github.com/jfrelinger/cython-munkres-wrapper \
-#   && cd $HOME/cython-munkres-wrapper \
-#   && python setup.py install
+# Installing all of these dependencies together in one RUN command
+# to avoid limit on number of layers in docker image
+# RUN conda install -y -c conda-forge av trackpy ipywidgets \
+#   && conda install -y filterpy \
+RUN /bin/bash -c "source activate base && mamba install --quiet --yes \
+  -c conda-forge av trackpy ipywidgets && \
+  mamba install -y filterpy && \
+  mamba clean --all -f -y" \
+  && jupyter nbextension enable --py --sys-prefix widgetsnbextension \
+  && pip install --upgrade pip \
+  && pip install \
+  ffmpeg-python \
+  image-attendant \
+  imutils \
+  imageio \
+  https://github.com/soft-matter/pims/archive/master.zip \
+  pynvvl-cuda92 \
+  sk-video \
+  tqdm \
+  && cd $HOME \
+  && git clone https://github.com/DheerendraRathor/ffprobe3 \
+  && cd $HOME/ffprobe3 \
+  && python setup.py install \
+  && cd $HOME \
+  && git clone https://github.com/jfrelinger/cython-munkres-wrapper \
+  && cd $HOME/cython-munkres-wrapper \
+  && python setup.py install
 
 # #--------------------------------------
 # # Install Additional Packages
