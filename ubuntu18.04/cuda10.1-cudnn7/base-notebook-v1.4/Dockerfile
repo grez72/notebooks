@@ -107,12 +107,12 @@ RUN mkdir /home/$NB_USER/work && \
 #--------------------------------------
 
 # Install conda as NB_USER and check the md5 sum provided on the download site
-# ENV MINICONDA_VERSION 4.5.4
-# ENV MINICONDA_CHECKSUM a946ea1d0c4a642ddf0c3a26a18bb16d
+ENV MINICONDA_VERSION 4.5.4
+ENV MINICONDA_CHECKSUM a946ea1d0c4a642ddf0c3a26a18bb16d
 
-ENV MINICONDA_VERSION=4.7.12.1 \
-    MINICONDA_MD5=81c773ff87af5cfac79ab862942ab6b3 \
-    CONDA_VERSION=4.7.12
+# ENV MINICONDA_VERSION=4.7.12.1 \
+#     MINICONDA_MD5=81c773ff87af5cfac79ab862942ab6b3 \
+#     CONDA_VERSION=4.7.12
 
 RUN cd /tmp && \
   wget --quiet https://repo.continuum.io/miniconda/Miniconda3-${MINICONDA_VERSION}-Linux-x86_64.sh && \
@@ -340,95 +340,95 @@ RUN git clone https://github.com/FFmpeg/FFmpeg /root/ffmpeg \
 USER $NB_UID
 WORKDIR $HOME
 
-# Install Python 3 packages
-# Remove pyqt and qt pulled in for matplotlib since we're only ever going to
-# use notebook-friendly backends in these images
-RUN conda install --quiet --yes \
-  "conda=${MINICONDA_VERSION}" \
-  'av' \
-  'conda-forge::blas=*=openblas' \
-  'ipywidgets=7.2*' \
-  'pandas=0.23*' \
-  'numexpr=2.6*' \
-  'matplotlib=2.2*' \
-  'scipy=1.1*' \
-  'seaborn=0.9*' \
-  'scikit-learn=0.19*' \
-  'scikit-image=0.14*' \
-  'sk-video=1.1*' \
-  'sympy=1.1*' \
-  'cython=0.28*' \
-  'patsy=0.5*' \
-  'statsmodels=0.9*' \
-  'cloudpickle=0.5*' \
-  'dill=0.2*' \
-  'numba=0.38*' \
-  'bokeh=0.12*' \
-  'sqlalchemy=1.2*' \
-  'hdf5=1.10*' \
-  'h5py=2.7*' \
-  'vincent=0.4.*' \
-  'beautifulsoup4=4.6.*' \
-  'protobuf=3.*' \
-  'xlrd'  && \
-  conda remove --quiet --yes --force qt pyqt && \
-  conda clean -tipsy && \
-  npm cache clean --force && \
-  rm -rf $CONDA_DIR/share/jupyter/lab/staging && \
-  rm -rf /home/$NB_USER/.cache/yarn && \
-  rm -rf /home/$NB_USER/.node-gyp && \
-  fix-permissions $CONDA_DIR && \
-  fix-permissions /home/$NB_USER
+# # Install Python 3 packages
+# # Remove pyqt and qt pulled in for matplotlib since we're only ever going to
+# # use notebook-friendly backends in these images
+# RUN conda install --quiet --yes \
+#   "conda=${MINICONDA_VERSION}" \
+#   'av' \
+#   'conda-forge::blas=*=openblas' \
+#   'ipywidgets=7.2*' \
+#   'pandas=0.23*' \
+#   'numexpr=2.6*' \
+#   'matplotlib=2.2*' \
+#   'scipy=1.1*' \
+#   'seaborn=0.9*' \
+#   'scikit-learn=0.19*' \
+#   'scikit-image=0.14*' \
+#   'sk-video=1.1*' \
+#   'sympy=1.1*' \
+#   'cython=0.28*' \
+#   'patsy=0.5*' \
+#   'statsmodels=0.9*' \
+#   'cloudpickle=0.5*' \
+#   'dill=0.2*' \
+#   'numba=0.38*' \
+#   'bokeh=0.12*' \
+#   'sqlalchemy=1.2*' \
+#   'hdf5=1.10*' \
+#   'h5py=2.7*' \
+#   'vincent=0.4.*' \
+#   'beautifulsoup4=4.6.*' \
+#   'protobuf=3.*' \
+#   'xlrd'  && \
+#   conda remove --quiet --yes --force qt pyqt && \
+#   conda clean -tipsy && \
+#   npm cache clean --force && \
+#   rm -rf $CONDA_DIR/share/jupyter/lab/staging && \
+#   rm -rf /home/$NB_USER/.cache/yarn && \
+#   rm -rf /home/$NB_USER/.node-gyp && \
+#   fix-permissions $CONDA_DIR && \
+#   fix-permissions /home/$NB_USER
 
-# jupyter nbextension enable --py widgetsnbextension --sys-prefix && \
-# jupyter labextension install @jupyter-widgets/jupyterlab-manager@^0.38.1 && \
-# jupyter labextension install jupyterlab_bokeh@^0.6.3 && \
+# # jupyter nbextension enable --py widgetsnbextension --sys-prefix && \
+# # jupyter labextension install @jupyter-widgets/jupyterlab-manager@^0.38.1 && \
+# # jupyter labextension install jupyterlab_bokeh@^0.6.3 && \
 
-# Install facets which does not have a pip or conda package at the moment
-RUN cd /tmp && \
-  git clone https://github.com/PAIR-code/facets.git && \
-  cd facets && \
-  jupyter nbextension install facets-dist/ --sys-prefix && \
-  cd && \
-  rm -rf /tmp/facets && \
-  fix-permissions $CONDA_DIR && \
-  fix-permissions /home/$NB_USER
+# # Install facets which does not have a pip or conda package at the moment
+# RUN cd /tmp && \
+#   git clone https://github.com/PAIR-code/facets.git && \
+#   cd facets && \
+#   jupyter nbextension install facets-dist/ --sys-prefix && \
+#   cd && \
+#   rm -rf /tmp/facets && \
+#   fix-permissions $CONDA_DIR && \
+#   fix-permissions /home/$NB_USER
 
-# Import matplotlib the first time to build the font cache.
-ENV XDG_CACHE_HOME /home/$NB_USER/.cache/
-RUN MPLBACKEND=Agg python -c "import matplotlib.pyplot" && \
-  fix-permissions /home/$NB_USER
+# # Import matplotlib the first time to build the font cache.
+# ENV XDG_CACHE_HOME /home/$NB_USER/.cache/
+# RUN MPLBACKEND=Agg python -c "import matplotlib.pyplot" && \
+#   fix-permissions /home/$NB_USER
 
-#--------------------------------------
-#   Updates needed for opencv
-#--------------------------------------
+# #--------------------------------------
+# #   Updates needed for opencv
+# #--------------------------------------
 
-USER root
+# USER root
 
-RUN apt-get update && apt-get install -y \
-  build-essential \
-  cmake \
-  git \
-  pkg-config \
-  libgtk-3-dev \
-  libavcodec-dev \
-  libavformat-dev \
-  libswscale-dev \
-  libv4l-dev \
-  libxvidcore-dev \
-  libx264-dev \
-  libjpeg-dev \
-  libpng-dev \
-  libtiff-dev \
-  libhdf5-serial-dev \
-  gfortran \
-  openexr \
-  libatlas-base-dev \
-  python3-dev \
-  python3-numpy \
-  libtbb2 \
-  libtbb-dev \
-  libdc1394-22-dev
+# RUN apt-get update && apt-get install -y \
+#   build-essential \
+#   cmake \
+#   git \
+#   pkg-config \
+#   libgtk-3-dev \
+#   libavcodec-dev \
+#   libavformat-dev \
+#   libswscale-dev \
+#   libv4l-dev \
+#   libxvidcore-dev \
+#   libx264-dev \
+#   libjpeg-dev \
+#   libpng-dev \
+#   libtiff-dev \
+#   libhdf5-serial-dev \
+#   gfortran \
+#   openexr \
+#   libatlas-base-dev \
+#   python3-dev \
+#   python3-numpy \
+#   libtbb2 \
+#   libtbb-dev \
+#   libdc1394-22-dev
 
 # #--------------------------------------
 # # Install OpenCV
