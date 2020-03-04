@@ -496,7 +496,8 @@ USER $NB_USER
 WORKDIR ~/
 
 # try to force use of our custom installation of ffmpeg
-RUN conda uninstall -y ffmpeg
+RUN /bin/bash -c "source activate base && mamba uninstall -y ffmpeg"
+# RUN conda uninstall -y ffmpeg
 # && /bin/bash -c "source activate python2 && conda uninstall -y ffmpeg"
 
 USER root
