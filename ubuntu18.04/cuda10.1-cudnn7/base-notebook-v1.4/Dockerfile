@@ -498,8 +498,8 @@ RUN apt-get update && apt-get install -y \
 USER $NB_USER
 WORKDIR ~/
 
-# try to force use of our custom installation of ffmpeg
-RUN /bin/bash -c "source activate base && mamba uninstall -y ffmpeg"
+# try to force use of our custom installation of ffmpeg and glib
+RUN /bin/bash -c "source activate base && mamba uninstall -y ffmpeg glib"
 # RUN conda uninstall -y ffmpeg
 # && /bin/bash -c "source activate python2 && conda uninstall -y ffmpeg"
 
