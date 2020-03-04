@@ -584,16 +584,17 @@ RUN pip install -U git+git://github.com/loopbio/PyTurboJPEG.git
 
 #--------------------------------------
 # Utilities for optimizing python code:
+# ...skipping in this iteration
 #--------------------------------------
 
 # USER $NB_USER
 
 # Cupy, PyCuda, Numba
-RUN /bin/bash -c "source activate base && mamba install --quiet --yes \
-  lukepfister pycuda && \
-  pip install cupy && \
-  conda install -y numba && \
-  mamba clean --all -f -y"
+# RUN /bin/bash -c "source activate base && mamba install --quiet --yes \
+#   lukepfister pycuda && \
+#   pip install cupy && \
+#   conda install -y numba && \
+#   mamba clean --all -f -y"
 
 # RUN conda install -y -c lukepfister pycuda \
 #   && pip install cupy \
