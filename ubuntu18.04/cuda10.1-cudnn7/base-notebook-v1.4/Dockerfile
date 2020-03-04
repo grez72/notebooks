@@ -387,18 +387,19 @@ WORKDIR $HOME
 #   fix-permissions /home/$NB_USER
 
 RUN /bin/bash -c "source activate base && mamba install --quiet --yes \
+  av=7.0.0 \
+  beautifulsoup4=4.8.* \
+  bokeh=0.12* \
+  cloudpickle=1.3.* \
   conda-forge::blas=*=openblas \
   cython=0.29* \
+  dask=2.11.* \
   dill=0.3* \
-  hdf5=2.10* \
-  h5py=2.7* \
+  hdf5=1.10.* \
+  h5py=2.10.* \
   ipywidgets=7.5* \
   matplotlib=3.1.* && \
   conda clean --all -f -y"
-
-#  av=7.0.0 beautifulsoup4=4.8.* bokeh=0.12* cloudpickle=1.3.* \
-
-# dask=2.11.* \
 
 RUN MPLBACKEND=Agg python -c "import matplotlib.pyplot" && \
   fix-permissions /home/$NB_USER
@@ -412,7 +413,7 @@ RUN MPLBACKEND=Agg python -c "import matplotlib.pyplot" && \
 #   'cython=0.29*' \
 #   'dask=2.11.*' \
 #   'dill=0.3*' \
-#   'hdf5=2.10*' \
+#   'hdf5=1.10.*' \
 #   'h5py=2.7*' \
 #   'ipywidgets=7.5*' \
 #   'matplotlib=3.1.*' \
