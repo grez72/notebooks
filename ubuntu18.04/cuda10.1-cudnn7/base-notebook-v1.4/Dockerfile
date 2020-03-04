@@ -611,7 +611,7 @@ RUN pip install -U git+git://github.com/loopbio/PyTurboJPEG.git
 RUN /bin/bash -c "source activate base && mamba install --quiet --yes \
   -c conda-forge av trackpy ipywidgets && \
   mamba install -y filterpy && \
-  mamba clean --all -f -y" \
+  mamba clean --all -f -y" && \ 
   && jupyter nbextension enable --py --sys-prefix widgetsnbextension \
   && pip install --upgrade pip \
   && pip install \
