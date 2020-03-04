@@ -548,7 +548,7 @@ RUN rm /opt/conda/lib/libfontconfig.so /opt/conda/lib/libfontconfig.so.1 /opt/co
 #   INSTALL misc dependencies
 #--------------------------------------
 
-RUN pip install pynvvl-cuda92 wget pathlib addict natsort nvidia-ml-py3
+RUN pip install pynvvl-cuda92 wget pathlib addict natsort nvidia-ml-py3 
 
 #--------------------------------------
 #   LIBJPEGTURBO
@@ -672,189 +672,189 @@ RUN /bin/bash -c "source activate base && mamba uninstall --force jpeg libtiff -
 #   && conda install -y -c conda-forge libjpeg-turbo \
 #   && CC="cc -mavx2" pip install --no-cache-dir -U --force-reinstall pillow-simd
 
-# #--------------------------------------
-# # Late Additions
-# #--------------------------------------
+#--------------------------------------
+# Late Additions
+#--------------------------------------
 
-# ENV CUDA_DEVICE_ORDER=PCI_BUS_ID
+ENV CUDA_DEVICE_ORDER=PCI_BUS_ID
 
-# USER root
+USER root
 
-# # RUN jupyter labextension install dask-labextension \
-# #   && jupyter labextension install @jupyterlab/git \
-# #   && pip install jupyterlab-git \
-# #   && jupyter serverextension enable --py jupyterlab_git
+# RUN jupyter labextension install dask-labextension \
+#   && jupyter labextension install @jupyterlab/git \
+#   && pip install jupyterlab-git \
+#   && jupyter serverextension enable --py jupyterlab_git
 
-# USER $NB_UID
+USER $NB_UID
 
-# #--------------------------------------
-# #   INSTALL DeepLearning Frameworks
-# #--------------------------------------
+#--------------------------------------
+#   INSTALL DeepLearning Frameworks
+#--------------------------------------
 
-# # RUN conda install -y pytorch torchvision cudatoolkit=10.0 -c pytorch \
-# #   && conda install -y -c fastai fastai fastprogress
+# RUN conda install -y pytorch torchvision cudatoolkit=10.0 -c pytorch \
+#   && conda install -y -c fastai fastai fastprogress
 
-# # RUN pip install tensorflow-gpu \
-# #   && pip install mxnet-cu100
+# RUN pip install tensorflow-gpu \
+#   && pip install mxnet-cu100
 
-# #--------------------------------------
-# # TIME ZONE!
-# #--------------------------------------
+#--------------------------------------
+# TIME ZONE!
+#--------------------------------------
 
-# # ENV TZ=America/New_York
-# # RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+# ENV TZ=America/New_York
+# RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
-# #--------------------------------------
-# #  Late Additions
-# #--------------------------------------
+#--------------------------------------
+#  Late Additions
+#--------------------------------------
 
-# # modin = faster pandas; https://modin.readthedocs.io/en/latest/
-# RUN pip install modin
+# modin = faster pandas; https://modin.readthedocs.io/en/latest/
+RUN pip install modin
 
-# # seems we need to run this build command:
-# RUN jupyter lab clean && jupyter lab build
+# seems we need to run this build command:
+RUN jupyter lab clean && jupyter lab build
 
-# #--------------------------------------
-# # Install R Kernel
-# #--------------------------------------
+#--------------------------------------
+# Install R Kernel
+#--------------------------------------
 
-# USER root
+USER root
 
-# # install R
-# RUN apt-get update && \
-#     apt-get install -y --no-install-recommends \
-#     fonts-dejavu \
-#     unixodbc \
-#     unixodbc-dev \
-#     r-cran-rodbc \
-#     gfortran \
-#     gcc && \
-#     rm -rf /var/lib/apt/lists/*
+# install R
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+    fonts-dejavu \
+    unixodbc \
+    unixodbc-dev \
+    r-cran-rodbc \
+    gfortran \
+    gcc && \
+    rm -rf /var/lib/apt/lists/*
 
-# RUN R -e "install.packages(c('arm', 'caret','crayon','devtools','forecast','hexbin','htmltools', 'htmltools', 'htmlwidgets', 'irkernel', 'lme4', 'lmerTest', 'lsmeans','nycflights13','plyr', 'randomforest', 'rcurl', 'reshape2', 'rmarkdown', 'rodbc','rsqlite', 'shiny', 'sparklyr', 'tidyverse', 'unixodbc'), dependencies=TRUE, repos='http://cran.rstudio.com/')"
+RUN R -e "install.packages(c('arm', 'caret','crayon','devtools','forecast','hexbin','htmltools', 'htmltools', 'htmlwidgets', 'irkernel', 'lme4', 'lmerTest', 'lsmeans','nycflights13','plyr', 'randomforest', 'rcurl', 'reshape2', 'rmarkdown', 'rodbc','rsqlite', 'shiny', 'sparklyr', 'tidyverse', 'unixodbc'), dependencies=TRUE, repos='http://cran.rstudio.com/')"
 
-# RUN R -e "install.packages('IRkernel')" && \
-#     R -e "IRkernel::installspec()"
+RUN R -e "install.packages('IRkernel')" && \
+    R -e "IRkernel::installspec()"
 
-# # RUN fix-permissions /home/$NB_USER
+# RUN fix-permissions /home/$NB_USER
 
-# RUN mv $HOME/.local/share/jupyter/kernels/ir* $CONDA_DIR/share/jupyter/kernels/ && \
-#       rm -rf $HOME/.local && \
-#       fix-permissions /home/$NB_USER $CONDA_DIR/share/jupyter
+RUN mv $HOME/.local/share/jupyter/kernels/ir* $CONDA_DIR/share/jupyter/kernels/ && \
+      rm -rf $HOME/.local && \
+      fix-permissions /home/$NB_USER $CONDA_DIR/share/jupyter
 
-# # RUN R -e "install.packages('lmerTest')" && \
-# #       pip install tzlocal pymer4
+# RUN R -e "install.packages('lmerTest')" && \
+#       pip install tzlocal pymer4
 
-# # python -c "from pymer4.test_install import test_install; test_install()"
+# python -c "from pymer4.test_install import test_install; test_install()"
 
-# # R packages including IRKernel which gets installed globally.
-# # RUN conda install --quiet --yes \
-# #     'r-base=3.6.1' \
-# #     'r-caret=6.0*' \
-# #     'r-crayon=1.3*' \
-# #     'r-devtools=2.1*' \
-# #     'r-forecast=8.7*' \
-# #     'r-hexbin=1.27*' \
-# #     'r-htmltools=0.3*' \
-# #     'r-htmlwidgets=1.3*' \
-# #     'r-irkernel=1.0*' \
-# #     'r-lme4' \
-# #     'r-lmerTest' \
-# #     'r-lsmeans' \
-# #     'r-nycflights13=1.0*' \
-# #     'r-plyr=1.8*' \
-# #     'r-randomforest=4.6*' \
-# #     'r-rcurl=1.95*' \
-# #     'r-reshape2=1.4*' \
-# #     'r-rmarkdown=1.14*' \
-# #     'r-rodbc=1.3*' \
-# #     'r-rsqlite=2.1*' \
-# #     'r-shiny=1.3*' \
-# #     'r-sparklyr=1.0*' \
-# #     'r-tidyverse=1.2*' \
-# #     'rpy2=2.9*' \
-# #     'unixodbc=2.3.*' \
-# #     && \
-# #     conda clean --all -y && \
-# #     fix-permissions $CONDA_DIR && \
-# #     fix-permissions /home/$NB_USER
-# #
-# # # Install e1071 R package (dependency of the caret R package)
-# # # RUN conda install --quiet --yes r-e1071
-# #
-# # RUN pip install pymer4
+# R packages including IRKernel which gets installed globally.
+# RUN conda install --quiet --yes \
+#     'r-base=3.6.1' \
+#     'r-caret=6.0*' \
+#     'r-crayon=1.3*' \
+#     'r-devtools=2.1*' \
+#     'r-forecast=8.7*' \
+#     'r-hexbin=1.27*' \
+#     'r-htmltools=0.3*' \
+#     'r-htmlwidgets=1.3*' \
+#     'r-irkernel=1.0*' \
+#     'r-lme4' \
+#     'r-lmerTest' \
+#     'r-lsmeans' \
+#     'r-nycflights13=1.0*' \
+#     'r-plyr=1.8*' \
+#     'r-randomforest=4.6*' \
+#     'r-rcurl=1.95*' \
+#     'r-reshape2=1.4*' \
+#     'r-rmarkdown=1.14*' \
+#     'r-rodbc=1.3*' \
+#     'r-rsqlite=2.1*' \
+#     'r-shiny=1.3*' \
+#     'r-sparklyr=1.0*' \
+#     'r-tidyverse=1.2*' \
+#     'rpy2=2.9*' \
+#     'unixodbc=2.3.*' \
+#     && \
+#     conda clean --all -y && \
+#     fix-permissions $CONDA_DIR && \
+#     fix-permissions /home/$NB_USER
+#
+# # Install e1071 R package (dependency of the caret R package)
+# # RUN conda install --quiet --yes r-e1071
+#
+# RUN pip install pymer4
 
-# # python -c "from pymer4.test_install import test_install; test_install()"
+# python -c "from pymer4.test_install import test_install; test_install()"
 
-# USER $NB_UID
+USER $NB_UID
 
-# #--------------------------------------
-# # Install Julia Kernel
-# #--------------------------------------
-
-# # USER root
-# #
-# # # Julia dependencies
-# # # install Julia packages in /opt/julia instead of $HOME
-# # ENV JULIA_DEPOT_PATH=/opt/julia
-# # ENV JULIA_PKGDIR=/opt/julia
-# # ENV JULIA_VERSION=1.2.0
-# #
-# # RUN mkdir /opt/julia-${JULIA_VERSION} && \
-# #     cd /tmp && \
-# #     wget -q https://julialang-s3.julialang.org/bin/linux/x64/`echo ${JULIA_VERSION} | cut -d. -f 1,2`/julia-${JULIA_VERSION}-linux-x86_64.tar.gz && \
-# #     echo "926ced5dec5d726ed0d2919e849ff084a320882fb67ab048385849f9483afc47 *julia-${JULIA_VERSION}-linux-x86_64.tar.gz" | sha256sum -c - && \
-# #     tar xzf julia-${JULIA_VERSION}-linux-x86_64.tar.gz -C /opt/julia-${JULIA_VERSION} --strip-components=1 && \
-# #     rm /tmp/julia-${JULIA_VERSION}-linux-x86_64.tar.gz
-# # RUN ln -fs /opt/julia-*/bin/julia /usr/local/bin/julia
-# #
-# # # Show Julia where conda libraries are \
-# # RUN mkdir /etc/julia && \
-# #     echo "push!(Libdl.DL_LOAD_PATH, \"$CONDA_DIR/lib\")" >> /etc/julia/juliarc.jl && \
-# #     # Create JULIA_PKGDIR \
-# #     mkdir $JULIA_PKGDIR && \
-# #     chown $NB_USER $JULIA_PKGDIR && \
-# #     fix-permissions $JULIA_PKGDIR
-# #
-# # # Add Julia packages. Only add HDF5 if this is not a test-only build since
-# # # it takes roughly half the entire build time of all of the images on Travis
-# # # to add this one package and often causes Travis to timeout.
-# # #
-# # # Install IJulia as jovyan and then move the kernelspec out
-# # # to the system share location. Avoids problems with runtime UID change not
-# # # taking effect properly on the .local folder in the jovyan home dir.
-# # RUN julia -e 'import Pkg; Pkg.update()' && \
-# #     (test $TEST_ONLY_BUILD || julia -e 'import Pkg; Pkg.add("HDF5")') && \
-# #     julia -e "using Pkg; pkg\"add IJulia\"; pkg\"precompile\"" && \
-# #     # move kernelspec out of home \
-# #     mv $HOME/.local/share/jupyter/kernels/julia* $CONDA_DIR/share/jupyter/kernels/ && \
-# #     chmod -R go+rx $CONDA_DIR/share/jupyter && \
-# #     rm -rf $HOME/.local && \
-# #     fix-permissions $JULIA_PKGDIR $CONDA_DIR/share/jupyter
-
-# #--------------------------------------
-# # Notebook Setup
-# #--------------------------------------
+#--------------------------------------
+# Install Julia Kernel
+#--------------------------------------
 
 # USER root
+#
+# # Julia dependencies
+# # install Julia packages in /opt/julia instead of $HOME
+# ENV JULIA_DEPOT_PATH=/opt/julia
+# ENV JULIA_PKGDIR=/opt/julia
+# ENV JULIA_VERSION=1.2.0
+#
+# RUN mkdir /opt/julia-${JULIA_VERSION} && \
+#     cd /tmp && \
+#     wget -q https://julialang-s3.julialang.org/bin/linux/x64/`echo ${JULIA_VERSION} | cut -d. -f 1,2`/julia-${JULIA_VERSION}-linux-x86_64.tar.gz && \
+#     echo "926ced5dec5d726ed0d2919e849ff084a320882fb67ab048385849f9483afc47 *julia-${JULIA_VERSION}-linux-x86_64.tar.gz" | sha256sum -c - && \
+#     tar xzf julia-${JULIA_VERSION}-linux-x86_64.tar.gz -C /opt/julia-${JULIA_VERSION} --strip-components=1 && \
+#     rm /tmp/julia-${JULIA_VERSION}-linux-x86_64.tar.gz
+# RUN ln -fs /opt/julia-*/bin/julia /usr/local/bin/julia
+#
+# # Show Julia where conda libraries are \
+# RUN mkdir /etc/julia && \
+#     echo "push!(Libdl.DL_LOAD_PATH, \"$CONDA_DIR/lib\")" >> /etc/julia/juliarc.jl && \
+#     # Create JULIA_PKGDIR \
+#     mkdir $JULIA_PKGDIR && \
+#     chown $NB_USER $JULIA_PKGDIR && \
+#     fix-permissions $JULIA_PKGDIR
+#
+# # Add Julia packages. Only add HDF5 if this is not a test-only build since
+# # it takes roughly half the entire build time of all of the images on Travis
+# # to add this one package and often causes Travis to timeout.
+# #
+# # Install IJulia as jovyan and then move the kernelspec out
+# # to the system share location. Avoids problems with runtime UID change not
+# # taking effect properly on the .local folder in the jovyan home dir.
+# RUN julia -e 'import Pkg; Pkg.update()' && \
+#     (test $TEST_ONLY_BUILD || julia -e 'import Pkg; Pkg.add("HDF5")') && \
+#     julia -e "using Pkg; pkg\"add IJulia\"; pkg\"precompile\"" && \
+#     # move kernelspec out of home \
+#     mv $HOME/.local/share/jupyter/kernels/julia* $CONDA_DIR/share/jupyter/kernels/ && \
+#     chmod -R go+rx $CONDA_DIR/share/jupyter && \
+#     rm -rf $HOME/.local && \
+#     fix-permissions $JULIA_PKGDIR $CONDA_DIR/share/jupyter
 
-# EXPOSE 8888
-# WORKDIR $HOME/work
+#--------------------------------------
+# Notebook Setup
+#--------------------------------------
 
-# # Configure container startup
-# ENTRYPOINT ["tini", "-g", "--"]
-# CMD ["start-notebook.sh"]
+USER root
 
-# # Add local files as late as possible to avoid cache busting
-# COPY credential-helper.sh /usr/local/bin/
-# COPY start.sh /usr/local/bin/
-# COPY start-notebook.sh /usr/local/bin/
-# COPY start-singleuser.sh /usr/local/bin/
-# COPY jupyter_notebook_config.py /etc/jupyter/
-# COPY genpass.py .
-# RUN fix-permissions /etc/jupyter/
+EXPOSE 8888
+WORKDIR $HOME/work
 
-# WORKDIR $HOME/work
+# Configure container startup
+ENTRYPOINT ["tini", "-g", "--"]
+CMD ["start-notebook.sh"]
 
-# # Switch back to jovyan to avoid accidental container runs as root
-# USER $NB_UID
+# Add local files as late as possible to avoid cache busting
+COPY credential-helper.sh /usr/local/bin/
+COPY start.sh /usr/local/bin/
+COPY start-notebook.sh /usr/local/bin/
+COPY start-singleuser.sh /usr/local/bin/
+COPY jupyter_notebook_config.py /etc/jupyter/
+COPY genpass.py .
+RUN fix-permissions /etc/jupyter/
+
+WORKDIR $HOME/work
+
+# Switch back to jovyan to avoid accidental container runs as root
+USER $NB_UID
