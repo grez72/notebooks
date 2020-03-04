@@ -107,10 +107,13 @@ RUN mkdir /home/$NB_USER/work && \
 #--------------------------------------
 
 # Install conda as NB_USER and check the md5 sum provided on the download site
-ENV MINICONDA_VERSION 4.5.4
-ENV MINICONDA_CHECKSUM a946ea1d0c4a642ddf0c3a26a18bb16d
-# ENV MINICONDA_VERSION 4.7.10
-# ENV MINICONDA_CHECKSUM 1c945f2b3335c7b2b15130b1b2dc5cf4
+# ENV MINICONDA_VERSION 4.5.4
+# ENV MINICONDA_CHECKSUM a946ea1d0c4a642ddf0c3a26a18bb16d
+
+ENV MINICONDA_VERSION=4.7.12.1 \
+    MINICONDA_MD5=81c773ff87af5cfac79ab862942ab6b3 \
+    CONDA_VERSION=4.7.12
+
 RUN cd /tmp && \
   wget --quiet https://repo.continuum.io/miniconda/Miniconda3-${MINICONDA_VERSION}-Linux-x86_64.sh && \
   echo "${MINICONDA_CHECKSUM} *Miniconda3-${MINICONDA_VERSION}-Linux-x86_64.sh" | md5sum -c - && \
@@ -395,123 +398,6 @@ RUN cd /tmp && \
 ENV XDG_CACHE_HOME /home/$NB_USER/.cache/
 RUN MPLBACKEND=Agg python -c "import matplotlib.pyplot" && \
   fix-permissions /home/$NB_USER
-
-# #--------------------------------------
-# # Setup Python 2 Environment
-# #--------------------------------------
-#
-# USER $NB_USER
-#
-# # Install Python 2 packages
-# RUN conda create -p $CONDA_DIR/envs/python2 python=2.7 \
-#     'av' \
-#     'ipython=4.0*' \
-#     'ipywidgets=4.0*' \
-#     'pandas=0.16*' \
-#     'matplotlib=1.4*' \
-#     'scipy=0.15*' \
-#     'seaborn=0.6*' \
-#     'scikit-learn=0.16*' \
-#     'scikit-image=0.11*' \
-#     'sk-video=1.1*' \
-#     'sympy=0.7*' \
-#     'cython=0.22*' \
-#     'patsy=0.3*' \
-#     'statsmodels=0.6*' \
-#     'cloudpickle=0.1*' \
-#     'dill=0.2*' \
-#     'numba=0.20*' \
-#     'bokeh=0.9*' \
-#     'libgfortran=1.0.0' \
-#     'tornado=4.5.3' \
-#     'pyzmq' \
-#     && conda clean -yt
-#
-# USER root
-#
-# RUN /bin/bash -c "source activate python2 && ipython kernel install"
-
-#--------------------------------------
-#   Install Python Libraries
-#--------------------------------------
-
-# RUN /bin/bash -c "source activate python3 \
-#     && conda install -y -c intel \
-#     cython \
-#     freetype \
-#     hdf5 \
-#     ipywidgets \
-#     jinja2 \
-#     libpng \
-#     lmdb \
-#     matplotlib \
-#     mpi4py \
-#     numba \
-#     numexpr \
-#     pandas \
-#     protobuf \
-#     pytables \
-#     requests \
-#     scikit-learn \
-#     scikit-image \
-#     && conda install -y \
-#     future \
-#     graphviz \
-#     hypothesis \
-#     pydot \
-#     python-nvd3 \
-#     sk-video \
-#     && conda clean -tipsy"
-#
-
-# Merged my scipy installation & intel installation
-# RUN /bin/bash -c "source activate python2 \
-#     && conda install -y -c intel \
-#       cython \
-#       freetype \
-#       hdf5 \
-#       ipywidgets \
-#       jinja2 \
-#       libpng \
-#       lmdb \
-#       matplotlib \
-#       mpi4py \
-#       numba \
-#       numexpr \
-#       pandas \
-#       protobuf \
-#       pytables \
-#       requests \
-#       scikit-learn \
-#       scikit-image \
-#     && conda install -y \
-#       'av' \
-#       'bokeh=0.9*' \
-#       'cloudpickle=0.1*' \
-#       'cython=0.22*' \
-#       'dill=0.2*' \
-#       'future' \
-#       'graphviz' \
-#       'hypothesis' \
-#       'ipython=4.0*' \
-#       'ipywidgets=4.0*' \
-#       'libgfortran=1.0.0' \
-#       'matplotlib=1.4*' \
-#       'numba=0.20*' \
-#       'pandas=0.16*' \
-#       'patsy=0.3*' \
-#       'pydot' \
-#       'python-nvd3' \
-#       'pyzmq' \
-#       'seaborn=0.6*' \
-#       'scipy=0.15*' \
-#       'scikit-learn=0.16*' \
-#       'scikit-image=0.11*' \
-#       'sk-video=1.1*' \
-#       'sympy=0.7*' \
-#       'statsmodels=0.6*' \
-#       'tornado=4.5.3' \
-#     && conda clean -tipsy"
 
 #--------------------------------------
 #   Updates needed for opencv
