@@ -613,7 +613,7 @@ RUN /bin/bash -c "source activate base && mamba install --quiet --yes \
   mamba install -y filterpy && \
   mamba clean --all -f -y"
 
-RUN pip install --no-cache pynvvl-cuda92
+# RUN pip install --no-cache pynvvl-cuda92
 # RUN jupyter nbextension enable --py --sys-prefix widgetsnbextension \
 #   && pip install --upgrade pip \
 #   && pip install \
