@@ -614,7 +614,7 @@ RUN /bin/bash -c "source activate base && mamba install --quiet --yes \
   mamba clean --all -f -y"
 
 RUN jupyter nbextension enable --py --sys-prefix widgetsnbextension \
-  && /bin/bash -c "source activate base && pip install pynvvl-cuda92" \
+  && /bin/bash -c "source activate base && pip install -H pynvvl-cuda92" \
   && pip install --upgrade pip \
   && pip install \
   ffmpeg-python \
