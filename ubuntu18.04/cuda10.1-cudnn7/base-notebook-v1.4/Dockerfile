@@ -386,7 +386,7 @@ WORKDIR $HOME
 #   fix-permissions $CONDA_DIR && \
 #   fix-permissions /home/$NB_USER
 
-RUN /bin/bash -c "source activate base && mamba install --quiet --yes \
+RUN /bin/bash -c "source activate base && mamba install --yes \
   av=7.0.0 \
   beautifulsoup4=4.8.* \
   bokeh=0.12* \
