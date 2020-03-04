@@ -436,6 +436,8 @@ RUN cd /tmp && \
   fix-permissions $CONDA_DIR && \
   fix-permissions /home/$NB_USER
 
+RUN /bin/bash -c "source activate base && conda mamba install --quiet --yes matplotlib=3.1.*"
+
 # Import matplotlib the first time to build the font cache.
 ENV XDG_CACHE_HOME /home/$NB_USER/.cache/
 RUN MPLBACKEND=Agg python -c "import matplotlib.pyplot" && \
