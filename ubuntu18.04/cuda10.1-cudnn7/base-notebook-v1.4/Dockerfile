@@ -386,41 +386,71 @@ WORKDIR $HOME
 #   fix-permissions $CONDA_DIR && \
 #   fix-permissions /home/$NB_USER
 
-RUN /bin/bash -c "source activate base && mamba install --quiet --yes \  
-  'av=7.0.0' \
-  'beautifulsoup4=4.8.*' \
-  'bokeh=0.12*' \
-  'cloudpickle=1.3.*' \
-  'conda-forge::blas=*=openblas' \
-  'cython=0.29*' \
-  'dask=2.11.*' \
-  'dill=0.3*' \
-  'hdf5=2.10*' \
-  'h5py=2.7*' \
-  'ipywidgets=7.5*' \
-  'matplotlib=3.1.*' \
-  'numba=0.48.*' \  
-  'numexpr=2.7.*' \
-  'pandas=1.0.*' \
-  'patsy=0.5.*' \
-  'protobuf=3.11.*' \
-  'seaborn=0.10.*' \
-  'scikit-image=0.16.*' \
-  'scikit-learn=0.22.*' \
-  'scipy=1.4.*' \
-  'sk-video=1.1*' \
-  'sqlalchemy=1.3.*' \
-  'statsmodels=0.11.*' \
-  'sympy=1.5.*' \
-  'vincent=0.4.*' \
-  'xlrd'  && \
-  conda clean --all -f -y" && \
-  npm cache clean --force && \
-  rm -rf $CONDA_DIR/share/jupyter/lab/staging && \
-  rm -rf /home/$NB_USER/.cache/yarn && \
-  rm -rf /home/$NB_USER/.node-gyp && \
-  fix-permissions $CONDA_DIR && \
-  fix-permissions /home/$NB_USER
+RUN /bin/bash -c "source activate base && mamba install --quiet --yes \
+   av=7.0.0 \
+   beautifulsoup4=4.8.* \
+   bokeh=0.12* \
+   cloudpickle=1.3.* \
+   conda-forge::blas=*=openblas \
+   cython=0.29* \
+   dask=2.11.* \
+   dill=0.3* \
+   hdf5=2.10* \
+   h5py=2.7* \
+   ipywidgets=7.5* \
+   matplotlib=3.1.* \
+   numba=0.48.* \
+   numexpr=2.7.* \
+   pandas=1.0.* \
+   patsy=0.5.* \
+   protobuf=3.11.* \
+   seaborn=0.10.* \
+   scikit-image=0.16.* \
+   scikit-learn=0.22.* \
+   scipy=1.4.* \
+   sk-video=1.1* \
+   sqlalchemy=1.3.* \
+   statsmodels=0.11.* \
+   sympy=1.5.* \
+   vincent=0.4.* \
+   xlrd && \
+   mamba clean --all -f -y"
+
+# RUN /bin/bash -c "source activate base && mamba install --quiet --yes \  
+#   'av=7.0.0' \
+#   'beautifulsoup4=4.8.*' \
+#   'bokeh=0.12*' \
+#   'cloudpickle=1.3.*' \
+#   'conda-forge::blas=*=openblas' \
+#   'cython=0.29*' \
+#   'dask=2.11.*' \
+#   'dill=0.3*' \
+#   'hdf5=2.10*' \
+#   'h5py=2.7*' \
+#   'ipywidgets=7.5*' \
+#   'matplotlib=3.1.*' \
+#   'numba=0.48.*' \  
+#   'numexpr=2.7.*' \
+#   'pandas=1.0.*' \
+#   'patsy=0.5.*' \
+#   'protobuf=3.11.*' \
+#   'seaborn=0.10.*' \
+#   'scikit-image=0.16.*' \
+#   'scikit-learn=0.22.*' \
+#   'scipy=1.4.*' \
+#   'sk-video=1.1*' \
+#   'sqlalchemy=1.3.*' \
+#   'statsmodels=0.11.*' \
+#   'sympy=1.5.*' \
+#   'vincent=0.4.*' \
+#   'xlrd'  && \
+#   conda clean --all -f -y" && \
+#   npm cache clean --force && \
+#   rm -rf $CONDA_DIR/share/jupyter/lab/staging && \
+#   rm -rf /home/$NB_USER/.cache/yarn && \
+#   rm -rf /home/$NB_USER/.node-gyp && \
+#   fix-permissions $CONDA_DIR && \
+#   fix-permissions /home/$NB_USER
 
 # jupyter nbextension enable --py widgetsnbextension --sys-prefix && \
 # jupyter labextension install @jupyter-widgets/jupyterlab-manager@^0.38.1 && \
