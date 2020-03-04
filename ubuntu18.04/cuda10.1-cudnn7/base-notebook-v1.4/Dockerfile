@@ -53,14 +53,17 @@ USER root
 ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get update && apt-get -yq dist-upgrade \
   && apt-get install -yq --no-install-recommends \
-  wget \
+  build-essential \
   bzip2 \
   ca-certificates \
   sudo \
+  libcap-dev \
   locales \
   fonts-liberation \
-  tmux \
+  openssh-client \
   rsync \
+  tmux \
+  wget \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/*
 
@@ -542,10 +545,10 @@ RUN git clone https://github.com/opencv/opencv_contrib.git ~/opencv_contrib \
 RUN rm /opt/conda/lib/libfontconfig.so /opt/conda/lib/libfontconfig.so.1 /opt/conda/lib/libfontconfig.so.1.12.0
 
 #--------------------------------------
-#   INSTALL pynvvl-cuda92
+#   INSTALL misc dependencies
 #--------------------------------------
 
-RUN pip install pynvvl-cuda92
+RUN pip install pynvvl-cuda92 wget pathlib addict natsort nvidia-ml-py3
 
 #--------------------------------------
 #   LIBJPEGTURBO
@@ -638,30 +641,32 @@ RUN /bin/bash -c "source activate base && mamba install --quiet --yes \
   && cd $HOME/cython-munkres-wrapper \
   && python setup.py install
 
-# #--------------------------------------
-# # Install Additional Packages
-# #--------------------------------------
+#--------------------------------------
+# Install Additional Packages
+#--------------------------------------
 
-# USER root
-# RUN apt-get update && apt-get install -y build-essential libcap-dev openssh-client
+USER $NB_UID
 
-# USER $NB_UID
+# plotly + dependencies
+RUN easy_install python-prctl \
+  && pip install plotly msgpack msgpack-numpy lmdb \
+  && pip install --upgrade git+https://github.com/tensorpack/tensorpack.git \
+  && /bin/bash -c "source activate base && mamba install --quiet --yes bioconda cufflinks"
 
-# # plotly + dependencies
-# RUN easy_install python-prctl
-# RUN pip install plotly msgpack msgpack-numpy lmdb \
-#   && pip install --upgrade git+https://github.com/tensorpack/tensorpack.git \
-#   && conda install -c bioconda cufflinks
+RUN /bin/bash -c "source activate base && mamba install --quiet --yes cookiecutter \
+    && mamba install --quiet --yes -c menpo pathlib \
+    && mamba install --quiet --yes cookiecutter \
+    && mamba clean --all -f -y"
 
-# RUN pip install wget pathlib addict nvidia-ml-py3 \
-#   && conda install -y cookiecutter \
-#   && conda install -c menpo pathlib \
-#   && conda install -y dask \
-#   && conda clean -tipsy
+#--------------------------------------
+# Install Optimized Fast PIL
+#--------------------------------------
 
-# #--------------------------------------
-# # Install Optimized Fast PIL
-# #--------------------------------------
+RUN /bin/bash -c "source activate base && mamba uninstall --force jpeg libtiff -y \
+  && pip uninstall -y pillow \
+  && mamba install -y -c conda-forge libjpeg-turbo \
+  && mamba clean --all -f -y \
+  && CC='cc -mavx2' pip install --no-cache-dir -U --force-reinstall pillow-simd"
 
 # RUN conda uninstall --force jpeg libtiff -y \
 #   && pip uninstall -y pillow \
