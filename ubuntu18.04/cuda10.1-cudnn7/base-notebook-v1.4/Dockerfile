@@ -645,14 +645,13 @@ RUN /bin/bash -c "source activate base && mamba install --quiet --yes \
 # Install Additional Packages
 #--------------------------------------
 
-USER $NB_UID
-
 # plotly + dependencies
 RUN easy_install python-prctl \
   && pip install plotly msgpack msgpack-numpy lmdb \
   && pip install --upgrade git+https://github.com/tensorpack/tensorpack.git \
   && /bin/bash -c "source activate base && mamba install --quiet --yes bioconda cufflinks"
 
+USER $NB_UID
 RUN /bin/bash -c "source activate base && mamba install --quiet --yes cookiecutter \
     && mamba install --quiet --yes -c menpo pathlib \
     && mamba install --quiet --yes cookiecutter \
