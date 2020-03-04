@@ -140,7 +140,7 @@ RUN conda install --quiet --yes 'tini=0.18.0' && \
 
 # https://github.com/QuantStack/mamba
 # install mamba for faster conda installs ("mamba install ...")
-RUN conda install --quiet --yes conda install pybind11 libsolv pip && \
+RUN conda install --quiet --yes pybind11 libsolv pip && \
   conda install --quiet --yes mamba -c conda-forge && \
   conda clean -tipsy
 
