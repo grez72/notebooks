@@ -679,10 +679,10 @@ RUN git clone https://github.com/opencv/opencv_contrib.git ~/opencv_contrib \
   && mkdir build \
   && cd build/ \
   && cmake -D CMAKE_BUILD_TYPE=RELEASE \
-  -D PYTHON3_EXECUTABLE:FILEPATH=/opt/conda/bin/python3.6 \
-  -D PYTHON3_INCLUDE_DIR:PATH=/opt/conda/include/python3.6m \
-  -D PYTHON3_NUMPY_INCLUDE_DIRS:PATH=/opt/conda/lib/python3.6/site-packages/numpy/core/include \
-  -D PYTHON3_PACKAGES_PATH:PATH=/opt/conda/lib/python3.6/site-packages \
+  -D PYTHON3_EXECUTABLE:FILEPATH=/opt/conda/bin/python3.7 \
+  -D PYTHON3_INCLUDE_DIR:PATH=/opt/conda/include/python3.7m \
+  -D PYTHON3_NUMPY_INCLUDE_DIRS:PATH=/opt/conda/lib/python3.7/site-packages/numpy/core/include \
+  -D PYTHON3_PACKAGES_PATH:PATH=/opt/conda/lib/python3.7/site-packages \
   -D OPENCV_EXTRA_MODULES_PATH=~/opencv_contrib/modules \
   -D CMAKE_INSTALL_PREFIX=/usr/local \
   -D BUILD_opencv_dnn=ON \
