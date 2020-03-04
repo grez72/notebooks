@@ -393,6 +393,7 @@ RUN /bin/bash -c "source activate base && mamba install --quiet --yes \
   cloudpickle=1.3.* \
   conda-forge::blas=*=openblas \
   cython=0.29* \
+  dask=2.11.* \
   matplotlib=3.1.* && \
   conda clean --all -f -y"
 
