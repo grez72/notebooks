@@ -124,7 +124,7 @@ RUN cd /tmp && \
   $CONDA_DIR/bin/conda config --system --set show_channel_urls true && \
   $CONDA_DIR/bin/conda install --quiet --yes conda="${MINICONDA_VERSION%.*}.*" && \
   conda install -y -c conda-forge libiconv && \
-  conda clean -tipsy && \
+  conda build purge-all && \
   rm -rf /home/$NB_USER/.cache/yarn && \
   fix-permissions $CONDA_DIR && \
   fix-permissions /home/$NB_USER
@@ -134,9 +134,14 @@ RUN cd /tmp && \
 # Install Tini
 RUN conda install --quiet --yes 'tini=0.18.0' && \
   conda list tini | grep tini | tr -s ' ' | cut -d ' ' -f 1,2 >> $CONDA_DIR/conda-meta/pinned && \
-  conda clean -tipsy && \
+  conda build purge-all && \
   fix-permissions $CONDA_DIR && \
   fix-permissions /home/$NB_USER
+
+# install mamba for faster conda installs ("mamba install ...")
+RUN conda install --quiet --yes conda install pybind11 libsolv pip && \
+  conda install --quiet --yes mamba -c conda-forge && \
+  conda build purge-all
 
 # #--------------------------------------
 # #   Install Jupyter Notebook, Lab, and Hub
