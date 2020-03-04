@@ -517,6 +517,8 @@ RUN git clone https://github.com/opencv/opencv_contrib.git ~/opencv_contrib \
   -D PYTHON3_PACKAGES_PATH:PATH=/opt/conda/lib/python3.6/site-packages \
   -D OPENCV_EXTRA_MODULES_PATH=~/opencv_contrib/modules \
   -D CMAKE_INSTALL_PREFIX=/usr/local \
+  -D CUDA_ARCH_BIN=5.3,6.0,6.1,7.0,7.5 \
+  -D CUDA_ARCH_PTX=7.5 \
   -D BUILD_opencv_dnn=ON \
   -D BUILD_opencv_dnn_modern=ON \
   -D BUILD_LIBPROTOBUF_FROM_SOURCES=ON \
