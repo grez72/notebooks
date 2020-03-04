@@ -398,8 +398,29 @@ RUN /bin/bash -c "source activate base && mamba install --quiet --yes \
   h5py=2.10.* \
   ipywidgets=7.5* \
   matplotlib=3.1.* && \
+  numba=0.48.* \
+  numexpr=2.7.* \
+  pandas=1.0.* \
+  patsy=0.5.* \
+  protobuf=3.11.* \
+  seaborn=0.10.* \
+  scikit-image=0.16.* \
+  scikit-learn=0.22.* \
+  scipy=1.4.* \
+  sk-video=1.1* \
+  sqlalchemy=1.3.* \
+  statsmodels=0.11.* \
+  sympy=1.5.* \
+  vincent=0.4.* \
+  xlrd \
   conda clean --all -f -y && \
-  mamba install --quiet --yes dask=2.11.*"
+  mamba install --quiet --yes dask=2.11.*" && \
+  npm cache clean --force && \
+  rm -rf $CONDA_DIR/share/jupyter/lab/staging && \
+  rm -rf /home/$NB_USER/.cache/yarn && \
+  rm -rf /home/$NB_USER/.node-gyp && \
+  fix-permissions $CONDA_DIR && \
+  fix-permissions /home/$NB_USER
 
 RUN MPLBACKEND=Agg python -c "import matplotlib.pyplot" && \
   fix-permissions /home/$NB_USER
