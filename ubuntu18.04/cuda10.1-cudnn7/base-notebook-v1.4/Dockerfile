@@ -514,10 +514,10 @@ RUN git clone https://github.com/opencv/opencv_contrib.git ~/opencv_contrib \
   && mkdir build \
   && cd build/ \
   && cmake -D CMAKE_BUILD_TYPE=RELEASE \
-  -D PYTHON3_EXECUTABLE:FILEPATH=/opt/conda/bin/python3.7 \
-  -D PYTHON3_INCLUDE_DIR:PATH=/opt/conda/include/python3.7m \
-  -D PYTHON3_NUMPY_INCLUDE_DIRS:PATH=/opt/conda/lib/python3.7/site-packages/numpy/core/include \
-  -D PYTHON3_PACKAGES_PATH:PATH=/opt/conda/lib/python3.7/site-packages \
+  -D PYTHON3_EXECUTABLE:FILEPATH=/opt/conda/bin/python3.6 \
+  -D PYTHON3_INCLUDE_DIR:PATH=/opt/conda/include/python3.6m \
+  -D PYTHON3_NUMPY_INCLUDE_DIRS:PATH=/opt/conda/lib/python3.6/site-packages/numpy/core/include \
+  -D PYTHON3_PACKAGES_PATH:PATH=/opt/conda/lib/python3.6/site-packages \
   -D OPENCV_EXTRA_MODULES_PATH=~/opencv_contrib/modules \
   -D CMAKE_INSTALL_PREFIX=/usr/local \
   -D CUDA_ARCH_BIN=5.3,6.0,6.1,7.0,7.5 \
@@ -548,7 +548,12 @@ RUN rm /opt/conda/lib/libfontconfig.so /opt/conda/lib/libfontconfig.so.1 /opt/co
 # #   INSTALL misc dependencies
 # #--------------------------------------
 
-# RUN pip install pynvvl-cuda92 wget pathlib addict natsort nvidia-ml-py3 
+# RUN /bin/bash -c "source activate base \
+#   && mamba install --quiet --yes -c rapidsai -c nvidia -c conda-forge -c defaults cuxfilter=0.12 \
+#   && mamba install --quiet --yes rapids=0.12" \
+#   && pip install pynvvl-cuda92 wget pathlib addict natsort nvidia-ml-py3 
+
+## RUN pip install pynvvl-cuda92 wget pathlib addict natsort nvidia-ml-py3 
 
 # #--------------------------------------
 # #   LIBJPEGTURBO
