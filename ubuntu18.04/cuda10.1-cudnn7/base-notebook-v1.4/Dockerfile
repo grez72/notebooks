@@ -621,6 +621,7 @@ RUN jupyter nbextension enable --py --sys-prefix widgetsnbextension \
   imutils \
   imageio \
   https://github.com/soft-matter/pims/archive/master.zip \
+  cupy \
   pynvvl-cuda92 \
   sk-video \
   tqdm \
