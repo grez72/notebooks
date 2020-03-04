@@ -350,32 +350,69 @@ WORKDIR $HOME
 # Remove pyqt and qt pulled in for matplotlib since we're only ever going to
 # use notebook-friendly backends in these images
 # "conda=${MINICONDA_VERSION}" \
-RUN conda install --quiet --yes \  
-  'av' \
-  'conda-forge::blas=*=openblas' \
-  'ipywidgets=7.2*' \
-  'pandas=0.23*' \
-  'numexpr=2.6*' \
-  'matplotlib=2.2*' \
-  'scipy=1.1*' \
-  'seaborn=0.9*' \
-  'scikit-learn=0.19*' \
-  'scikit-image=0.14*' \
-  'sk-video=1.1*' \
-  'sympy=1.1*' \
-  'cython=0.28*' \
-  'patsy=0.5*' \
-  'statsmodels=0.9*' \
-  'cloudpickle=0.5*' \
-  'dill=0.2*' \
-  'numba=0.38*' \
+# RUN conda install --quiet --yes \  
+#   'av' \
+#   'conda-forge::blas=*=openblas' \
+#   'ipywidgets=7.2*' \
+#   'pandas=0.23*' \
+#   'numexpr=2.6*' \
+#   'matplotlib=2.2*' \
+#   'scipy=1.1*' \
+#   'seaborn=0.9*' \
+#   'scikit-learn=0.19*' \
+#   'scikit-image=0.14*' \
+#   'sk-video=1.1*' \
+#   'sympy=1.1*' \
+#   'cython=0.28*' \
+#   'patsy=0.5*' \
+#   'statsmodels=0.9*' \
+#   'cloudpickle=0.5*' \
+#   'dill=0.2*' \
+#   'numba=0.38*' \
+#   'bokeh=0.12*' \
+#   'sqlalchemy=1.2*' \
+#   'hdf5=1.10*' \
+#   'h5py=2.7*' \
+#   'vincent=0.4.*' \
+#   'beautifulsoup4=4.6.*' \
+#   'protobuf=3.*' \
+#   'xlrd'  && \
+#   conda remove --quiet --yes --force qt pyqt && \
+#   conda clean -tipsy && \
+#   npm cache clean --force && \
+#   rm -rf $CONDA_DIR/share/jupyter/lab/staging && \
+#   rm -rf /home/$NB_USER/.cache/yarn && \
+#   rm -rf /home/$NB_USER/.node-gyp && \
+#   fix-permissions $CONDA_DIR && \
+#   fix-permissions /home/$NB_USER
+
+RUN mamba install --quiet --yes \  
+  'av=7.0.0' \
+  'beautifulsoup4=4.8.*' \
   'bokeh=0.12*' \
-  'sqlalchemy=1.2*' \
-  'hdf5=1.10*' \
+  'cloudpickle=1.3.*' \
+  'conda-forge::blas=*=openblas' \
+  'cython=0.29*' \
+  'dask=2.11.*' \
+  'dill=0.3*' \
+  'hdf5=2.10*' \
   'h5py=2.7*' \
+  'ipywidgets=7.5*' \
+  'matplotlib-base=3.1.*' \
+  'numba=0.48.*' \  
+  'numexpr=2.7.*' \
+  'pandas=1.0.*' \
+  'patsy=0.5.*' \
+  'protobuf=3.11.*' \
+  'seaborn=0.10.*' \
+  'scikit-image=0.16.*' \
+  'scikit-learn=0.22.*' \
+  'scipy=1.4.*' \
+  'sk-video=1.1*' \
+  'sqlalchemy=1.3.*' \
+  'statsmodels=0.11.*' \
+  'sympy=1.5.*' \
   'vincent=0.4.*' \
-  'beautifulsoup4=4.6.*' \
-  'protobuf=3.*' \
   'xlrd'  && \
   conda remove --quiet --yes --force qt pyqt && \
   conda clean -tipsy && \
