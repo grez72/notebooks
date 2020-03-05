@@ -523,9 +523,9 @@ RUN cp /usr/lib/x86_64-linux-gnu/libfontconfig.so.1.10.1 /opt/conda/lib/libfontc
 #   INSTALL NVIDIA RAPIDS
 #--------------------------------------
 
-RUN /bin/bash -c "source activate base \
-  && mamba install --quiet --yes -c rapidsai -c nvidia -c conda-forge -c defaults cuxfilter=0.12 python=3.6 cudatoolkit=10.1 glib=$GLIB_VERSION \
-  && mamba install --quiet --yes -c rapidsai -c nvidia -c conda-forge -c defaults rapids=0.12 python=3.6 cudatoolkit=10.1 glib=$GLIB_VERSION"
+# RUN /bin/bash -c "source activate base \
+#   && mamba install --quiet --yes -c rapidsai -c nvidia -c conda-forge -c defaults cuxfilter=0.12 python=3.6 cudatoolkit=10.1 glib=$GLIB_VERSION \
+#   && mamba install --quiet --yes -c rapidsai -c nvidia -c conda-forge -c defaults rapids=0.12 python=3.6 cudatoolkit=10.1 glib=$GLIB_VERSION"
 
 # #--------------------------------------
 # #   INSTALL PIP PACKAGES
