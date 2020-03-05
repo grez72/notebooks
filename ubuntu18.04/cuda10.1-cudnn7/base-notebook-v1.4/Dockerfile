@@ -327,104 +327,104 @@ RUN git clone https://github.com/FFmpeg/FFmpeg /root/ffmpeg \
 # ffmpeg -hwaccel_device 0 -hwaccel cuvid -i youtube_epVDutrGlDU.mp4 -qmin 1 -qmax 1 -qscale:v 1 test/$filename%04d.jpg
 # ffmpeg -hwaccel_device 0 -hwaccel nvdec -i youtube_epVDutrGlDU.mp4 -qmin 1 -qmax 1 -qscale:v 1 test/$filename%04d.jpg
 
-# #--------------------------------------
-# #   Add Conda Environments with Intel Python
-# #--------------------------------------
+#--------------------------------------
+#   Add Conda Environments with Intel Python
+#--------------------------------------
 
-# # RUN conda update conda \
-# #     && conda config --add channels intel \
-# #     && conda create -n python3 intelpython3_core python=3 \
-# #     && conda create -n python2 intelpython2_core python=2 \
-# #     && /bin/bash -c "source activate python3 \
-# #     && conda install pip ipykernel \
-# #     && python -m ipykernel install --user --name python3 --display-name 'Python3'" \
-# #     && /bin/bash -c "source activate python2 \
-# #     && conda install pip ipykernel \
-# #     && python -m ipykernel install --user --name python2 --display-name 'Python2'"
+# RUN conda update conda \
+#     && conda config --add channels intel \
+#     && conda create -n python3 intelpython3_core python=3 \
+#     && conda create -n python2 intelpython2_core python=2 \
+#     && /bin/bash -c "source activate python3 \
+#     && conda install pip ipykernel \
+#     && python -m ipykernel install --user --name python3 --display-name 'Python3'" \
+#     && /bin/bash -c "source activate python2 \
+#     && conda install pip ipykernel \
+#     && python -m ipykernel install --user --name python2 --display-name 'Python2'"
 
-# #--------------------------------------
-# # Setup Python 3 Environment
-# #--------------------------------------
+#--------------------------------------
+# Setup Python 3 Environment
+#--------------------------------------
 
-# USER $NB_UID
-# WORKDIR $HOME
+USER $NB_UID
+WORKDIR $HOME
 
-# # Install Python 3 packages
-# # Remove pyqt and qt pulled in for matplotlib since we're only ever going to
-# # use notebook-friendly backends in these images
-# # "conda=${MINICONDA_VERSION}" \
-# # RUN conda install --quiet --yes \  
-# #   'av' \
-# #   'conda-forge::blas=*=openblas' \
-# #   'ipywidgets=7.2*' \
-# #   'pandas=0.23*' \
-# #   'numexpr=2.6*' \
-# #   'matplotlib=2.2*' \
-# #   'scipy=1.1*' \
-# #   'seaborn=0.9*' \
-# #   'scikit-learn=0.19*' \
-# #   'scikit-image=0.14*' \
-# #   'sk-video=1.1*' \
-# #   'sympy=1.1*' \
-# #   'cython=0.28*' \
-# #   'patsy=0.5*' \
-# #   'statsmodels=0.9*' \
-# #   'cloudpickle=0.5*' \
-# #   'dill=0.2*' \
-# #   'numba=0.38*' \
-# #   'bokeh=0.12*' \
-# #   'sqlalchemy=1.2*' \
-# #   'hdf5=1.10*' \
-# #   'h5py=2.7*' \
-# #   'vincent=0.4.*' \
-# #   'beautifulsoup4=4.6.*' \
-# #   'protobuf=3.*' \
-# #   'xlrd'  && \
-# #   conda remove --quiet --yes --force qt pyqt && \
-# #   conda clean -tipsy && \
-# #   npm cache clean --force && \
-# #   rm -rf $CONDA_DIR/share/jupyter/lab/staging && \
-# #   rm -rf /home/$NB_USER/.cache/yarn && \
-# #   rm -rf /home/$NB_USER/.node-gyp && \
-# #   fix-permissions $CONDA_DIR && \
-# #   fix-permissions /home/$NB_USER
-
-# RUN /bin/bash -c "source activate base && mamba install --quiet --yes \
-#   av=7.0.0 \
-#   beautifulsoup4=4.8.* \
-#   bokeh=0.12* \
-#   cloudpickle=1.3.* \
-#   conda-forge::blas=*=openblas \
-#   cython=0.29* \
-#   dill=0.3* \
-#   hdf5=1.10.* \
-#   h5py=2.10.* \
-#   ipywidgets=7.5* \
-#   matplotlib=3.1.* \
-#   numba=0.48.* \
-#   numexpr=2.7.* \
-#   pandas=1.0.* \
-#   patsy=0.5.* \
-#   protobuf=3.11.* \
-#   seaborn=0.10.* \
-#   scikit-image=0.16.* \
-#   scikit-learn=0.22.* \
-#   scipy=1.4.* \
-#   sk-video=1.1* \
-#   sqlalchemy=1.3.* \
-#   statsmodels=0.11.* \
-#   sympy=1.5.* \
-#   vincent=0.4.* \
-#   xlrd && \
-#   mamba clean --all -f -y && \
-#   mamba install --quiet --yes dask=2.11.* && \
-#   mamba clean --all -f -y" && \
+# Install Python 3 packages
+# Remove pyqt and qt pulled in for matplotlib since we're only ever going to
+# use notebook-friendly backends in these images
+# "conda=${MINICONDA_VERSION}" \
+# RUN conda install --quiet --yes \  
+#   'av' \
+#   'conda-forge::blas=*=openblas' \
+#   'ipywidgets=7.2*' \
+#   'pandas=0.23*' \
+#   'numexpr=2.6*' \
+#   'matplotlib=2.2*' \
+#   'scipy=1.1*' \
+#   'seaborn=0.9*' \
+#   'scikit-learn=0.19*' \
+#   'scikit-image=0.14*' \
+#   'sk-video=1.1*' \
+#   'sympy=1.1*' \
+#   'cython=0.28*' \
+#   'patsy=0.5*' \
+#   'statsmodels=0.9*' \
+#   'cloudpickle=0.5*' \
+#   'dill=0.2*' \
+#   'numba=0.38*' \
+#   'bokeh=0.12*' \
+#   'sqlalchemy=1.2*' \
+#   'hdf5=1.10*' \
+#   'h5py=2.7*' \
+#   'vincent=0.4.*' \
+#   'beautifulsoup4=4.6.*' \
+#   'protobuf=3.*' \
+#   'xlrd'  && \
+#   conda remove --quiet --yes --force qt pyqt && \
+#   conda clean -tipsy && \
 #   npm cache clean --force && \
 #   rm -rf $CONDA_DIR/share/jupyter/lab/staging && \
 #   rm -rf /home/$NB_USER/.cache/yarn && \
 #   rm -rf /home/$NB_USER/.node-gyp && \
 #   fix-permissions $CONDA_DIR && \
 #   fix-permissions /home/$NB_USER
+
+RUN /bin/bash -c "source activate base && mamba install --quiet --yes \
+  av=7.0.0 \
+  beautifulsoup4=4.8.* \
+  bokeh=0.12* \
+  cloudpickle=1.3.* \
+  conda-forge::blas=*=openblas \
+  cython=0.29* \
+  dill=0.3* \
+  hdf5=1.10.* \
+  h5py=2.10.* \
+  ipywidgets=7.5* \
+  matplotlib=3.1.* \
+  numba=0.48.* \
+  numexpr=2.7.* \
+  pandas=1.0.* \
+  patsy=0.5.* \
+  protobuf=3.11.* \
+  seaborn=0.10.* \
+  scikit-image=0.16.* \
+  scikit-learn=0.22.* \
+  scipy=1.4.* \
+  sk-video=1.1* \
+  sqlalchemy=1.3.* \
+  statsmodels=0.11.* \
+  sympy=1.5.* \
+  vincent=0.4.* \
+  xlrd && \
+  mamba clean --all -f -y && \
+  mamba install --quiet --yes dask=2.11.* && \
+  mamba clean --all -f -y" && \
+  npm cache clean --force && \
+  rm -rf $CONDA_DIR/share/jupyter/lab/staging && \
+  rm -rf /home/$NB_USER/.cache/yarn && \
+  rm -rf /home/$NB_USER/.node-gyp && \
+  fix-permissions $CONDA_DIR && \
+  fix-permissions /home/$NB_USER
 
 # # jupyter nbextension enable --py widgetsnbextension --sys-prefix && \
 # # jupyter labextension install @jupyter-widgets/jupyterlab-manager@^0.38.1 && \
