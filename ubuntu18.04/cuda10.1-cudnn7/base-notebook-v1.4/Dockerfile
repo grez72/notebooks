@@ -201,131 +201,131 @@ RUN apt-get update && apt-get install -yq --no-install-recommends \
   && apt-get clean && \
   rm -rf /var/lib/apt/lists/*
 
-# #--------------------------------------
-# # FFMEG with support for: with libx264 (mp4), Nvidia NVENC/NVDEC,
-# #   and cuda hardware acceleration:
-# #   https://trac.ffmpeg.org/wiki/HWAccelIntro
-# #   https://trac.ffmpeg.org/wiki/HWAccelIntro#NVENC
-# #--------------------------------------
+#--------------------------------------
+# FFMEG with support for: with libx264 (mp4), Nvidia NVENC/NVDEC,
+#   and cuda hardware acceleration:
+#   https://trac.ffmpeg.org/wiki/HWAccelIntro
+#   https://trac.ffmpeg.org/wiki/HWAccelIntro#NVENC
+#--------------------------------------
 
-# USER root
+USER root
 
-# RUN apt-get update -qq && apt-get -y install \
-#   autoconf \
-#   automake \
-#   build-essential \
-#   cmake \
-#   git-core \
-#   libass-dev \
-#   libfreetype6-dev \
-#   libsdl2-dev \
-#   libtool \
-#   libva-dev \
-#   libvdpau-dev \
-#   libvorbis-dev \
-#   libxcb1-dev \
-#   libxcb-shm0-dev \
-#   libxcb-xfixes0-dev \
-#   pkg-config \
-#   texinfo \
-#   wget \
-#   zlib1g-dev \
-#   yasm \
-#   nasm \
-#   libx264-dev \
-#   libx265-dev libnuma-dev \
-#   libvpx-dev \
-#   libfdk-aac-dev \
-#   libmp3lame-dev \
-#   libopus-dev \
-#   && rm -rf /var/lib/apt/lists/*
+RUN apt-get update -qq && apt-get -y install \
+  autoconf \
+  automake \
+  build-essential \
+  cmake \
+  git-core \
+  libass-dev \
+  libfreetype6-dev \
+  libsdl2-dev \
+  libtool \
+  libva-dev \
+  libvdpau-dev \
+  libvorbis-dev \
+  libxcb1-dev \
+  libxcb-shm0-dev \
+  libxcb-xfixes0-dev \
+  pkg-config \
+  texinfo \
+  wget \
+  zlib1g-dev \
+  yasm \
+  nasm \
+  libx264-dev \
+  libx265-dev libnuma-dev \
+  libvpx-dev \
+  libfdk-aac-dev \
+  libmp3lame-dev \
+  libopus-dev \
+  && rm -rf /var/lib/apt/lists/*
 
-# ENV NVIDIA_VISIBLE_DEVICES=all
-# ENV NVIDIA_DRIVER_CAPABILITIES=compute,utility,video
+ENV NVIDIA_VISIBLE_DEVICES=all
+ENV NVIDIA_DRIVER_CAPABILITIES=compute,utility,video
 
-# # double check to make sure dependencies installed
-# RUN apt-get -y update && apt-get install -y wget nano git build-essential yasm pkg-config
+# double check to make sure dependencies installed
+RUN apt-get -y update && apt-get install -y wget nano git build-essential yasm pkg-config
 
-# # install nvidia headers for nvidia codecs
-# RUN git clone https://github.com/FFmpeg/nv-codec-headers /root/nv-codec-headers && \
-#   cd /root/nv-codec-headers &&\
-#   make -j$(nproc) && \
-#   make install -j$(nproc) && \
-#   cd /root && rm -rf nv-codec-headers
+# install nvidia headers for nvidia codecs
+RUN git clone https://github.com/FFmpeg/nv-codec-headers /root/nv-codec-headers && \
+  cd /root/nv-codec-headers &&\
+  make -j$(nproc) && \
+  make install -j$(nproc) && \
+  cd /root && rm -rf nv-codec-headers
 
-# # Compile and install ffmpeg from source
-# # This version works, but my original version had more features enabled,
-# # so down below I've combined them.
-# # RUN git clone https://github.com/FFmpeg/FFmpeg /root/ffmpeg && \
-# #   cd /root/ffmpeg && ./configure \
-# #   --enable-nonfree \
-# #   --disable-shared \
-# #   --enable-nvenc \
-# #   --enable-cuda \
-# #   --enable-cuvid \
-# #   --enable-libnpp \
-# #   --extra-cflags=-I/usr/local/cuda/include \
-# #   --extra-cflags=-I/usr/local/include \
-# #   --extra-ldflags=-L/usr/local/cuda/lib64 && \
-# #   make -j$(nproc) && \
-# #   make install -j$(nproc) && \
-# #   cd /root && rm -rf ffmpeg
-
-# RUN git clone https://github.com/FFmpeg/FFmpeg /root/ffmpeg \
-#   && cd /root/ffmpeg \
-#   && PATH="~/bin:$PATH" PKG_CONFIG_PATH="/root/ffmpeg/lib/pkgconfig" ./configure \
-#   --prefix="/root/ffmpeg" \
-#   --pkg-config-flags="--static" \
-#   --extra-cflags="-I/root/ffmpeg/include" \
-#   --extra-ldflags="-L/root/ffmpeg/lib" \
-#   --extra-libs="-lpthread -lm" \
-#   --bindir="/bin" \
-#   --disable-shared \
-#   --enable-avresample \
-#   --enable-gpl \
-#   --enable-libass \
-#   --enable-libfdk-aac \
-#   --enable-libfreetype \
-#   --enable-libmp3lame \
-#   --enable-libopus \
-#   --enable-libvorbis \
-#   --enable-libvpx \
-#   --enable-libx264 \
-#   --enable-libx265 \
+# Compile and install ffmpeg from source
+# This version works, but my original version had more features enabled,
+# so down below I've combined them.
+# RUN git clone https://github.com/FFmpeg/FFmpeg /root/ffmpeg && \
+#   cd /root/ffmpeg && ./configure \
 #   --enable-nonfree \
+#   --disable-shared \
+#   --enable-nvenc \
 #   --enable-cuda \
 #   --enable-cuvid \
-#   --enable-nvenc \
-#   --enable-nonfree \
 #   --enable-libnpp \
 #   --extra-cflags=-I/usr/local/cuda/include \
 #   --extra-cflags=-I/usr/local/include \
-#   --extra-ldflags=-L/usr/local/cuda/lib64 \
-#   --extra-libs="-lpthread -lm" \
-#   && make -j$(nproc) \
-#   && make install -j$(nproc) \
-#   && cd /root && rm -rf ffmpeg
+#   --extra-ldflags=-L/usr/local/cuda/lib64 && \
+#   make -j$(nproc) && \
+#   make install -j$(nproc) && \
+#   cd /root && rm -rf ffmpeg
 
-# # Check for nvidia codecs
-# # ffmpeg -encoders 2>/dev/null | grep nvenc
+RUN git clone https://github.com/FFmpeg/FFmpeg /root/ffmpeg \
+  && cd /root/ffmpeg \
+  && PATH="~/bin:$PATH" PKG_CONFIG_PATH="/root/ffmpeg/lib/pkgconfig" ./configure \
+  --prefix="/root/ffmpeg" \
+  --pkg-config-flags="--static" \
+  --extra-cflags="-I/root/ffmpeg/include" \
+  --extra-ldflags="-L/root/ffmpeg/lib" \
+  --extra-libs="-lpthread -lm" \
+  --bindir="/bin" \
+  --disable-shared \
+  --enable-avresample \
+  --enable-gpl \
+  --enable-libass \
+  --enable-libfdk-aac \
+  --enable-libfreetype \
+  --enable-libmp3lame \
+  --enable-libopus \
+  --enable-libvorbis \
+  --enable-libvpx \
+  --enable-libx264 \
+  --enable-libx265 \
+  --enable-nonfree \
+  --enable-cuda \
+  --enable-cuvid \
+  --enable-nvenc \
+  --enable-nonfree \
+  --enable-libnpp \
+  --extra-cflags=-I/usr/local/cuda/include \
+  --extra-cflags=-I/usr/local/include \
+  --extra-ldflags=-L/usr/local/cuda/lib64 \
+  --extra-libs="-lpthread -lm" \
+  && make -j$(nproc) \
+  && make install -j$(nproc) \
+  && cd /root && rm -rf ffmpeg
 
-# # Test hardware acceleration
-# # cd /root
-# # wget https://www.dropbox.com/s/oyhp2pv4zaae29f/youtube_epVDutrGlDU.mp4
-# # mkdir test
-# # ffprobe -v error -select_streams v:0 -show_entries stream=codec_name -of default=nw=1 youtube_epVDutrGlDU.mp4
-# # ffmpeg -hwaccel_device 0 -hwaccel nvdec -i youtube_epVDutrGlDU.mp4 -qmin 1 -qmax 1 -qscale:v 1 test/$filename%04d.jpg
-# # ffmpeg -hwaccel_device 0 -hwaccel nvdec -c:v h264_cuvid -i youtube_epVDutrGlDU.mp4 output.mkv
+# Check for nvidia codecs
+# ffmpeg -encoders 2>/dev/null | grep nvenc
 
-# # ffmpeg -hwaccel_device 0 -hwaccel cuvid -c:v h264_cuvid -i input -vf scale_npp=-1:720 -c:v h264_nvenc -preset slow output.mkv
-# # ffmpeg -y -hwaccel cuvid -c:v h264_cuvid -vsync 0 -i <input.mp4> -vf scale_npp=1920:1072 -vcodec h264_nvenc <output0.264> -vf scale_npp=1280:720 -vcodec h264_nvenc <output1.264>
-# # ffmpeg -y -hwaccel cuvid -c:v h264_cuvid -vsync 0 -i VP13_z4LO6M.mp4 -vf scale_npp=1920:1072 -vcodec h264_nvenc VP13_z4LO6M.264 -vf scale_npp=1280:720 -vcodec h264_nvenc VP13_z4LO6M.264
-# # ffmpeg -i VP13_z4LO6M.mp4 -c:v h264_nvenc -profile:v high444p -pixel_format yuv444p -preset default output.mp4
-# # ffmpeg -c:v h264_cuvid -i input output.mkv
-# # ffmpeg -c:v h264_cuvid -i youtube_epVDutrGlDU.mp4 output.mkv
-# # ffmpeg -hwaccel_device 0 -hwaccel cuvid -c:v h264_cuvid -i youtube_epVDutrGlDU.mp4 -i "%1" test/$filename%04d.jpg
-# # ffmpeg -hwaccel_device 0 -hwaccel cuvid -i youtube_epVDutrGlDU.mp4 -qmin 1 -qmax 1 -qscale:v 1 test/$filename%04d.jpg
-# # ffmpeg -hwaccel_device 0 -hwaccel nvdec -i youtube_epVDutrGlDU.mp4 -qmin 1 -qmax 1 -qscale:v 1 test/$filename%04d.jpg
+# Test hardware acceleration
+# cd /root
+# wget https://www.dropbox.com/s/oyhp2pv4zaae29f/youtube_epVDutrGlDU.mp4
+# mkdir test
+# ffprobe -v error -select_streams v:0 -show_entries stream=codec_name -of default=nw=1 youtube_epVDutrGlDU.mp4
+# ffmpeg -hwaccel_device 0 -hwaccel nvdec -i youtube_epVDutrGlDU.mp4 -qmin 1 -qmax 1 -qscale:v 1 test/$filename%04d.jpg
+# ffmpeg -hwaccel_device 0 -hwaccel nvdec -c:v h264_cuvid -i youtube_epVDutrGlDU.mp4 output.mkv
+
+# ffmpeg -hwaccel_device 0 -hwaccel cuvid -c:v h264_cuvid -i input -vf scale_npp=-1:720 -c:v h264_nvenc -preset slow output.mkv
+# ffmpeg -y -hwaccel cuvid -c:v h264_cuvid -vsync 0 -i <input.mp4> -vf scale_npp=1920:1072 -vcodec h264_nvenc <output0.264> -vf scale_npp=1280:720 -vcodec h264_nvenc <output1.264>
+# ffmpeg -y -hwaccel cuvid -c:v h264_cuvid -vsync 0 -i VP13_z4LO6M.mp4 -vf scale_npp=1920:1072 -vcodec h264_nvenc VP13_z4LO6M.264 -vf scale_npp=1280:720 -vcodec h264_nvenc VP13_z4LO6M.264
+# ffmpeg -i VP13_z4LO6M.mp4 -c:v h264_nvenc -profile:v high444p -pixel_format yuv444p -preset default output.mp4
+# ffmpeg -c:v h264_cuvid -i input output.mkv
+# ffmpeg -c:v h264_cuvid -i youtube_epVDutrGlDU.mp4 output.mkv
+# ffmpeg -hwaccel_device 0 -hwaccel cuvid -c:v h264_cuvid -i youtube_epVDutrGlDU.mp4 -i "%1" test/$filename%04d.jpg
+# ffmpeg -hwaccel_device 0 -hwaccel cuvid -i youtube_epVDutrGlDU.mp4 -qmin 1 -qmax 1 -qscale:v 1 test/$filename%04d.jpg
+# ffmpeg -hwaccel_device 0 -hwaccel nvdec -i youtube_epVDutrGlDU.mp4 -qmin 1 -qmax 1 -qscale:v 1 test/$filename%04d.jpg
 
 # #--------------------------------------
 # #   Add Conda Environments with Intel Python
