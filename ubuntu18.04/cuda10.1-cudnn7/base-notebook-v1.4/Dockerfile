@@ -781,7 +781,8 @@ RUN /bin/bash -c "source activate base && mamba install --quiet --yes \
   notebook=5.7.* \
   jupyterhub=0.9.* \
   jupyterlab=0.35.* \
-  mamba clean --all -f -y" \
+  mamba clean --all -f -y \
+  && mamba uninstall glib " \
   && jupyter lab clean && jupyter lab build
 
 #--------------------------------------
