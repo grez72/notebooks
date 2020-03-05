@@ -513,6 +513,12 @@ RUN git clone https://github.com/opencv/opencv_contrib.git ~/opencv_contrib \
   && ldconfig
 
 # RUN rm /opt/conda/lib/libfontconfig.so /opt/conda/lib/libfontconfig.so.1 /opt/conda/lib/libfontconfig.so.1.12.0
+RUN cp /usr/lib/x86_64-linux-gnu/libfontconfig.so.1.10.1 /opt/conda/lib/libfontconfig.so.1.10.1 \
+  && rm -rf /opt/conda/lib/libfontconfig.so  \
+  && rm -rf /opt/conda/lib/libfontconfig.so.1 \
+  && rm -rf /opt/conda/lib/libfontconfig.so.1.12.0 \
+  && ln -s /opt/conda/lib/libfontconfig.so.1.10.1 /opt/conda/lib/libfontconfig.so \
+  && ln -s /opt/conda/lib/libfontconfig.so.1.10.1 /opt/conda/lib/libfontconfig.so.1
 
 # #--------------------------------------
 # #   INSTALL NVIDIA RAPIDS
