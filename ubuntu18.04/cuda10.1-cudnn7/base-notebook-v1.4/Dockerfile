@@ -47,6 +47,8 @@ LABEL maintainer="George Alvarez <alvarez@wjh.harvard.com>"
 USER root
 
 ENV CUDA_DEVICE_ORDER=PCI_BUS_ID
+ENV OPENCV_VERSION=4.2.0
+ENV GLIB_VERSION=2.51.0
 
 #--------------------------------------
 #   OS dependencies
@@ -363,6 +365,7 @@ RUN /bin/bash -c "source activate base && mamba install --quiet --yes \
   conda-forge::blas=*=openblas \
   cython=0.29* \
   dill=0.3* \
+  glib=$GLIB_VERSION \
   hdf5=1.10.* \
   h5py=2.10.* \
   ipywidgets=7.5* \
@@ -464,8 +467,8 @@ RUN apt-get update && apt-get install -y \
 USER $NB_USER
 WORKDIR ~/
 
-# try to force use of our custom installation of ffmpeg and glib
-RUN /bin/bash -c "source activate base && mamba uninstall -y ffmpeg glib"
+# try to force use of our custom installation of ffmpeg
+RUN /bin/bash -c "source activate base && mamba uninstall -y ffmpeg"
 # RUN conda uninstall -y ffmpeg
 # && /bin/bash -c "source activate python2 && conda uninstall -y ffmpeg"
 
@@ -473,10 +476,10 @@ USER root
 
 # used to install v3.4.3, now installing latest 4.2.0
 RUN git clone https://github.com/opencv/opencv_contrib.git ~/opencv_contrib \
-  && cd ~/opencv_contrib && git checkout tags/4.2.0 \
+  && cd ~/opencv_contrib && git checkout tags/$OPENCV_VERSION \
   && git clone https://github.com/Itseez/opencv.git ~/opencv \
   && cd ~/opencv \
-  && git checkout tags/4.2.0 \
+  && git checkout tags/$OPENCV_VERSION \
   && mkdir build \
   && cd build/ \
   && cmake -D CMAKE_BUILD_TYPE=RELEASE \
@@ -491,6 +494,7 @@ RUN git clone https://github.com/opencv/opencv_contrib.git ~/opencv_contrib \
   -D BUILD_opencv_dnn=ON \
   -D BUILD_opencv_dnn_modern=ON \
   -D BUILD_LIBPROTOBUF_FROM_SOURCES=ON \
+  -D OPENCV_ENABLE_NONFREE=ON \
   -D WITH_CUDA=ON \
   -D WITH_CUFFT=ON \
   -D WITH_CUBLAS=ON \
@@ -781,9 +785,10 @@ RUN /bin/bash -c "source activate base && mamba install --quiet --yes \
   notebook=5.7.* \
   jupyterhub=0.9.* \
   jupyterlab=0.35.* \
-  mamba clean --all -f -y \
-  && mamba uninstall glib " \
+  mamba clean --all -f -y" \
   && jupyter lab clean && jupyter lab build
+
+# && mamba uninstall glib " \
 
 #--------------------------------------
 # Notebook Setup
