@@ -7,7 +7,7 @@
 # docker run -it --rm --user root grez72/deep-notebooks:ubuntu18.04-cuda10.1-cudnn7-pytorch-v1.4-notebook nvidia-smi
 # docker run -it --rm --shm-size=2G -p 8889:8888 grez72/deep-notebooks:ubuntu18.04-cuda10.1-cudnn7-pytorch-v1.4-notebook
 
-FROM grez72/base-notebook:ubuntu18.04-cuda10.1-cudnn7
+FROM grez72/base-notebook:ubuntu18.04-cuda10.1-cudnn7-1.4
 
 LABEL maintainer="George Alvarez <alvarez@wjh.harvard.com>"
 
