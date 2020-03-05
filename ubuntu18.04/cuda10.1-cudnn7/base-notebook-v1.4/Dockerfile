@@ -171,35 +171,35 @@ RUN conda install --quiet --yes \
   fix-permissions $CONDA_DIR && \
   fix-permissions /home/$NB_USER
 
-# #--------------------------------------
-# # Install all OS dependencies for fully functional notebook server:
-# #--------------------------------------
+#--------------------------------------
+# Install all OS dependencies for fully functional notebook server:
+#--------------------------------------
 
-# USER root
+USER root
 
-# RUN apt-get update && apt-get install -yq --no-install-recommends \
-#   build-essential \
-#   emacs \
-#   git \
-#   inkscape \
-#   jed \
-#   libsm6 \
-#   libxext-dev \
-#   libxrender1 \
-#   lmodern \
-#   netcat \
-#   pandoc \
-#   python-dev \
-#   texlive-fonts-extra \
-#   texlive-fonts-recommended \
-#   texlive-generic-recommended \
-#   texlive-latex-base \
-#   texlive-latex-extra \
-#   texlive-xetex \
-#   unzip \
-#   nano \
-#   && apt-get clean && \
-#   rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -yq --no-install-recommends \
+  build-essential \
+  emacs \
+  git \
+  inkscape \
+  jed \
+  libsm6 \
+  libxext-dev \
+  libxrender1 \
+  lmodern \
+  netcat \
+  pandoc \
+  python-dev \
+  texlive-fonts-extra \
+  texlive-fonts-recommended \
+  texlive-generic-recommended \
+  texlive-latex-base \
+  texlive-latex-extra \
+  texlive-xetex \
+  unzip \
+  nano \
+  && apt-get clean && \
+  rm -rf /var/lib/apt/lists/*
 
 # #--------------------------------------
 # # FFMEG with support for: with libx264 (mp4), Nvidia NVENC/NVDEC,
