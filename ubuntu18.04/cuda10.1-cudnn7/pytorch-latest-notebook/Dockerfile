@@ -12,7 +12,6 @@ FROM grez72/base-notebook:ubuntu18.04-cuda10.1-cudnn7-1.4
 LABEL maintainer="George Alvarez <alvarez@wjh.harvard.com>"
 
 ENV DEBIAN_FRONTEND noninteractive
-# ARG PYTORCH_VERSION=1.4
 ARG CUDA_VERSION=10.1
 
 USER root
@@ -35,23 +34,25 @@ RUN curl -fSsL -O https://bootstrap.pypa.io/get-pip.py && \
 #  INSTALL PYTORCH
 # ==============================================================
 
-# RUN pip install torch torchvision
-RUN pip install numpy --upgrade \
-  && conda update conda \
-  && conda install -c fastai -c pytorch fastprogress fastai \
-  && conda install -c conda-forge mock \
-  && conda install -y mkl -c intel \
-  && conda clean -tipsy
+RUN /bin/bash -c "source activate base \
+  && pip install numpy --upgrade \
+  && mamba update conda \
+  && mamba install -c fastai -c pytorch fastprogress fastai \
+  && mamba install -c conda-forge mock \
+  && mamba install -y mkl -c intel \
+  && mamba clean --all -f -y"
 
 # ==============================================================
 #  MAKE SURE WE'RE USING OPTIMIZED PILLOW
 # ==============================================================
 
-RUN conda update -n base conda -y \
+RUN /bin/bash -c "source activate base \
+  && mamba update -n base conda -y \
   && pip install --upgrade pip \
-  && conda uninstall -y --force jpeg libtiff \
-  && conda install -y -c conda-forge libjpeg-turbo \
-  && CC="cc -mavx2" pip install --no-cache-dir -U --force-reinstall --no-binary :all: --compile pillow-simd
+  && mamba uninstall -y --force jpeg libtiff \
+  && mamba install -y -c conda-forge libjpeg-turbo \
+  && CC='cc -mavx2' pip install --no-cache-dir -U --force-reinstall --no-binary :all: --compile pillow-simd \
+  && mamba clean --all -f -y"
 
 # ==============================================================
 #  INSTALL NVIDIA HELPERS
