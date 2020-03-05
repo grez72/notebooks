@@ -14,6 +14,7 @@ LABEL maintainer="George Alvarez <alvarez@wjh.harvard.com>"
 ENV DEBIAN_FRONTEND noninteractive
 ARG PYTORCH_VERSION=1.4
 ARG CUDA_VERSION=10.1
+ENV GLIB_VERSION=2.51.0
 
 USER root
 WORKDIR $HOME
@@ -41,7 +42,7 @@ RUN curl -fSsL -O https://bootstrap.pypa.io/get-pip.py && \
 RUN /bin/bash -c "source activate base \
   && pip install numpy --upgrade \
   && mamba update conda \
-  && mamba install -c fastai -c pytorch fastprogress fastai pytorch==$PYTORCH_VERSION \
+  && mamba install -c fastai -c pytorch fastprogress fastai pytorch==$PYTORCH_VERSION glib=$GLIB_VERSION \
   && mamba install -c conda-forge mock \
   && mamba install -y mkl -c intel \
   && mamba clean --all -f -y"
