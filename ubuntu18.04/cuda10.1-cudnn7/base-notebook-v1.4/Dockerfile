@@ -1,7 +1,7 @@
 # grez72/base-notebook for deep learning
 #
 # Runs a fully-loaded jupyterlab notebook server with access to the GPU on
-# the host machine, running Ubuntu 16.04, CUDA 10.1, CUDNN7, python2, python3,
+# the host machine, running Ubuntu 18.04, CUDA 10.1, CUDNN7, python3.6,
 # and including most of the packages you might need for deep learning,
 # experiments except a deep learning framework! (we build those from this image)
 #
@@ -558,15 +558,19 @@ RUN /bin/bash -c "source activate base \
 
 # addict = turn dict into dotdict
 # modin = faster pandas; https://modin.readthedocs.io/en/latest/
+# trackpy = particle tracking; http://soft-matter.github.io/trackpy/v0.4.2/
+# filterpy = kalman filtering: https://github.com/rlabbe/filterpy
 
 RUN pip install \
-  pynvvl-cuda92 \
-  wget \
-  pathlib \ 
-  addict \
+  addict \  
+  filterpy \
   natsort \
   nvidia-ml-py3 \
-  modin
+  modin \
+  pathlib \
+  pynvvl-cuda92 \
+  trackpy \
+  wget 
 
 #--------------------------------------
 #   LIBJPEGTURBO
@@ -636,8 +640,7 @@ RUN pip install -U git+git://github.com/loopbio/PyTurboJPEG.git
 # RUN conda install -y -c conda-forge av trackpy ipywidgets \
 #   && conda install -y filterpy \
 RUN /bin/bash -c "source activate base && mamba install --quiet --yes \
-  -c conda-forge av trackpy ipywidgets && \
-  mamba install -y filterpy && \
+  -c conda-forge av ipywidgets && \
   mamba clean --all -f -y" && \
   jupyter nbextension enable --py --sys-prefix widgetsnbextension \
   && pip install --upgrade pip \
