@@ -476,73 +476,73 @@ RUN apt-get update && apt-get install -y \
   libtbb-dev \
   libdc1394-22-dev
 
-#--------------------------------------
-# Install OpenCV
-#--------------------------------------
+# #--------------------------------------
+# # Install OpenCV
+# #--------------------------------------
 
-# do we need to set these?
-# export PATH=/usr/local/cuda/bin:$PATH
-# export LPATH=/usr/local/nvidia/lib64:$LPATH
-# export LIBRARY_PATH=/usr/local/nvidia:$LIBRARY_PATH
-# export LD_LIBRARY_PATH=/usr/local/nvidia/lib64:/usr/local/cuda/lib64:/usr/local/cuda/lib:$LD_LIBRARY_PATH
+# # do we need to set these?
+# # export PATH=/usr/local/cuda/bin:$PATH
+# # export LPATH=/usr/local/nvidia/lib64:$LPATH
+# # export LIBRARY_PATH=/usr/local/nvidia:$LIBRARY_PATH
+# # export LD_LIBRARY_PATH=/usr/local/nvidia/lib64:/usr/local/cuda/lib64:/usr/local/cuda/lib:$LD_LIBRARY_PATH
 
-# -D WITH_JPEG=ON \
-# -D BUILD_JPEG=OFF \
-# -D JPEG_LIBRARY=/opt/libjpeg-turbo/lib64/libturbojpeg.so \
-# -D JPEG_INCLUDE_DIR=/usr/libjpeg-turbo/include \
-# -D BUILD_TIFF=ON \
-# -D WITH_TIFF=ON \
-# -D BUILD_PNG=ON \
-# -D WITH_PNG=ON \
+# # -D WITH_JPEG=ON \
+# # -D BUILD_JPEG=OFF \
+# # -D JPEG_LIBRARY=/opt/libjpeg-turbo/lib64/libturbojpeg.so \
+# # -D JPEG_INCLUDE_DIR=/usr/libjpeg-turbo/include \
+# # -D BUILD_TIFF=ON \
+# # -D WITH_TIFF=ON \
+# # -D BUILD_PNG=ON \
+# # -D WITH_PNG=ON \
 
-USER $NB_USER
-WORKDIR ~/
+# USER $NB_USER
+# WORKDIR ~/
 
-# try to force use of our custom installation of ffmpeg and glib
-RUN /bin/bash -c "source activate base && mamba uninstall -y ffmpeg glib"
-# RUN conda uninstall -y ffmpeg
-# && /bin/bash -c "source activate python2 && conda uninstall -y ffmpeg"
+# # try to force use of our custom installation of ffmpeg and glib
+# RUN /bin/bash -c "source activate base && mamba uninstall -y ffmpeg glib"
+# # RUN conda uninstall -y ffmpeg
+# # && /bin/bash -c "source activate python2 && conda uninstall -y ffmpeg"
 
-USER root
+# USER root
 
-# used to install v3.4.3, now installing latest 4.2.0
-RUN git clone https://github.com/opencv/opencv_contrib.git ~/opencv_contrib \
-  && cd ~/opencv_contrib && git checkout tags/4.2.0 \
-  && git clone https://github.com/Itseez/opencv.git ~/opencv \
-  && cd ~/opencv \
-  && git checkout tags/4.2.0 \
-  && mkdir build \
-  && cd build/ \
-  && cmake -D CMAKE_BUILD_TYPE=RELEASE \
-  -D PYTHON3_EXECUTABLE:FILEPATH=/opt/conda/bin/python3.6 \
-  -D PYTHON3_INCLUDE_DIR:PATH=/opt/conda/include/python3.6m \
-  -D PYTHON3_NUMPY_INCLUDE_DIRS:PATH=/opt/conda/lib/python3.6/site-packages/numpy/core/include \
-  -D PYTHON3_PACKAGES_PATH:PATH=/opt/conda/lib/python3.6/site-packages \
-  -D OPENCV_EXTRA_MODULES_PATH=~/opencv_contrib/modules \
-  -D CMAKE_INSTALL_PREFIX=/usr/local \
-  -D CUDA_ARCH_BIN=5.3,6.0,6.1,7.0,7.5 \
-  -D CUDA_ARCH_PTX=7.5 \
-  -D BUILD_opencv_dnn=ON \
-  -D BUILD_opencv_dnn_modern=ON \
-  -D BUILD_LIBPROTOBUF_FROM_SOURCES=ON \
-  -D WITH_CUDA=ON \
-  -D WITH_CUFFT=ON \
-  -D WITH_CUBLAS=ON \
-  -D WITH_NVCUVID=ON \
-  -D FORCE_VTK=OFF \
-  -D WITH_TBB=ON \
-  -D WITH_V4L=ON \
-  -D WITH_OPENGL=ON \
-  -D ENABLE_FAST_MATH=1 \
-  -D CUDA_FAST_MATH=1 \
-  -D WITH_CUBLAS=1 \
-  -D WITH_FFMPEG=1 \
-  -D INSTALL_PYTHON_EXAMPLES=ON \
-  -D BUILD_EXAMPLES=OFF .. \
-  && make -j$(nproc) && make install \
-  && ldconfig
+# # used to install v3.4.3, now installing latest 4.2.0
+# RUN git clone https://github.com/opencv/opencv_contrib.git ~/opencv_contrib \
+#   && cd ~/opencv_contrib && git checkout tags/4.2.0 \
+#   && git clone https://github.com/Itseez/opencv.git ~/opencv \
+#   && cd ~/opencv \
+#   && git checkout tags/4.2.0 \
+#   && mkdir build \
+#   && cd build/ \
+#   && cmake -D CMAKE_BUILD_TYPE=RELEASE \
+#   -D PYTHON3_EXECUTABLE:FILEPATH=/opt/conda/bin/python3.6 \
+#   -D PYTHON3_INCLUDE_DIR:PATH=/opt/conda/include/python3.6m \
+#   -D PYTHON3_NUMPY_INCLUDE_DIRS:PATH=/opt/conda/lib/python3.6/site-packages/numpy/core/include \
+#   -D PYTHON3_PACKAGES_PATH:PATH=/opt/conda/lib/python3.6/site-packages \
+#   -D OPENCV_EXTRA_MODULES_PATH=~/opencv_contrib/modules \
+#   -D CMAKE_INSTALL_PREFIX=/usr/local \
+#   -D CUDA_ARCH_BIN=5.3,6.0,6.1,7.0,7.5 \
+#   -D CUDA_ARCH_PTX=7.5 \
+#   -D BUILD_opencv_dnn=ON \
+#   -D BUILD_opencv_dnn_modern=ON \
+#   -D BUILD_LIBPROTOBUF_FROM_SOURCES=ON \
+#   -D WITH_CUDA=ON \
+#   -D WITH_CUFFT=ON \
+#   -D WITH_CUBLAS=ON \
+#   -D WITH_NVCUVID=ON \
+#   -D FORCE_VTK=OFF \
+#   -D WITH_TBB=ON \
+#   -D WITH_V4L=ON \
+#   -D WITH_OPENGL=ON \
+#   -D ENABLE_FAST_MATH=1 \
+#   -D CUDA_FAST_MATH=1 \
+#   -D WITH_CUBLAS=1 \
+#   -D WITH_FFMPEG=1 \
+#   -D INSTALL_PYTHON_EXAMPLES=ON \
+#   -D BUILD_EXAMPLES=OFF .. \
+#   && make -j$(nproc) && make install \
+#   && ldconfig
 
-RUN rm /opt/conda/lib/libfontconfig.so /opt/conda/lib/libfontconfig.so.1 /opt/conda/lib/libfontconfig.so.1.12.0
+# RUN rm /opt/conda/lib/libfontconfig.so /opt/conda/lib/libfontconfig.so.1 /opt/conda/lib/libfontconfig.so.1.12.0
 
 # #--------------------------------------
 # #   INSTALL NVIDIA RAPIDS
