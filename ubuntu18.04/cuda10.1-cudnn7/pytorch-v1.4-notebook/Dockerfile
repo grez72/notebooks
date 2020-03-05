@@ -61,12 +61,20 @@ RUN pip install 'git+https://github.com/facebookresearch/fvcore' && \
     pip install -e .
 
 # ==============================================================
-#  INSTALL NVIDIA HELPERS
+#  INSTALL HELPERS
 # ==============================================================
 
 WORKDIR /home/$NB_USER
 
-RUN pip install --extra-index-url https://developer.download.nvidia.com/compute/redist nvidia-dali
+RUN pip install torchlars \
+  torchsummary \
+  torchsummaryX \
+  streamlit \
+  fire \
+  pretrainedmodels \ 
+  natsort \
+  && pip install -U git+git://github.com/PyTorchLightning/pytorch-lightning.git \
+  && pip install --extra-index-url https://developer.download.nvidia.com/compute/redist nvidia-dali
 
 # ==============================================================
 #  MAKE SURE WE'RE USING OPTIMIZED PILLOW
@@ -84,20 +92,6 @@ RUN /bin/bash -c "source activate base \
   && CC='cc -mavx2' pip install --no-cache-dir -U --force-reinstall --no-binary :all: --compile pillow-simd \  
   && mamba install -y jpeg libtiff \
   && mamba clean --all -f -y"
-
-# ==============================================================
-#  MORE HELPERS
-# ==============================================================
-
-RUN pip install torchlars \
-  torchsummary \
-  torchsummaryX \
-  streamlit \
-  fire \
-  pretrainedmodels \ 
-  natsort \
-  && pip install -U git+git://github.com/PyTorchLightning/pytorch-lightning.git \
-  && pip install --extra-index-url https://developer.download.nvidia.com/compute/redist nvidia-dali
 
 # ==============================================================
 #  set workdir and user for jupyter notebook use
