@@ -46,7 +46,8 @@ RUN /bin/bash -c "source activate base \
 #  MAKE SURE WE'RE USING OPTIMIZED PILLOW
 # ==============================================================
 
-# python -c "import fastai.utils; fastai.utils.check_perf()"
+# python -c "from PIL import features; print(features.check_feature('libjpeg_turbo'))"
+# python -c "import PIL; print(PIL.__version__)"
 
 RUN /bin/bash -c "source activate base \
   && mamba update -n base conda -y \
@@ -54,11 +55,9 @@ RUN /bin/bash -c "source activate base \
   && conda uninstall -y --force pillow pil jpeg libtiff libjpeg-turbo \
   && pip uninstall -y pillow pil jpeg libtiff libjpeg-turbo \
   && mamba install -yc conda-forge libjpeg-turbo \
-  && CFLAGS='${CFLAGS} -mavx2' pip install --upgrade --no-cache-dir --force-reinstall --no-binary :all: --compile pillow-simd \  
+  && CC='cc -mavx2' pip install --no-cache-dir -U --force-reinstall --no-binary :all: --compile pillow-simd \  
   && mamba install -y jpeg libtiff \
   && mamba clean --all -f -y"
-
-# && CC='cc -mavx2' pip install --no-cache-dir -U --force-reinstall --no-binary :all: --compile pillow-simd \
 
 # ==============================================================
 #  INSTALL NVIDIA HELPERS
