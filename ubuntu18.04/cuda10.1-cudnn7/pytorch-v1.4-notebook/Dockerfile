@@ -51,14 +51,20 @@ RUN /bin/bash -c "source activate base \
 #  MAKE SURE WE'RE USING OPTIMIZED PILLOW
 # ==============================================================
 
-RUN /bin/bash -c "source activate base \
-  && mamba update -n base conda -y \
-  && pip install --upgrade pip \
-  && mamba uninstall -y --force jpeg libtiff \
-  && mamba install -y -c conda-forge libjpeg-turbo \
-  && CC='cc -mavx2' pip install --no-cache-dir -U --force-reinstall --no-binary :all: --compile pillow-simd \
-  && mamba clean --all -f -y"
+# RUN /bin/bash -c "source activate base \
+#   && mamba update -n base conda -y \
+#   && pip install --upgrade pip \
+#   && mamba uninstall -y --force jpeg libtiff \
+#   && mamba install -y -c conda-forge libjpeg-turbo \
+#   && CC='cc -mavx2' pip install --no-cache-dir -U --force-reinstall --no-binary :all: --compile pillow-simd \
+#   && mamba clean --all -f -y"
 
+RUN /bin/bash -c "source activate base && mamba uninstall --force jpeg libtiff -y \
+  && pip uninstall -y pillow \
+  && mamba install -y -c conda-forge libjpeg-turbo \
+  && mamba clean --all -f -y \
+  && CC='cc -mavx2' pip install --no-cache-dir -U --force-reinstall pillow-simd"
+  
 # ==============================================================
 #  INSTALL NVIDIA HELPERS
 # ==============================================================
