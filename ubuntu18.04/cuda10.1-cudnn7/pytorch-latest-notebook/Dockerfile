@@ -43,31 +43,6 @@ RUN /bin/bash -c "source activate base \
   && mamba clean --all -f -y"
 
 # ==============================================================
-#  MAKE SURE WE'RE USING OPTIMIZED PILLOW
-# ==============================================================
-
-# python -c "from PIL import features; print(features.check_feature('libjpeg_turbo'))"
-# python -c "import PIL; print(PIL.__version__)"
-
-RUN /bin/bash -c "source activate base \
-  && mamba update -n base conda -y \
-  && pip install --upgrade pip \
-  && conda uninstall -y --force pillow pil jpeg libtiff libjpeg-turbo \
-  && pip uninstall -y pillow pil jpeg libtiff libjpeg-turbo \
-  && mamba install -yc conda-forge libjpeg-turbo \
-  && CC='cc -mavx2' pip install --no-cache-dir -U --force-reinstall --no-binary :all: --compile pillow-simd \  
-  && mamba install -y jpeg libtiff \
-  && mamba clean --all -f -y"
-
-# ==============================================================
-#  INSTALL NVIDIA HELPERS
-# ==============================================================
-
-WORKDIR /home/$NB_USER
-
-RUN pip install --extra-index-url https://developer.download.nvidia.com/compute/redist nvidia-dali
-
-# ==============================================================
 #  Install Detectron
 # ==============================================================
 
@@ -81,22 +56,35 @@ RUN pip install 'git+https://github.com/facebookresearch/fvcore' && \
     pip install -e .
 
 # ==============================================================
-#  MORE HELPERS
+#  INSTALL HELPERS
 # ==============================================================
+
+WORKDIR /home/$NB_USER
 
 RUN pip install torchlars \
   torchsummary \
   torchsummaryX \
   streamlit \
   fire \
-  opencv-python \
   pretrainedmodels \ 
-  pytorch-lightning \
-  natsort
+  natsort \
+  && pip install -U git+git://github.com/PyTorchLightning/pytorch-lightning.git \
+  && pip install --extra-index-url https://developer.download.nvidia.com/compute/redist nvidia-dali
 
 # ==============================================================
-#  set workdir and user for jupyter notebook use
+#  MAKE SURE WE'RE USING OPTIMIZED PILLOW
 # ==============================================================
 
-WORKDIR /home/$NB_USER/work/
-USER $NB_USER
+# python -c "from PIL import features; print(features.check_feature('libjpeg_turbo'))"
+# python -c "import PIL; print(PIL.__version__); print('is pil-simd: ', 'post' in PIL.__version__.split(".")[-1]);)"
+# python -c "import PIL; print(PIL.__version__); print('pil-simd: {}'.format('post' in PIL.__version__.split('.')[-1]));"
+
+RUN /bin/bash -c "source activate base \
+  && mamba update -n base conda -y \
+  && pip install --upgrade pip \
+  && conda uninstall -y --force pillow pil jpeg libtiff libjpeg-turbo \
+  && pip uninstall -y pillow pil jpeg libtiff libjpeg-turbo \
+  && mamba install -yc conda-forge libjpeg-turbo \
+  && CC='cc -mavx2' pip install --no-cache-dir -U --force-reinstall --no-binary :all: --compile pillow-simd \  
+  && mamba install -y jpeg libtiff \
+  && mamba clean --all -f -y"
