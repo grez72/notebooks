@@ -845,29 +845,29 @@ RUN MPLBACKEND=Agg python -c "import matplotlib.pyplot" && \
 #   && mamba install -y pyzmq=18.1.0 tornado=6.0.3 \
 #   && mamba clean --all -f -y"
 
-# #--------------------------------------
-# # Notebook Setup
-# #--------------------------------------
+#--------------------------------------
+# Notebook Setup
+#--------------------------------------
 
-# USER root
+USER root
 
-# EXPOSE 8888
-# WORKDIR $HOME/work
+EXPOSE 8888
+WORKDIR $HOME/work
 
-# # Configure container startup
-# ENTRYPOINT ["tini", "-g", "--"]
-# CMD ["start-notebook.sh"]
+# Configure container startup
+ENTRYPOINT ["tini", "-g", "--"]
+CMD ["start-notebook.sh"]
 
-# # Add local files as late as possible to avoid cache busting
-# COPY credential-helper.sh /usr/local/bin/
-# COPY start.sh /usr/local/bin/
-# COPY start-notebook.sh /usr/local/bin/
-# COPY start-singleuser.sh /usr/local/bin/
-# COPY jupyter_notebook_config.py /etc/jupyter/
-# COPY genpass.py .
-# RUN fix-permissions /etc/jupyter/
+# Add local files as late as possible to avoid cache busting
+COPY credential-helper.sh /usr/local/bin/
+COPY start.sh /usr/local/bin/
+COPY start-notebook.sh /usr/local/bin/
+COPY start-singleuser.sh /usr/local/bin/
+COPY jupyter_notebook_config.py /etc/jupyter/
+COPY genpass.py .
+RUN fix-permissions /etc/jupyter/
 
-# WORKDIR $HOME/work
+WORKDIR $HOME/work
 
-# # Switch back to jovyan to avoid accidental container runs as root
-# USER $NB_UID
+# Switch back to jovyan to avoid accidental container runs as root
+USER $NB_UID
