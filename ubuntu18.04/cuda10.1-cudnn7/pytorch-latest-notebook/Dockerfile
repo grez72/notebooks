@@ -49,49 +49,53 @@ RUN /bin/bash -c "source activate base \
 RUN /bin/bash -c "source activate base \
   && mamba update -n base conda -y \
   && pip install --upgrade pip \
-  && mamba uninstall -y --force jpeg libtiff \
-  && mamba install -y -c conda-forge libjpeg-turbo \
-  && CC='cc -mavx2' pip install --no-cache-dir -U --force-reinstall --no-binary :all: --compile pillow-simd \
+  && conda uninstall -y --force pillow pil jpeg libtiff libjpeg-turbo \
+  && pip uninstall -y pillow pil jpeg libtiff libjpeg-turbo \
+  && mamba install -yc conda-forge libjpeg-turbo \
+  && CFLAGS='${CFLAGS} -mavx2' pip install --upgrade --no-cache-dir --force-reinstall --no-binary :all: --compile pillow-simd \  
+  && mamba install -y jpeg libtiff \
   && mamba clean --all -f -y"
 
-# ==============================================================
-#  INSTALL NVIDIA HELPERS
-# ==============================================================
+# && CC='cc -mavx2' pip install --no-cache-dir -U --force-reinstall --no-binary :all: --compile pillow-simd \
 
-WORKDIR /home/$NB_USER
+# # ==============================================================
+# #  INSTALL NVIDIA HELPERS
+# # ==============================================================
 
-RUN pip install --extra-index-url https://developer.download.nvidia.com/compute/redist nvidia-dali
+# WORKDIR /home/$NB_USER
 
-# ==============================================================
-#  Install Detectron
-# ==============================================================
+# RUN pip install --extra-index-url https://developer.download.nvidia.com/compute/redist nvidia-dali
 
-ENV FORCE_CUDA="1"
-RUN pip install 'git+https://github.com/facebookresearch/fvcore' && \
-    pip install cython && \
-    pip install 'git+https://github.com/cocodataset/cocoapi.git#subdirectory=PythonAPI' && \
-    cd /home/$NB_USER && \
-    git clone https://github.com/facebookresearch/detectron2.git && \
-    cd detectron2 && \
-    pip install -e .
+# # ==============================================================
+# #  Install Detectron
+# # ==============================================================
 
-# ==============================================================
-#  MORE HELPERS
-# ==============================================================
+# ENV FORCE_CUDA="1"
+# RUN pip install 'git+https://github.com/facebookresearch/fvcore' && \
+#     pip install cython && \
+#     pip install 'git+https://github.com/cocodataset/cocoapi.git#subdirectory=PythonAPI' && \
+#     cd /home/$NB_USER && \
+#     git clone https://github.com/facebookresearch/detectron2.git && \
+#     cd detectron2 && \
+#     pip install -e .
 
-RUN pip install torchlars \
-  torchsummary \
-  torchsummaryX \
-  streamlit \
-  fire \
-  opencv-python \
-  pretrainedmodels \ 
-  pytorch-lightning \
-  natsort
+# # ==============================================================
+# #  MORE HELPERS
+# # ==============================================================
 
-# ==============================================================
-#  set workdir and user for jupyter notebook use
-# ==============================================================
+# RUN pip install torchlars \
+#   torchsummary \
+#   torchsummaryX \
+#   streamlit \
+#   fire \
+#   opencv-python \
+#   pretrainedmodels \ 
+#   pytorch-lightning \
+#   natsort
 
-WORKDIR /home/$NB_USER/work/
-USER $NB_USER
+# # ==============================================================
+# #  set workdir and user for jupyter notebook use
+# # ==============================================================
+
+# WORKDIR /home/$NB_USER/work/
+# USER $NB_USER
