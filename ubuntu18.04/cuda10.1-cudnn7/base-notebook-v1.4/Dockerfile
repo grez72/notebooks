@@ -46,6 +46,8 @@ LABEL maintainer="George Alvarez <alvarez@wjh.harvard.com>"
 
 USER root
 
+ENV CUDA_DEVICE_ORDER=PCI_BUS_ID
+
 #--------------------------------------
 #   OS dependencies
 #--------------------------------------
@@ -350,45 +352,6 @@ USER $NB_UID
 WORKDIR $HOME
 
 # Install Python 3 packages
-# Remove pyqt and qt pulled in for matplotlib since we're only ever going to
-# use notebook-friendly backends in these images
-# "conda=${MINICONDA_VERSION}" \
-# RUN conda install --quiet --yes \  
-#   'av' \
-#   'conda-forge::blas=*=openblas' \
-#   'ipywidgets=7.2*' \
-#   'pandas=0.23*' \
-#   'numexpr=2.6*' \
-#   'matplotlib=2.2*' \
-#   'scipy=1.1*' \
-#   'seaborn=0.9*' \
-#   'scikit-learn=0.19*' \
-#   'scikit-image=0.14*' \
-#   'sk-video=1.1*' \
-#   'sympy=1.1*' \
-#   'cython=0.28*' \
-#   'patsy=0.5*' \
-#   'statsmodels=0.9*' \
-#   'cloudpickle=0.5*' \
-#   'dill=0.2*' \
-#   'numba=0.38*' \
-#   'bokeh=0.12*' \
-#   'sqlalchemy=1.2*' \
-#   'hdf5=1.10*' \
-#   'h5py=2.7*' \
-#   'vincent=0.4.*' \
-#   'beautifulsoup4=4.6.*' \
-#   'protobuf=3.*' \
-#   'xlrd'  && \
-#   conda remove --quiet --yes --force qt pyqt && \
-#   conda clean -tipsy && \
-#   npm cache clean --force && \
-#   rm -rf $CONDA_DIR/share/jupyter/lab/staging && \
-#   rm -rf /home/$NB_USER/.cache/yarn && \
-#   rm -rf /home/$NB_USER/.node-gyp && \
-#   fix-permissions $CONDA_DIR && \
-#   fix-permissions /home/$NB_USER
-
 RUN /bin/bash -c "source activate base && mamba install --quiet --yes \
   notebook=5.7.* \
   jupyterhub=0.9.* \
@@ -448,275 +411,247 @@ ENV XDG_CACHE_HOME /home/$NB_USER/.cache/
 RUN MPLBACKEND=Agg python -c "import matplotlib.pyplot" && \
   fix-permissions /home/$NB_USER
 
-# #--------------------------------------
-# #   Updates needed for opencv
-# #--------------------------------------
+#--------------------------------------
+#   Updates needed for opencv
+#--------------------------------------
 
-# USER root
+USER root
 
-# RUN apt-get update && apt-get install -y \
-#   build-essential \
-#   cmake \
-#   git \
-#   pkg-config \
-#   libgtk-3-dev \
-#   libavcodec-dev \
-#   libavformat-dev \
-#   libswscale-dev \
-#   libv4l-dev \
-#   libxvidcore-dev \
-#   libx264-dev \
-#   libjpeg-dev \
-#   libpng-dev \
-#   libtiff-dev \
-#   libhdf5-serial-dev \
-#   gfortran \
-#   openexr \
-#   libatlas-base-dev \
-#   python3-dev \
-#   python3-numpy \
-#   libtbb2 \
-#   libtbb-dev \
-#   libdc1394-22-dev
+RUN apt-get update && apt-get install -y \
+  build-essential \
+  cmake \
+  git \
+  pkg-config \
+  libgtk-3-dev \
+  libavcodec-dev \
+  libavformat-dev \
+  libswscale-dev \
+  libv4l-dev \
+  libxvidcore-dev \
+  libx264-dev \
+  libjpeg-dev \
+  libpng-dev \
+  libtiff-dev \
+  libhdf5-serial-dev \
+  gfortran \
+  openexr \
+  libatlas-base-dev \
+  python3-dev \
+  python3-numpy \
+  libtbb2 \
+  libtbb-dev \
+  libdc1394-22-dev
 
-# #--------------------------------------
-# # Install OpenCV
-# #--------------------------------------
+#--------------------------------------
+# Install OpenCV
+#--------------------------------------
 
-# # do we need to set these?
-# # export PATH=/usr/local/cuda/bin:$PATH
-# # export LPATH=/usr/local/nvidia/lib64:$LPATH
-# # export LIBRARY_PATH=/usr/local/nvidia:$LIBRARY_PATH
-# # export LD_LIBRARY_PATH=/usr/local/nvidia/lib64:/usr/local/cuda/lib64:/usr/local/cuda/lib:$LD_LIBRARY_PATH
+# do we need to set these?
+# export PATH=/usr/local/cuda/bin:$PATH
+# export LPATH=/usr/local/nvidia/lib64:$LPATH
+# export LIBRARY_PATH=/usr/local/nvidia:$LIBRARY_PATH
+# export LD_LIBRARY_PATH=/usr/local/nvidia/lib64:/usr/local/cuda/lib64:/usr/local/cuda/lib:$LD_LIBRARY_PATH
 
-# # -D WITH_JPEG=ON \
-# # -D BUILD_JPEG=OFF \
-# # -D JPEG_LIBRARY=/opt/libjpeg-turbo/lib64/libturbojpeg.so \
-# # -D JPEG_INCLUDE_DIR=/usr/libjpeg-turbo/include \
-# # -D BUILD_TIFF=ON \
-# # -D WITH_TIFF=ON \
-# # -D BUILD_PNG=ON \
-# # -D WITH_PNG=ON \
+# -D WITH_JPEG=ON \
+# -D BUILD_JPEG=OFF \
+# -D JPEG_LIBRARY=/opt/libjpeg-turbo/lib64/libturbojpeg.so \
+# -D JPEG_INCLUDE_DIR=/usr/libjpeg-turbo/include \
+# -D BUILD_TIFF=ON \
+# -D WITH_TIFF=ON \
+# -D BUILD_PNG=ON \
+# -D WITH_PNG=ON \
+
+USER $NB_USER
+WORKDIR ~/
+
+# try to force use of our custom installation of ffmpeg and glib
+RUN /bin/bash -c "source activate base && mamba uninstall -y ffmpeg glib"
+# RUN conda uninstall -y ffmpeg
+# && /bin/bash -c "source activate python2 && conda uninstall -y ffmpeg"
+
+USER root
+
+# used to install v3.4.3, now installing latest 4.2.0
+RUN git clone https://github.com/opencv/opencv_contrib.git ~/opencv_contrib \
+  && cd ~/opencv_contrib && git checkout tags/4.2.0 \
+  && git clone https://github.com/Itseez/opencv.git ~/opencv \
+  && cd ~/opencv \
+  && git checkout tags/4.2.0 \
+  && mkdir build \
+  && cd build/ \
+  && cmake -D CMAKE_BUILD_TYPE=RELEASE \
+  -D PYTHON3_EXECUTABLE:FILEPATH=/opt/conda/bin/python3.6 \
+  -D PYTHON3_INCLUDE_DIR:PATH=/opt/conda/include/python3.6m \
+  -D PYTHON3_NUMPY_INCLUDE_DIRS:PATH=/opt/conda/lib/python3.6/site-packages/numpy/core/include \
+  -D PYTHON3_PACKAGES_PATH:PATH=/opt/conda/lib/python3.6/site-packages \
+  -D OPENCV_EXTRA_MODULES_PATH=~/opencv_contrib/modules \
+  -D CMAKE_INSTALL_PREFIX=/usr/local \
+  -D CUDA_ARCH_BIN=5.3,6.0,6.1,7.0,7.5 \
+  -D CUDA_ARCH_PTX=7.5 \
+  -D BUILD_opencv_dnn=ON \
+  -D BUILD_opencv_dnn_modern=ON \
+  -D BUILD_LIBPROTOBUF_FROM_SOURCES=ON \
+  -D WITH_CUDA=ON \
+  -D WITH_CUFFT=ON \
+  -D WITH_CUBLAS=ON \
+  -D WITH_NVCUVID=ON \
+  -D FORCE_VTK=OFF \
+  -D WITH_TBB=ON \
+  -D WITH_V4L=ON \
+  -D WITH_OPENGL=ON \
+  -D ENABLE_FAST_MATH=1 \
+  -D CUDA_FAST_MATH=1 \
+  -D WITH_CUBLAS=1 \
+  -D WITH_FFMPEG=1 \
+  -D INSTALL_PYTHON_EXAMPLES=ON \
+  -D BUILD_EXAMPLES=OFF .. \
+  && make -j$(nproc) && make install \
+  && ldconfig
+
+RUN rm /opt/conda/lib/libfontconfig.so /opt/conda/lib/libfontconfig.so.1 /opt/conda/lib/libfontconfig.so.1.12.0
+
+#--------------------------------------
+#   INSTALL NVIDIA RAPIDS
+#--------------------------------------
+
+RUN /bin/bash -c "source activate base \
+  && mamba install --quiet --yes -c rapidsai -c nvidia -c conda-forge -c defaults cuxfilter=0.12 python=3.6 cudatoolkit=10.1 \
+  && mamba install --quiet --yes rapids=0.12 python=3.6 cudatoolkit=10.1"
+
+#--------------------------------------
+#   INSTALL PIP PACKAGES
+#--------------------------------------
+
+# addict = turn dict into dotdict
+# modin = faster pandas; https://modin.readthedocs.io/en/latest/
+# trackpy = particle tracking; http://soft-matter.github.io/trackpy/v0.4.2/
+# filterpy = kalman filtering: https://github.com/rlabbe/filterpy
+
+RUN pip install \
+  addict \  
+  filterpy \
+  natsort \
+  nvidia-ml-py3 \
+  modin \
+  pathlib \
+  pynvvl-cuda92 \
+  trackpy \
+  wget 
+
+#--------------------------------------
+#   LIBJPEGTURBO
+#--------------------------------------
+
+RUN cd /opt \
+  && wget https://downloads.sourceforge.net/libjpeg-turbo/libjpeg-turbo-2.0.0.tar.gz \
+  && tar -xzf libjpeg-turbo-2.0.0.tar.gz \
+  && rm libjpeg-turbo-2.0.0.tar.gz \
+  && cd libjpeg-turbo-2.0.0 \
+  && mkdir build \
+  && cd build \
+  && cmake -DCMAKE_INSTALL_PREFIX=/usr/libjpeg-turbo \
+  -DCMAKE_BUILD_TYPE=RELEASE  \
+  -DENABLE_STATIC=FALSE       \
+  -DCMAKE_INSTALL_DOCDIR=/usr/share/doc/libjpeg-turbo-2.0.0 \
+  -DCMAKE_INSTALL_DEFAULT_LIBDIR=lib  \
+  .. \
+  && make -j"$(nproc)" \
+  && make test \
+  && make install \
+  && mkdir -p /opt/libjpeg-turbo/lib64 \
+  && ln -s /usr/libjpeg-turbo/lib/libturbojpeg.so /opt/libjpeg-turbo/lib64/libturbojpeg.so
+
+#--------------------------------------
+# PyTurboJPEG
+#--------------------------------------
+
+# pip install -U git+git://github.com/loopbio/PyTurboJPEG.git
+# RUN conda config --add channels conda-forge \
+#   && conda install -c loopbio libjpeg-turbo \
+#   && mkdir -p /opt/libjpeg-turbo/lib64 \
+#   && ln -s /opt/conda/lib/libjpeg-turbo/lib/libturbojpeg.so /opt/libjpeg-turbo/lib64/libturbojpeg.so \
+#   && /bin/bash -c "source activate python2 && conda config --add channels conda-forge \
+#     && conda install -c loopbio libjpeg-turbo"
+
+# http://blog.loopbio.com/video-io-2-jpeg-decoding.html
+# using loopbio's PyTurbojpeg fork! https://github.com/loopbio/PyTurbojpeg
+RUN pip install -U git+git://github.com/loopbio/PyTurboJPEG.git
+# \
+#  && /bin/bash -c "source activate python2 && pip install -U git+git://github.com/loopbio/PyTurboJPEG.git"
+
+#--------------------------------------
+# Utilities for optimizing python code:
+# ...skipping in this iteration
+#--------------------------------------
 
 # USER $NB_USER
-# WORKDIR ~/
 
-# # try to force use of our custom installation of ffmpeg and glib
-# RUN /bin/bash -c "source activate base && mamba uninstall -y ffmpeg glib"
-# # RUN conda uninstall -y ffmpeg
-# # && /bin/bash -c "source activate python2 && conda uninstall -y ffmpeg"
-
-# USER root
-
-# # used to install v3.4.3, now installing latest 4.2.0
-# RUN git clone https://github.com/opencv/opencv_contrib.git ~/opencv_contrib \
-#   && cd ~/opencv_contrib && git checkout tags/4.2.0 \
-#   && git clone https://github.com/Itseez/opencv.git ~/opencv \
-#   && cd ~/opencv \
-#   && git checkout tags/4.2.0 \
-#   && mkdir build \
-#   && cd build/ \
-#   && cmake -D CMAKE_BUILD_TYPE=RELEASE \
-#   -D PYTHON3_EXECUTABLE:FILEPATH=/opt/conda/bin/python3.6 \
-#   -D PYTHON3_INCLUDE_DIR:PATH=/opt/conda/include/python3.6m \
-#   -D PYTHON3_NUMPY_INCLUDE_DIRS:PATH=/opt/conda/lib/python3.6/site-packages/numpy/core/include \
-#   -D PYTHON3_PACKAGES_PATH:PATH=/opt/conda/lib/python3.6/site-packages \
-#   -D OPENCV_EXTRA_MODULES_PATH=~/opencv_contrib/modules \
-#   -D CMAKE_INSTALL_PREFIX=/usr/local \
-#   -D CUDA_ARCH_BIN=5.3,6.0,6.1,7.0,7.5 \
-#   -D CUDA_ARCH_PTX=7.5 \
-#   -D BUILD_opencv_dnn=ON \
-#   -D BUILD_opencv_dnn_modern=ON \
-#   -D BUILD_LIBPROTOBUF_FROM_SOURCES=ON \
-#   -D WITH_CUDA=ON \
-#   -D WITH_CUFFT=ON \
-#   -D WITH_CUBLAS=ON \
-#   -D WITH_NVCUVID=ON \
-#   -D FORCE_VTK=OFF \
-#   -D WITH_TBB=ON \
-#   -D WITH_V4L=ON \
-#   -D WITH_OPENGL=ON \
-#   -D ENABLE_FAST_MATH=1 \
-#   -D CUDA_FAST_MATH=1 \
-#   -D WITH_CUBLAS=1 \
-#   -D WITH_FFMPEG=1 \
-#   -D INSTALL_PYTHON_EXAMPLES=ON \
-#   -D BUILD_EXAMPLES=OFF .. \
-#   && make -j$(nproc) && make install \
-#   && ldconfig
-
-# RUN rm /opt/conda/lib/libfontconfig.so /opt/conda/lib/libfontconfig.so.1 /opt/conda/lib/libfontconfig.so.1.12.0
-
-# #--------------------------------------
-# #   INSTALL NVIDIA RAPIDS
-# #--------------------------------------
-
-# RUN /bin/bash -c "source activate base \
-#   && mamba install --quiet --yes -c rapidsai -c nvidia -c conda-forge -c defaults cuxfilter=0.12 python=3.6 cudatoolkit=10.1 \
-#   && mamba install --quiet --yes rapids=0.12 python=3.6 cudatoolkit=10.1"
-
-# #--------------------------------------
-# #   INSTALL PIP PACKAGES
-# #--------------------------------------
-
-# # addict = turn dict into dotdict
-# # modin = faster pandas; https://modin.readthedocs.io/en/latest/
-# # trackpy = particle tracking; http://soft-matter.github.io/trackpy/v0.4.2/
-# # filterpy = kalman filtering: https://github.com/rlabbe/filterpy
-
-# RUN pip install \
-#   addict \  
-#   filterpy \
-#   natsort \
-#   nvidia-ml-py3 \
-#   modin \
-#   pathlib \
-#   pynvvl-cuda92 \
-#   trackpy \
-#   wget 
-
-# #--------------------------------------
-# #   LIBJPEGTURBO
-# #--------------------------------------
-
-# RUN cd /opt \
-#   && wget https://downloads.sourceforge.net/libjpeg-turbo/libjpeg-turbo-2.0.0.tar.gz \
-#   && tar -xzf libjpeg-turbo-2.0.0.tar.gz \
-#   && rm libjpeg-turbo-2.0.0.tar.gz \
-#   && cd libjpeg-turbo-2.0.0 \
-#   && mkdir build \
-#   && cd build \
-#   && cmake -DCMAKE_INSTALL_PREFIX=/usr/libjpeg-turbo \
-#   -DCMAKE_BUILD_TYPE=RELEASE  \
-#   -DENABLE_STATIC=FALSE       \
-#   -DCMAKE_INSTALL_DOCDIR=/usr/share/doc/libjpeg-turbo-2.0.0 \
-#   -DCMAKE_INSTALL_DEFAULT_LIBDIR=lib  \
-#   .. \
-#   && make -j"$(nproc)" \
-#   && make test \
-#   && make install \
-#   && mkdir -p /opt/libjpeg-turbo/lib64 \
-#   && ln -s /usr/libjpeg-turbo/lib/libturbojpeg.so /opt/libjpeg-turbo/lib64/libturbojpeg.so
-
-# #--------------------------------------
-# # PyTurboJPEG
-# #--------------------------------------
-
-# # pip install -U git+git://github.com/loopbio/PyTurboJPEG.git
-# # RUN conda config --add channels conda-forge \
-# #   && conda install -c loopbio libjpeg-turbo \
-# #   && mkdir -p /opt/libjpeg-turbo/lib64 \
-# #   && ln -s /opt/conda/lib/libjpeg-turbo/lib/libturbojpeg.so /opt/libjpeg-turbo/lib64/libturbojpeg.so \
-# #   && /bin/bash -c "source activate python2 && conda config --add channels conda-forge \
-# #     && conda install -c loopbio libjpeg-turbo"
-
-# # http://blog.loopbio.com/video-io-2-jpeg-decoding.html
-# # using loopbio's PyTurbojpeg fork! https://github.com/loopbio/PyTurbojpeg
-# RUN pip install -U git+git://github.com/loopbio/PyTurboJPEG.git
-# # \
-# #  && /bin/bash -c "source activate python2 && pip install -U git+git://github.com/loopbio/PyTurboJPEG.git"
-
-# #--------------------------------------
-# # Utilities for optimizing python code:
-# # ...skipping in this iteration
-# #--------------------------------------
-
-# # USER $NB_USER
-
-# # Cupy, PyCuda, Numba
-# # RUN /bin/bash -c "source activate base && mamba install --quiet --yes \
-# #   lukepfister pycuda && \
-# #   pip install cupy && \
-# #   conda install -y numba && \
-# #   mamba clean --all -f -y"
-
-# # RUN conda install -y -c lukepfister pycuda \
-# #   && pip install cupy \
-# #   && conda install -y numba
-
-# #--------------------------------------
-# # Install Video and Image Utilities
-# #--------------------------------------
-
-# # Installing all of these dependencies together in one RUN command
-# # to avoid limit on number of layers in docker image
-# # RUN conda install -y -c conda-forge av trackpy ipywidgets \
-# #   && conda install -y filterpy \
+# Cupy, PyCuda, Numba
 # RUN /bin/bash -c "source activate base && mamba install --quiet --yes \
-#   -c conda-forge av ipywidgets && \
-#   mamba clean --all -f -y" && \
-#   jupyter nbextension enable --py --sys-prefix widgetsnbextension \
-#   && pip install --upgrade pip \
-#   && pip install \
-#   ffmpeg-python \
-#   image-attendant \
-#   imutils \
-#   imageio \
-#   https://github.com/soft-matter/pims/archive/master.zip \
-#   cupy \
-#   sk-video \
-#   tqdm \
-#   && cd $HOME \
-#   && git clone https://github.com/DheerendraRathor/ffprobe3 \
-#   && cd $HOME/ffprobe3 \
-#   && python setup.py install \
-#   && cd $HOME \
-#   && git clone https://github.com/jfrelinger/cython-munkres-wrapper \
-#   && cd $HOME/cython-munkres-wrapper \
-#   && python setup.py install
+#   lukepfister pycuda && \
+#   pip install cupy && \
+#   conda install -y numba && \
+#   mamba clean --all -f -y"
 
-# #--------------------------------------
-# # Install Additional Packages
-# #--------------------------------------
-
-# # plotly + dependencies
-# RUN easy_install python-prctl \
-#   && pip install plotly msgpack msgpack-numpy lmdb \
-#   && pip install --upgrade git+https://github.com/tensorpack/tensorpack.git \
-#   && /bin/bash -c "source activate base && mamba install --quiet --yes bioconda cufflinks"
-
-# RUN /bin/bash -c "source activate base && mamba install --quiet --yes cookiecutter \
-#     && mamba install --quiet --yes -c menpo pathlib \
-#     && mamba install --quiet --yes cookiecutter \
-#     && mamba clean --all -f -y"
-
-# #--------------------------------------
-# # Install Optimized Fast PIL
-# #--------------------------------------
-
-# RUN /bin/bash -c "source activate base && mamba uninstall --force jpeg libtiff -y \
-#   && pip uninstall -y pillow \
-#   && mamba install -y -c conda-forge libjpeg-turbo \
-#   && mamba clean --all -f -y \
-#   && CC='cc -mavx2' pip install --no-cache-dir -U --force-reinstall pillow-simd"
-
-# # RUN conda uninstall --force jpeg libtiff -y \
-# #   && pip uninstall -y pillow \
-# #   && conda install -y -c conda-forge libjpeg-turbo \
-# #   && CC="cc -mavx2" pip install --no-cache-dir -U --force-reinstall pillow-simd
+# RUN conda install -y -c lukepfister pycuda \
+#   && pip install cupy \
+#   && conda install -y numba
 
 #--------------------------------------
-# Late Additions
+# Install Video and Image Utilities
 #--------------------------------------
 
-ENV CUDA_DEVICE_ORDER=PCI_BUS_ID
+# Installing all of these dependencies together in one RUN command
+# to avoid limit on number of layers in docker image
+# RUN conda install -y -c conda-forge av trackpy ipywidgets \
+#   && conda install -y filterpy \
+RUN /bin/bash -c "source activate base && mamba install --quiet --yes \
+  -c conda-forge av ipywidgets && \
+  mamba clean --all -f -y" && \
+  jupyter nbextension enable --py --sys-prefix widgetsnbextension \
+  && pip install --upgrade pip \
+  && pip install \
+  ffmpeg-python \
+  image-attendant \
+  imutils \
+  imageio \
+  https://github.com/soft-matter/pims/archive/master.zip \
+  cupy \
+  sk-video \
+  tqdm \
+  && cd $HOME \
+  && git clone https://github.com/DheerendraRathor/ffprobe3 \
+  && cd $HOME/ffprobe3 \
+  && python setup.py install \
+  && cd $HOME \
+  && git clone https://github.com/jfrelinger/cython-munkres-wrapper \
+  && cd $HOME/cython-munkres-wrapper \
+  && python setup.py install
 
 #--------------------------------------
-#   INSTALL DeepLearning Frameworks
+# Install Additional Packages
 #--------------------------------------
 
-# RUN conda install -y pytorch torchvision cudatoolkit=10.0 -c pytorch \
-#   && conda install -y -c fastai fastai fastprogress
+# plotly + dependencies
+RUN easy_install python-prctl \
+  && pip install plotly msgpack msgpack-numpy lmdb \
+  && pip install --upgrade git+https://github.com/tensorpack/tensorpack.git \
+  && /bin/bash -c "source activate base && mamba install --quiet --yes bioconda cufflinks"
 
-# RUN pip install tensorflow-gpu \
-#   && pip install mxnet-cu100
+RUN /bin/bash -c "source activate base && mamba install --quiet --yes cookiecutter \
+    && mamba install --quiet --yes -c menpo pathlib \
+    && mamba install --quiet --yes cookiecutter \
+    && mamba clean --all -f -y"
 
 #--------------------------------------
-#  Late Additions
+# Install Optimized Fast PIL
 #--------------------------------------
 
-# seems we need to run this build command:
-RUN jupyter lab clean && jupyter lab build
+RUN /bin/bash -c "source activate base && mamba uninstall --force jpeg libtiff -y \
+  && pip uninstall -y pillow \
+  && mamba install -y -c conda-forge libjpeg-turbo \
+  && mamba clean --all -f -y \
+  && CC='cc -mavx2' pip install --no-cache-dir -U --force-reinstall pillow-simd"
 
 #--------------------------------------
 # Install R Kernel
@@ -837,13 +772,17 @@ RUN jupyter lab clean && jupyter lab build
 #     fix-permissions $JULIA_PKGDIR $CONDA_DIR/share/jupyter
 
 #--------------------------------------
-# Install specific pyzmq + tornado 
-# otherwise we get "500" error in jupyterhub
+# jupyterlab
 #--------------------------------------
 
-# RUN /bin/bash -c "source activate base \
-#   && mamba install -y pyzmq=18.1.0 tornado=6.0.3 \
-#   && mamba clean --all -f -y"
+# make sure the desired/required versions of jupyterhub and lab are installed
+# then build jupyterlab
+RUN /bin/bash -c "source activate base && mamba install --quiet --yes \
+  notebook=5.7.* \
+  jupyterhub=0.9.* \
+  jupyterlab=0.35.* \
+  mamba clean --all -f -y" \
+  && jupyter lab clean && jupyter lab build
 
 #--------------------------------------
 # Notebook Setup
