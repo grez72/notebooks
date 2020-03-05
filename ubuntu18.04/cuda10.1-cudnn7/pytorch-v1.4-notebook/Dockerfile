@@ -48,6 +48,27 @@ RUN /bin/bash -c "source activate base \
   && mamba clean --all -f -y"
 
 # ==============================================================
+#  Install Detectron
+# ==============================================================
+
+ENV FORCE_CUDA="1"
+RUN pip install 'git+https://github.com/facebookresearch/fvcore' && \
+    pip install cython && \
+    pip install 'git+https://github.com/cocodataset/cocoapi.git#subdirectory=PythonAPI' && \
+    cd /home/$NB_USER && \
+    git clone https://github.com/facebookresearch/detectron2.git && \
+    cd detectron2 && \
+    pip install -e .
+
+# ==============================================================
+#  INSTALL NVIDIA HELPERS
+# ==============================================================
+
+WORKDIR /home/$NB_USER
+
+RUN pip install --extra-index-url https://developer.download.nvidia.com/compute/redist nvidia-dali
+
+# ==============================================================
 #  MAKE SURE WE'RE USING OPTIMIZED PILLOW
 # ==============================================================
 
@@ -65,42 +86,22 @@ RUN /bin/bash -c "source activate base \
   && mamba clean --all -f -y"
 
 # ==============================================================
-#  INSTALL NVIDIA HELPERS
+#  MORE HELPERS
 # ==============================================================
 
-WORKDIR /home/$NB_USER
-
-RUN pip install --extra-index-url https://developer.download.nvidia.com/compute/redist nvidia-dali
+RUN pip install torchlars \
+  torchsummary \
+  torchsummaryX \
+  streamlit \
+  fire \
+  pretrainedmodels \ 
+  natsort \
+  && pip install -U git+git://github.com/PyTorchLightning/pytorch-lightning.git \
+  && pip install --extra-index-url https://developer.download.nvidia.com/compute/redist nvidia-dali
 
 # ==============================================================
-#  Install Detectron
+#  set workdir and user for jupyter notebook use
 # ==============================================================
 
-ENV FORCE_CUDA="1"
-RUN pip install 'git+https://github.com/facebookresearch/fvcore' && \
-    pip install cython && \
-    pip install 'git+https://github.com/cocodataset/cocoapi.git#subdirectory=PythonAPI' && \
-    cd /home/$NB_USER && \
-    git clone https://github.com/facebookresearch/detectron2.git && \
-    cd detectron2 && \
-    pip install -e .
-
-# # ==============================================================
-# #  MORE HELPERS
-# # ==============================================================
-
-# RUN pip install torchlars \
-#   torchsummary \
-#   torchsummaryX \
-#   streamlit \
-#   fire \
-#   pretrainedmodels \ 
-#   natsort \
-#   && pip install -U git+git://github.com/PyTorchLightning/pytorch-lightning.git
-
-# # ==============================================================
-# #  set workdir and user for jupyter notebook use
-# # ==============================================================
-
-# WORKDIR /home/$NB_USER/work/
-# USER $NB_USER
+WORKDIR /home/$NB_USER/work/
+USER $NB_USER
