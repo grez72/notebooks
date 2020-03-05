@@ -171,217 +171,254 @@ RUN conda install --quiet --yes \
   fix-permissions $CONDA_DIR && \
   fix-permissions /home/$NB_USER
 
-#--------------------------------------
-# Install all OS dependencies for fully functional notebook server:
-#--------------------------------------
+# #--------------------------------------
+# # Install all OS dependencies for fully functional notebook server:
+# #--------------------------------------
 
-USER root
+# USER root
 
-RUN apt-get update && apt-get install -yq --no-install-recommends \
-  build-essential \
-  emacs \
-  git \
-  inkscape \
-  jed \
-  libsm6 \
-  libxext-dev \
-  libxrender1 \
-  lmodern \
-  netcat \
-  pandoc \
-  python-dev \
-  texlive-fonts-extra \
-  texlive-fonts-recommended \
-  texlive-generic-recommended \
-  texlive-latex-base \
-  texlive-latex-extra \
-  texlive-xetex \
-  unzip \
-  nano \
-  && apt-get clean && \
-  rm -rf /var/lib/apt/lists/*
+# RUN apt-get update && apt-get install -yq --no-install-recommends \
+#   build-essential \
+#   emacs \
+#   git \
+#   inkscape \
+#   jed \
+#   libsm6 \
+#   libxext-dev \
+#   libxrender1 \
+#   lmodern \
+#   netcat \
+#   pandoc \
+#   python-dev \
+#   texlive-fonts-extra \
+#   texlive-fonts-recommended \
+#   texlive-generic-recommended \
+#   texlive-latex-base \
+#   texlive-latex-extra \
+#   texlive-xetex \
+#   unzip \
+#   nano \
+#   && apt-get clean && \
+#   rm -rf /var/lib/apt/lists/*
 
-#--------------------------------------
-# FFMEG with support for: with libx264 (mp4), Nvidia NVENC/NVDEC,
-#   and cuda hardware acceleration:
-#   https://trac.ffmpeg.org/wiki/HWAccelIntro
-#   https://trac.ffmpeg.org/wiki/HWAccelIntro#NVENC
-#--------------------------------------
+# #--------------------------------------
+# # FFMEG with support for: with libx264 (mp4), Nvidia NVENC/NVDEC,
+# #   and cuda hardware acceleration:
+# #   https://trac.ffmpeg.org/wiki/HWAccelIntro
+# #   https://trac.ffmpeg.org/wiki/HWAccelIntro#NVENC
+# #--------------------------------------
 
-USER root
+# USER root
 
-RUN apt-get update -qq && apt-get -y install \
-  autoconf \
-  automake \
-  build-essential \
-  cmake \
-  git-core \
-  libass-dev \
-  libfreetype6-dev \
-  libsdl2-dev \
-  libtool \
-  libva-dev \
-  libvdpau-dev \
-  libvorbis-dev \
-  libxcb1-dev \
-  libxcb-shm0-dev \
-  libxcb-xfixes0-dev \
-  pkg-config \
-  texinfo \
-  wget \
-  zlib1g-dev \
-  yasm \
-  nasm \
-  libx264-dev \
-  libx265-dev libnuma-dev \
-  libvpx-dev \
-  libfdk-aac-dev \
-  libmp3lame-dev \
-  libopus-dev \
-  && rm -rf /var/lib/apt/lists/*
+# RUN apt-get update -qq && apt-get -y install \
+#   autoconf \
+#   automake \
+#   build-essential \
+#   cmake \
+#   git-core \
+#   libass-dev \
+#   libfreetype6-dev \
+#   libsdl2-dev \
+#   libtool \
+#   libva-dev \
+#   libvdpau-dev \
+#   libvorbis-dev \
+#   libxcb1-dev \
+#   libxcb-shm0-dev \
+#   libxcb-xfixes0-dev \
+#   pkg-config \
+#   texinfo \
+#   wget \
+#   zlib1g-dev \
+#   yasm \
+#   nasm \
+#   libx264-dev \
+#   libx265-dev libnuma-dev \
+#   libvpx-dev \
+#   libfdk-aac-dev \
+#   libmp3lame-dev \
+#   libopus-dev \
+#   && rm -rf /var/lib/apt/lists/*
 
-ENV NVIDIA_VISIBLE_DEVICES=all
-ENV NVIDIA_DRIVER_CAPABILITIES=compute,utility,video
+# ENV NVIDIA_VISIBLE_DEVICES=all
+# ENV NVIDIA_DRIVER_CAPABILITIES=compute,utility,video
 
-# double check to make sure dependencies installed
-RUN apt-get -y update && apt-get install -y wget nano git build-essential yasm pkg-config
+# # double check to make sure dependencies installed
+# RUN apt-get -y update && apt-get install -y wget nano git build-essential yasm pkg-config
 
-# install nvidia headers for nvidia codecs
-RUN git clone https://github.com/FFmpeg/nv-codec-headers /root/nv-codec-headers && \
-  cd /root/nv-codec-headers &&\
-  make -j$(nproc) && \
-  make install -j$(nproc) && \
-  cd /root && rm -rf nv-codec-headers
+# # install nvidia headers for nvidia codecs
+# RUN git clone https://github.com/FFmpeg/nv-codec-headers /root/nv-codec-headers && \
+#   cd /root/nv-codec-headers &&\
+#   make -j$(nproc) && \
+#   make install -j$(nproc) && \
+#   cd /root && rm -rf nv-codec-headers
 
-# Compile and install ffmpeg from source
-# This version works, but my original version had more features enabled,
-# so down below I've combined them.
-# RUN git clone https://github.com/FFmpeg/FFmpeg /root/ffmpeg && \
-#   cd /root/ffmpeg && ./configure \
-#   --enable-nonfree \
+# # Compile and install ffmpeg from source
+# # This version works, but my original version had more features enabled,
+# # so down below I've combined them.
+# # RUN git clone https://github.com/FFmpeg/FFmpeg /root/ffmpeg && \
+# #   cd /root/ffmpeg && ./configure \
+# #   --enable-nonfree \
+# #   --disable-shared \
+# #   --enable-nvenc \
+# #   --enable-cuda \
+# #   --enable-cuvid \
+# #   --enable-libnpp \
+# #   --extra-cflags=-I/usr/local/cuda/include \
+# #   --extra-cflags=-I/usr/local/include \
+# #   --extra-ldflags=-L/usr/local/cuda/lib64 && \
+# #   make -j$(nproc) && \
+# #   make install -j$(nproc) && \
+# #   cd /root && rm -rf ffmpeg
+
+# RUN git clone https://github.com/FFmpeg/FFmpeg /root/ffmpeg \
+#   && cd /root/ffmpeg \
+#   && PATH="~/bin:$PATH" PKG_CONFIG_PATH="/root/ffmpeg/lib/pkgconfig" ./configure \
+#   --prefix="/root/ffmpeg" \
+#   --pkg-config-flags="--static" \
+#   --extra-cflags="-I/root/ffmpeg/include" \
+#   --extra-ldflags="-L/root/ffmpeg/lib" \
+#   --extra-libs="-lpthread -lm" \
+#   --bindir="/bin" \
 #   --disable-shared \
-#   --enable-nvenc \
+#   --enable-avresample \
+#   --enable-gpl \
+#   --enable-libass \
+#   --enable-libfdk-aac \
+#   --enable-libfreetype \
+#   --enable-libmp3lame \
+#   --enable-libopus \
+#   --enable-libvorbis \
+#   --enable-libvpx \
+#   --enable-libx264 \
+#   --enable-libx265 \
+#   --enable-nonfree \
 #   --enable-cuda \
 #   --enable-cuvid \
+#   --enable-nvenc \
+#   --enable-nonfree \
 #   --enable-libnpp \
 #   --extra-cflags=-I/usr/local/cuda/include \
 #   --extra-cflags=-I/usr/local/include \
-#   --extra-ldflags=-L/usr/local/cuda/lib64 && \
-#   make -j$(nproc) && \
-#   make install -j$(nproc) && \
-#   cd /root && rm -rf ffmpeg
+#   --extra-ldflags=-L/usr/local/cuda/lib64 \
+#   --extra-libs="-lpthread -lm" \
+#   && make -j$(nproc) \
+#   && make install -j$(nproc) \
+#   && cd /root && rm -rf ffmpeg
 
-RUN git clone https://github.com/FFmpeg/FFmpeg /root/ffmpeg \
-  && cd /root/ffmpeg \
-  && PATH="~/bin:$PATH" PKG_CONFIG_PATH="/root/ffmpeg/lib/pkgconfig" ./configure \
-  --prefix="/root/ffmpeg" \
-  --pkg-config-flags="--static" \
-  --extra-cflags="-I/root/ffmpeg/include" \
-  --extra-ldflags="-L/root/ffmpeg/lib" \
-  --extra-libs="-lpthread -lm" \
-  --bindir="/bin" \
-  --disable-shared \
-  --enable-avresample \
-  --enable-gpl \
-  --enable-libass \
-  --enable-libfdk-aac \
-  --enable-libfreetype \
-  --enable-libmp3lame \
-  --enable-libopus \
-  --enable-libvorbis \
-  --enable-libvpx \
-  --enable-libx264 \
-  --enable-libx265 \
-  --enable-nonfree \
-  --enable-cuda \
-  --enable-cuvid \
-  --enable-nvenc \
-  --enable-nonfree \
-  --enable-libnpp \
-  --extra-cflags=-I/usr/local/cuda/include \
-  --extra-cflags=-I/usr/local/include \
-  --extra-ldflags=-L/usr/local/cuda/lib64 \
-  --extra-libs="-lpthread -lm" \
-  && make -j$(nproc) \
-  && make install -j$(nproc) \
-  && cd /root && rm -rf ffmpeg
+# # Check for nvidia codecs
+# # ffmpeg -encoders 2>/dev/null | grep nvenc
 
-# Check for nvidia codecs
-# ffmpeg -encoders 2>/dev/null | grep nvenc
+# # Test hardware acceleration
+# # cd /root
+# # wget https://www.dropbox.com/s/oyhp2pv4zaae29f/youtube_epVDutrGlDU.mp4
+# # mkdir test
+# # ffprobe -v error -select_streams v:0 -show_entries stream=codec_name -of default=nw=1 youtube_epVDutrGlDU.mp4
+# # ffmpeg -hwaccel_device 0 -hwaccel nvdec -i youtube_epVDutrGlDU.mp4 -qmin 1 -qmax 1 -qscale:v 1 test/$filename%04d.jpg
+# # ffmpeg -hwaccel_device 0 -hwaccel nvdec -c:v h264_cuvid -i youtube_epVDutrGlDU.mp4 output.mkv
 
-# Test hardware acceleration
-# cd /root
-# wget https://www.dropbox.com/s/oyhp2pv4zaae29f/youtube_epVDutrGlDU.mp4
-# mkdir test
-# ffprobe -v error -select_streams v:0 -show_entries stream=codec_name -of default=nw=1 youtube_epVDutrGlDU.mp4
-# ffmpeg -hwaccel_device 0 -hwaccel nvdec -i youtube_epVDutrGlDU.mp4 -qmin 1 -qmax 1 -qscale:v 1 test/$filename%04d.jpg
-# ffmpeg -hwaccel_device 0 -hwaccel nvdec -c:v h264_cuvid -i youtube_epVDutrGlDU.mp4 output.mkv
+# # ffmpeg -hwaccel_device 0 -hwaccel cuvid -c:v h264_cuvid -i input -vf scale_npp=-1:720 -c:v h264_nvenc -preset slow output.mkv
+# # ffmpeg -y -hwaccel cuvid -c:v h264_cuvid -vsync 0 -i <input.mp4> -vf scale_npp=1920:1072 -vcodec h264_nvenc <output0.264> -vf scale_npp=1280:720 -vcodec h264_nvenc <output1.264>
+# # ffmpeg -y -hwaccel cuvid -c:v h264_cuvid -vsync 0 -i VP13_z4LO6M.mp4 -vf scale_npp=1920:1072 -vcodec h264_nvenc VP13_z4LO6M.264 -vf scale_npp=1280:720 -vcodec h264_nvenc VP13_z4LO6M.264
+# # ffmpeg -i VP13_z4LO6M.mp4 -c:v h264_nvenc -profile:v high444p -pixel_format yuv444p -preset default output.mp4
+# # ffmpeg -c:v h264_cuvid -i input output.mkv
+# # ffmpeg -c:v h264_cuvid -i youtube_epVDutrGlDU.mp4 output.mkv
+# # ffmpeg -hwaccel_device 0 -hwaccel cuvid -c:v h264_cuvid -i youtube_epVDutrGlDU.mp4 -i "%1" test/$filename%04d.jpg
+# # ffmpeg -hwaccel_device 0 -hwaccel cuvid -i youtube_epVDutrGlDU.mp4 -qmin 1 -qmax 1 -qscale:v 1 test/$filename%04d.jpg
+# # ffmpeg -hwaccel_device 0 -hwaccel nvdec -i youtube_epVDutrGlDU.mp4 -qmin 1 -qmax 1 -qscale:v 1 test/$filename%04d.jpg
 
-# ffmpeg -hwaccel_device 0 -hwaccel cuvid -c:v h264_cuvid -i input -vf scale_npp=-1:720 -c:v h264_nvenc -preset slow output.mkv
-# ffmpeg -y -hwaccel cuvid -c:v h264_cuvid -vsync 0 -i <input.mp4> -vf scale_npp=1920:1072 -vcodec h264_nvenc <output0.264> -vf scale_npp=1280:720 -vcodec h264_nvenc <output1.264>
-# ffmpeg -y -hwaccel cuvid -c:v h264_cuvid -vsync 0 -i VP13_z4LO6M.mp4 -vf scale_npp=1920:1072 -vcodec h264_nvenc VP13_z4LO6M.264 -vf scale_npp=1280:720 -vcodec h264_nvenc VP13_z4LO6M.264
-# ffmpeg -i VP13_z4LO6M.mp4 -c:v h264_nvenc -profile:v high444p -pixel_format yuv444p -preset default output.mp4
-# ffmpeg -c:v h264_cuvid -i input output.mkv
-# ffmpeg -c:v h264_cuvid -i youtube_epVDutrGlDU.mp4 output.mkv
-# ffmpeg -hwaccel_device 0 -hwaccel cuvid -c:v h264_cuvid -i youtube_epVDutrGlDU.mp4 -i "%1" test/$filename%04d.jpg
-# ffmpeg -hwaccel_device 0 -hwaccel cuvid -i youtube_epVDutrGlDU.mp4 -qmin 1 -qmax 1 -qscale:v 1 test/$filename%04d.jpg
-# ffmpeg -hwaccel_device 0 -hwaccel nvdec -i youtube_epVDutrGlDU.mp4 -qmin 1 -qmax 1 -qscale:v 1 test/$filename%04d.jpg
+# #--------------------------------------
+# #   Add Conda Environments with Intel Python
+# #--------------------------------------
 
-#--------------------------------------
-#   Add Conda Environments with Intel Python
-#--------------------------------------
+# # RUN conda update conda \
+# #     && conda config --add channels intel \
+# #     && conda create -n python3 intelpython3_core python=3 \
+# #     && conda create -n python2 intelpython2_core python=2 \
+# #     && /bin/bash -c "source activate python3 \
+# #     && conda install pip ipykernel \
+# #     && python -m ipykernel install --user --name python3 --display-name 'Python3'" \
+# #     && /bin/bash -c "source activate python2 \
+# #     && conda install pip ipykernel \
+# #     && python -m ipykernel install --user --name python2 --display-name 'Python2'"
 
-# RUN conda update conda \
-#     && conda config --add channels intel \
-#     && conda create -n python3 intelpython3_core python=3 \
-#     && conda create -n python2 intelpython2_core python=2 \
-#     && /bin/bash -c "source activate python3 \
-#     && conda install pip ipykernel \
-#     && python -m ipykernel install --user --name python3 --display-name 'Python3'" \
-#     && /bin/bash -c "source activate python2 \
-#     && conda install pip ipykernel \
-#     && python -m ipykernel install --user --name python2 --display-name 'Python2'"
+# #--------------------------------------
+# # Setup Python 3 Environment
+# #--------------------------------------
 
-#--------------------------------------
-# Setup Python 3 Environment
-#--------------------------------------
+# USER $NB_UID
+# WORKDIR $HOME
 
-USER $NB_UID
-WORKDIR $HOME
+# # Install Python 3 packages
+# # Remove pyqt and qt pulled in for matplotlib since we're only ever going to
+# # use notebook-friendly backends in these images
+# # "conda=${MINICONDA_VERSION}" \
+# # RUN conda install --quiet --yes \  
+# #   'av' \
+# #   'conda-forge::blas=*=openblas' \
+# #   'ipywidgets=7.2*' \
+# #   'pandas=0.23*' \
+# #   'numexpr=2.6*' \
+# #   'matplotlib=2.2*' \
+# #   'scipy=1.1*' \
+# #   'seaborn=0.9*' \
+# #   'scikit-learn=0.19*' \
+# #   'scikit-image=0.14*' \
+# #   'sk-video=1.1*' \
+# #   'sympy=1.1*' \
+# #   'cython=0.28*' \
+# #   'patsy=0.5*' \
+# #   'statsmodels=0.9*' \
+# #   'cloudpickle=0.5*' \
+# #   'dill=0.2*' \
+# #   'numba=0.38*' \
+# #   'bokeh=0.12*' \
+# #   'sqlalchemy=1.2*' \
+# #   'hdf5=1.10*' \
+# #   'h5py=2.7*' \
+# #   'vincent=0.4.*' \
+# #   'beautifulsoup4=4.6.*' \
+# #   'protobuf=3.*' \
+# #   'xlrd'  && \
+# #   conda remove --quiet --yes --force qt pyqt && \
+# #   conda clean -tipsy && \
+# #   npm cache clean --force && \
+# #   rm -rf $CONDA_DIR/share/jupyter/lab/staging && \
+# #   rm -rf /home/$NB_USER/.cache/yarn && \
+# #   rm -rf /home/$NB_USER/.node-gyp && \
+# #   fix-permissions $CONDA_DIR && \
+# #   fix-permissions /home/$NB_USER
 
-# Install Python 3 packages
-# Remove pyqt and qt pulled in for matplotlib since we're only ever going to
-# use notebook-friendly backends in these images
-# "conda=${MINICONDA_VERSION}" \
-# RUN conda install --quiet --yes \  
-#   'av' \
-#   'conda-forge::blas=*=openblas' \
-#   'ipywidgets=7.2*' \
-#   'pandas=0.23*' \
-#   'numexpr=2.6*' \
-#   'matplotlib=2.2*' \
-#   'scipy=1.1*' \
-#   'seaborn=0.9*' \
-#   'scikit-learn=0.19*' \
-#   'scikit-image=0.14*' \
-#   'sk-video=1.1*' \
-#   'sympy=1.1*' \
-#   'cython=0.28*' \
-#   'patsy=0.5*' \
-#   'statsmodels=0.9*' \
-#   'cloudpickle=0.5*' \
-#   'dill=0.2*' \
-#   'numba=0.38*' \
-#   'bokeh=0.12*' \
-#   'sqlalchemy=1.2*' \
-#   'hdf5=1.10*' \
-#   'h5py=2.7*' \
-#   'vincent=0.4.*' \
-#   'beautifulsoup4=4.6.*' \
-#   'protobuf=3.*' \
-#   'xlrd'  && \
-#   conda remove --quiet --yes --force qt pyqt && \
-#   conda clean -tipsy && \
+# RUN /bin/bash -c "source activate base && mamba install --quiet --yes \
+#   av=7.0.0 \
+#   beautifulsoup4=4.8.* \
+#   bokeh=0.12* \
+#   cloudpickle=1.3.* \
+#   conda-forge::blas=*=openblas \
+#   cython=0.29* \
+#   dill=0.3* \
+#   hdf5=1.10.* \
+#   h5py=2.10.* \
+#   ipywidgets=7.5* \
+#   matplotlib=3.1.* \
+#   numba=0.48.* \
+#   numexpr=2.7.* \
+#   pandas=1.0.* \
+#   patsy=0.5.* \
+#   protobuf=3.11.* \
+#   seaborn=0.10.* \
+#   scikit-image=0.16.* \
+#   scikit-learn=0.22.* \
+#   scipy=1.4.* \
+#   sk-video=1.1* \
+#   sqlalchemy=1.3.* \
+#   statsmodels=0.11.* \
+#   sympy=1.5.* \
+#   vincent=0.4.* \
+#   xlrd && \
+#   mamba clean --all -f -y && \
+#   mamba install --quiet --yes dask=2.11.* && \
+#   mamba clean --all -f -y" && \
 #   npm cache clean --force && \
 #   rm -rf $CONDA_DIR/share/jupyter/lab/staging && \
 #   rm -rf /home/$NB_USER/.cache/yarn && \
@@ -389,92 +426,55 @@ WORKDIR $HOME
 #   fix-permissions $CONDA_DIR && \
 #   fix-permissions /home/$NB_USER
 
-RUN /bin/bash -c "source activate base && mamba install --quiet --yes \
-  av=7.0.0 \
-  beautifulsoup4=4.8.* \
-  bokeh=0.12* \
-  cloudpickle=1.3.* \
-  conda-forge::blas=*=openblas \
-  cython=0.29* \
-  dill=0.3* \
-  hdf5=1.10.* \
-  h5py=2.10.* \
-  ipywidgets=7.5* \
-  matplotlib=3.1.* \
-  numba=0.48.* \
-  numexpr=2.7.* \
-  pandas=1.0.* \
-  patsy=0.5.* \
-  protobuf=3.11.* \
-  seaborn=0.10.* \
-  scikit-image=0.16.* \
-  scikit-learn=0.22.* \
-  scipy=1.4.* \
-  sk-video=1.1* \
-  sqlalchemy=1.3.* \
-  statsmodels=0.11.* \
-  sympy=1.5.* \
-  vincent=0.4.* \
-  xlrd && \
-  mamba clean --all -f -y && \
-  mamba install --quiet --yes dask=2.11.* && \
-  mamba clean --all -f -y" && \
-  npm cache clean --force && \
-  rm -rf $CONDA_DIR/share/jupyter/lab/staging && \
-  rm -rf /home/$NB_USER/.cache/yarn && \
-  rm -rf /home/$NB_USER/.node-gyp && \
-  fix-permissions $CONDA_DIR && \
-  fix-permissions /home/$NB_USER
+# # jupyter nbextension enable --py widgetsnbextension --sys-prefix && \
+# # jupyter labextension install @jupyter-widgets/jupyterlab-manager@^0.38.1 && \
+# # jupyter labextension install jupyterlab_bokeh@^0.6.3 && \
 
-# jupyter nbextension enable --py widgetsnbextension --sys-prefix && \
-# jupyter labextension install @jupyter-widgets/jupyterlab-manager@^0.38.1 && \
-# jupyter labextension install jupyterlab_bokeh@^0.6.3 && \
+# # Install facets which does not have a pip or conda package at the moment
+# RUN cd /tmp && \
+#   git clone https://github.com/PAIR-code/facets.git && \
+#   cd facets && \
+#   jupyter nbextension install facets-dist/ --sys-prefix && \
+#   cd && \
+#   rm -rf /tmp/facets && \
+#   fix-permissions $CONDA_DIR && \
+#   fix-permissions /home/$NB_USER
 
-# Install facets which does not have a pip or conda package at the moment
-RUN cd /tmp && \
-  git clone https://github.com/PAIR-code/facets.git && \
-  cd facets && \
-  jupyter nbextension install facets-dist/ --sys-prefix && \
-  cd && \
-  rm -rf /tmp/facets && \
-  fix-permissions $CONDA_DIR && \
-  fix-permissions /home/$NB_USER
+# # Import matplotlib the first time to build the font cache.
+# ENV XDG_CACHE_HOME /home/$NB_USER/.cache/
+# RUN MPLBACKEND=Agg python -c "import matplotlib.pyplot" && \
+#   fix-permissions /home/$NB_USER
 
-# Import matplotlib the first time to build the font cache.
-ENV XDG_CACHE_HOME /home/$NB_USER/.cache/
-RUN MPLBACKEND=Agg python -c "import matplotlib.pyplot" && \
-  fix-permissions /home/$NB_USER
+# #--------------------------------------
+# #   Updates needed for opencv
+# #--------------------------------------
 
-#--------------------------------------
-#   Updates needed for opencv
-#--------------------------------------
+# USER root
 
-USER root
-
-RUN apt-get update && apt-get install -y \
-  build-essential \
-  cmake \
-  git \
-  pkg-config \
-  libgtk-3-dev \
-  libavcodec-dev \
-  libavformat-dev \
-  libswscale-dev \
-  libv4l-dev \
-  libxvidcore-dev \
-  libx264-dev \
-  libjpeg-dev \
-  libpng-dev \
-  libtiff-dev \
-  libhdf5-serial-dev \
-  gfortran \
-  openexr \
-  libatlas-base-dev \
-  python3-dev \
-  python3-numpy \
-  libtbb2 \
-  libtbb-dev \
-  libdc1394-22-dev
+# RUN apt-get update && apt-get install -y \
+#   build-essential \
+#   cmake \
+#   git \
+#   pkg-config \
+#   libgtk-3-dev \
+#   libavcodec-dev \
+#   libavformat-dev \
+#   libswscale-dev \
+#   libv4l-dev \
+#   libxvidcore-dev \
+#   libx264-dev \
+#   libjpeg-dev \
+#   libpng-dev \
+#   libtiff-dev \
+#   libhdf5-serial-dev \
+#   gfortran \
+#   openexr \
+#   libatlas-base-dev \
+#   python3-dev \
+#   python3-numpy \
+#   libtbb2 \
+#   libtbb-dev \
+#   libdc1394-22-dev
 
 # #--------------------------------------
 # # Install OpenCV
