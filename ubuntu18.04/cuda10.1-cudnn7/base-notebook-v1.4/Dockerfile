@@ -353,9 +353,6 @@ RUN git clone https://github.com/FFmpeg/FFmpeg /root/ffmpeg \
 USER $NB_UID
 WORKDIR $HOME
 
-#  glib=$GLIB_VERSION \
-
-
 # Install Python 3 packages
 RUN /bin/bash -c "source activate base && mamba install --quiet --yes \
   notebook=5.7.* \
@@ -368,10 +365,11 @@ RUN /bin/bash -c "source activate base && mamba install --quiet --yes \
   conda-forge::blas=*=openblas \
   cython=0.29* \
   dill=0.3* \
+  glib=$GLIB_VERSION \
   hdf5=1.10.* \
   h5py=2.10.* \
   ipywidgets=7.5* \
-  matplotlib=3.1.* \
+  matplotlib-base=3.1.* \
   numba=0.48.* \
   numexpr=2.7.* \
   pandas=1.0.* \
