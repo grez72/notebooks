@@ -787,7 +787,7 @@ RUN jupyter lab clean && jupyter lab build
 
 # python -c "from pymer4.test_install import test_install; test_install()"
 
-USER $NB_UID
+# USER $NB_UID
 
 #--------------------------------------
 # Install Julia Kernel
@@ -832,6 +832,15 @@ USER $NB_UID
 #     chmod -R go+rx $CONDA_DIR/share/jupyter && \
 #     rm -rf $HOME/.local && \
 #     fix-permissions $JULIA_PKGDIR $CONDA_DIR/share/jupyter
+
+#--------------------------------------
+# Install specific pyzmq + tornado 
+# otherwise we get "500" error in jupyterhub
+#--------------------------------------
+
+RUN /bin/bash -c "source activate base \
+  && mamba install -y pyzmq=18.1.0 tornado=6.0.3 \
+  && mamba clean --all -f -y"
 
 #--------------------------------------
 # Notebook Setup
