@@ -46,6 +46,8 @@ RUN /bin/bash -c "source activate base \
 #  MAKE SURE WE'RE USING OPTIMIZED PILLOW
 # ==============================================================
 
+# python -c "import fastai.utils; fastai.utils.check_perf()"
+
 RUN /bin/bash -c "source activate base \
   && mamba update -n base conda -y \
   && pip install --upgrade pip \
@@ -58,44 +60,44 @@ RUN /bin/bash -c "source activate base \
 
 # && CC='cc -mavx2' pip install --no-cache-dir -U --force-reinstall --no-binary :all: --compile pillow-simd \
 
-# # ==============================================================
-# #  INSTALL NVIDIA HELPERS
-# # ==============================================================
+# ==============================================================
+#  INSTALL NVIDIA HELPERS
+# ==============================================================
 
-# WORKDIR /home/$NB_USER
+WORKDIR /home/$NB_USER
 
-# RUN pip install --extra-index-url https://developer.download.nvidia.com/compute/redist nvidia-dali
+RUN pip install --extra-index-url https://developer.download.nvidia.com/compute/redist nvidia-dali
 
-# # ==============================================================
-# #  Install Detectron
-# # ==============================================================
+# ==============================================================
+#  Install Detectron
+# ==============================================================
 
-# ENV FORCE_CUDA="1"
-# RUN pip install 'git+https://github.com/facebookresearch/fvcore' && \
-#     pip install cython && \
-#     pip install 'git+https://github.com/cocodataset/cocoapi.git#subdirectory=PythonAPI' && \
-#     cd /home/$NB_USER && \
-#     git clone https://github.com/facebookresearch/detectron2.git && \
-#     cd detectron2 && \
-#     pip install -e .
+ENV FORCE_CUDA="1"
+RUN pip install 'git+https://github.com/facebookresearch/fvcore' && \
+    pip install cython && \
+    pip install 'git+https://github.com/cocodataset/cocoapi.git#subdirectory=PythonAPI' && \
+    cd /home/$NB_USER && \
+    git clone https://github.com/facebookresearch/detectron2.git && \
+    cd detectron2 && \
+    pip install -e .
 
-# # ==============================================================
-# #  MORE HELPERS
-# # ==============================================================
+# ==============================================================
+#  MORE HELPERS
+# ==============================================================
 
-# RUN pip install torchlars \
-#   torchsummary \
-#   torchsummaryX \
-#   streamlit \
-#   fire \
-#   opencv-python \
-#   pretrainedmodels \ 
-#   pytorch-lightning \
-#   natsort
+RUN pip install torchlars \
+  torchsummary \
+  torchsummaryX \
+  streamlit \
+  fire \
+  opencv-python \
+  pretrainedmodels \ 
+  pytorch-lightning \
+  natsort
 
-# # ==============================================================
-# #  set workdir and user for jupyter notebook use
-# # ==============================================================
+# ==============================================================
+#  set workdir and user for jupyter notebook use
+# ==============================================================
 
-# WORKDIR /home/$NB_USER/work/
-# USER $NB_USER
+WORKDIR /home/$NB_USER/work/
+USER $NB_USER
