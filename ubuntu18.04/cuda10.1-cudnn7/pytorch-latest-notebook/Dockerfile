@@ -76,7 +76,7 @@ RUN pip install torchlars \
 # ==============================================================
 
 # python -c "from PIL import features; print(features.check_feature('libjpeg_turbo'))"
-# python -c "import PIL; print(PIL.__version__); print('is pil-simd: ', 'post' in PIL.__version__.split(".")[-1]);)"
+# python -c "import PIL; print(PIL.__version__);"
 # python -c "import PIL; print(PIL.__version__); print('pil-simd: {}'.format('post' in PIL.__version__.split('.')[-1]));"
 
 RUN /bin/bash -c "source activate base \
