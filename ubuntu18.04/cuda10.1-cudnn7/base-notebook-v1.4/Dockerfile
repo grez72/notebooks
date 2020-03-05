@@ -525,7 +525,7 @@ RUN cp /usr/lib/x86_64-linux-gnu/libfontconfig.so.1.10.1 /opt/conda/lib/libfontc
 
 RUN /bin/bash -c "source activate base \
   && mamba install --quiet --yes -c rapidsai -c nvidia -c conda-forge -c defaults cuxfilter=0.12 python=3.6 cudatoolkit=10.1 \
-  && mamba install --quiet --yes rapids=0.12 python=3.6 cudatoolkit=10.1"
+  && mamba install --quiet --yes -c rapidsai -c nvidia -c conda-forge -c defaults rapids=0.12 python=3.6 cudatoolkit=10.1"
 
 #--------------------------------------
 #   INSTALL PIP PACKAGES
