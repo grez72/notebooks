@@ -719,29 +719,29 @@ RUN jupyter lab clean && jupyter lab build
 # Install R Kernel
 #--------------------------------------
 
-USER root
+# USER root
 
-# install R
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends \
-    fonts-dejavu \
-    unixodbc \
-    unixodbc-dev \
-    r-cran-rodbc \
-    gfortran \
-    gcc && \
-    rm -rf /var/lib/apt/lists/*
+# # install R
+# RUN apt-get update && \
+#     apt-get install -y --no-install-recommends \
+#     fonts-dejavu \
+#     unixodbc \
+#     unixodbc-dev \
+#     r-cran-rodbc \
+#     gfortran \
+#     gcc && \
+#     rm -rf /var/lib/apt/lists/*
 
-RUN R -e "install.packages(c('arm', 'caret','crayon','devtools','forecast','hexbin','htmltools', 'htmltools', 'htmlwidgets', 'irkernel', 'lme4', 'lmerTest', 'lsmeans','nycflights13','plyr', 'randomforest', 'rcurl', 'reshape2', 'rmarkdown', 'rodbc','rsqlite', 'shiny', 'sparklyr', 'tidyverse', 'unixodbc'), dependencies=TRUE, repos='http://cran.rstudio.com/')"
+# RUN R -e "install.packages(c('arm', 'caret','crayon','devtools','forecast','hexbin','htmltools', 'htmltools', 'htmlwidgets', 'irkernel', 'lme4', 'lmerTest', 'lsmeans','nycflights13','plyr', 'randomforest', 'rcurl', 'reshape2', 'rmarkdown', 'rodbc','rsqlite', 'shiny', 'sparklyr', 'tidyverse', 'unixodbc'), dependencies=TRUE, repos='http://cran.rstudio.com/')"
 
-RUN R -e "install.packages('IRkernel')" && \
-    R -e "IRkernel::installspec()"
+# RUN R -e "install.packages('IRkernel')" && \
+#     R -e "IRkernel::installspec()"
 
-# RUN fix-permissions /home/$NB_USER
+# # RUN fix-permissions /home/$NB_USER
 
-RUN mv $HOME/.local/share/jupyter/kernels/ir* $CONDA_DIR/share/jupyter/kernels/ && \
-      rm -rf $HOME/.local && \
-      fix-permissions /home/$NB_USER $CONDA_DIR/share/jupyter
+# RUN mv $HOME/.local/share/jupyter/kernels/ir* $CONDA_DIR/share/jupyter/kernels/ && \
+#       rm -rf $HOME/.local && \
+#       fix-permissions /home/$NB_USER $CONDA_DIR/share/jupyter
 
 # RUN R -e "install.packages('lmerTest')" && \
 #       pip install tzlocal pymer4
