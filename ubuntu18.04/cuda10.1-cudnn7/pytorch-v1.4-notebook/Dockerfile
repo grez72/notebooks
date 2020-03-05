@@ -42,6 +42,7 @@ RUN /bin/bash -c "source activate base \
   && pip install numpy --upgrade \
   && mamba update conda \
   && mamba install -c pytorch pytorch=$PYTORCH_VERSION torchvision cudatoolkit=10.1 glib=$GLIB_VERSION \
+  && mamba install -c fastai -c pytorch fastprogress \
   && mamba install -c conda-forge mock \
   && mamba install -y mkl -c intel \
   && mamba clean --all -f -y"
