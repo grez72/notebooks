@@ -30,67 +30,68 @@ RUN curl -fSsL -O https://bootstrap.pypa.io/get-pip.py && \
 	python3 get-pip.py && \
 	rm get-pip.py
 
-# # ==============================================================
-# #  INSTALL PYTORCH
-# # ==============================================================
+# ==============================================================
+#  INSTALL PYTORCH
+# ==============================================================
 
-# RUN /bin/bash -c "source activate base \
-#   && pip install numpy --upgrade \
-#   && mamba update conda \
-#   && mamba install -c fastai -c pytorch fastprogress fastai \
-#   && mamba install -c conda-forge mock \
-#   && mamba install -y mkl -c intel \
-#   && mamba clean --all -f -y"
+RUN /bin/bash -c "source activate base \
+  && pip install numpy --upgrade \
+  && mamba update conda \
+  && mamba install -c fastai -c pytorch fastprogress fastai \
+  && mamba install -c conda-forge mock \
+  && mamba install -y mkl -c intel \
+  && mamba clean --all -f -y"
 
-# # ==============================================================
-# #  MAKE SURE WE'RE USING OPTIMIZED PILLOW
-# # ==============================================================
+# ==============================================================
+#  MAKE SURE WE'RE USING OPTIMIZED PILLOW
+# ==============================================================
 
-# RUN /bin/bash -c "source activate base \
-#   && mamba update -n base conda -y \
-#   && pip install --upgrade pip \
-#   && mamba uninstall -y --force jpeg libtiff \
-#   && mamba install -y -c conda-forge libjpeg-turbo \
-#   && CC='cc -mavx2' pip install --no-cache-dir -U --force-reinstall --no-binary :all: --compile pillow-simd \
-#   && mamba clean --all -f -y"
+RUN /bin/bash -c "source activate base \
+  && mamba update -n base conda -y \
+  && pip install --upgrade pip \
+  && mamba uninstall -y --force jpeg libtiff \
+  && mamba install -y -c conda-forge libjpeg-turbo \
+  && CC='cc -mavx2' pip install --no-cache-dir -U --force-reinstall --no-binary :all: --compile pillow-simd \
+  && mamba clean --all -f -y"
 
-# # ==============================================================
-# #  INSTALL NVIDIA HELPERS
-# # ==============================================================
+# ==============================================================
+#  INSTALL NVIDIA HELPERS
+# ==============================================================
 
-# WORKDIR /home/$NB_USER
+WORKDIR /home/$NB_USER
 
-# RUN pip install --extra-index-url https://developer.download.nvidia.com/compute/redist nvidia-dali
+RUN pip install --extra-index-url https://developer.download.nvidia.com/compute/redist nvidia-dali
 
-# # ==============================================================
-# #  Install Detectron
-# # ==============================================================
+# ==============================================================
+#  Install Detectron
+# ==============================================================
 
-# ENV FORCE_CUDA="1"
-# RUN pip install 'git+https://github.com/facebookresearch/fvcore' && \
-#     pip install cython && \
-#     pip install 'git+https://github.com/cocodataset/cocoapi.git#subdirectory=PythonAPI' && \
-#     cd /home/$NB_USER && \
-#     git clone https://github.com/facebookresearch/detectron2.git && \
-#     cd detectron2 && \
-#     pip install -e .
+ENV FORCE_CUDA="1"
+RUN pip install 'git+https://github.com/facebookresearch/fvcore' && \
+    pip install cython && \
+    pip install 'git+https://github.com/cocodataset/cocoapi.git#subdirectory=PythonAPI' && \
+    cd /home/$NB_USER && \
+    git clone https://github.com/facebookresearch/detectron2.git && \
+    cd detectron2 && \
+    pip install -e .
 
-# # ==============================================================
-# #  MORE HELPERS
-# # ==============================================================
+# ==============================================================
+#  MORE HELPERS
+# ==============================================================
 
-# RUN pip install torchlars \
-#   torchsummary \
-#   torchsummaryX \
-#   streamlit \
-#   fire \
-#   pretrainedmodels \ 
-#   pytorch-lightning \
-#   natsort
+RUN pip install torchlars \
+  torchsummary \
+  torchsummaryX \
+  streamlit \
+  fire \
+  opencv-python \
+  pretrainedmodels \ 
+  pytorch-lightning \
+  natsort
 
-# # ==============================================================
-# #  set workdir and user for jupyter notebook use
-# # ==============================================================
+# ==============================================================
+#  set workdir and user for jupyter notebook use
+# ==============================================================
 
-# WORKDIR /home/$NB_USER/work/
-# USER $NB_USER
+WORKDIR /home/$NB_USER/work/
+USER $NB_USER
