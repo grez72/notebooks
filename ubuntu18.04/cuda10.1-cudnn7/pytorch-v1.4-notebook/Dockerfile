@@ -37,12 +37,11 @@ RUN curl -fSsL -O https://bootstrap.pypa.io/get-pip.py && \
 # ==============================================================
 
 # mamba install glib=2.51.0
-# mamba install glib=2.58.3
 
 RUN /bin/bash -c "source activate base \
   && pip install numpy --upgrade \
   && mamba update conda \
-  && mamba install -c fastai -c pytorch fastprogress fastai pytorch==$PYTORCH_VERSION glib=$GLIB_VERSION \
+  && mamba install -c pytorch pytorch=$PYTORCH_VERSION torchvision cudatoolkit=10.1 glib=$GLIB_VERSION \
   && mamba install -c conda-forge mock \
   && mamba install -y mkl -c intel \
   && mamba clean --all -f -y"
@@ -51,13 +50,13 @@ RUN /bin/bash -c "source activate base \
 #  MAKE SURE WE'RE USING OPTIMIZED PILLOW
 # ==============================================================
 
-# RUN /bin/bash -c "source activate base \
-#   && mamba update -n base conda -y \
-#   && pip install --upgrade pip \
-#   && mamba uninstall -y --force jpeg libtiff \
-#   && mamba install -y -c conda-forge libjpeg-turbo \
-#   && CC='cc -mavx2' pip install --no-cache-dir -U --force-reinstall --no-binary :all: --compile pillow-simd \
-#   && mamba clean --all -f -y"
+RUN /bin/bash -c "source activate base \
+  && mamba update -n base conda -y \
+  && pip install --upgrade pip \
+  && mamba uninstall -y --force jpeg libtiff \
+  && mamba install -y -c conda-forge libjpeg-turbo \
+  && CC='cc -mavx2' pip install --no-cache-dir -U --force-reinstall --no-binary :all: --compile pillow-simd \
+  && mamba clean --all -f -y"
 
 # RUN /bin/bash -c "source activate base && mamba uninstall --force jpeg libtiff -y \
 #   && pip uninstall -y pillow \
