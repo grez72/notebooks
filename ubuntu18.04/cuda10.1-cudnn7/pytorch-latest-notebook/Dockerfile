@@ -88,3 +88,10 @@ RUN /bin/bash -c "source activate base \
   && CC='cc -mavx2' pip install --no-cache-dir -U --force-reinstall --no-binary :all: --compile pillow-simd \  
   && mamba install -y jpeg libtiff \
   && mamba clean --all -f -y"
+
+# ==============================================================
+#  set workdir and user for jupyter notebook use
+# ==============================================================
+
+WORKDIR /home/$NB_USER/work/
+USER $NB_USER  
