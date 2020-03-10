@@ -36,8 +36,8 @@ RUN curl -fSsL -O https://bootstrap.pypa.io/get-pip.py && \
 
 RUN /bin/bash -c "source activate base \
   && pip install numpy --upgrade \
+  && pip install fastai2 \
   && mamba update conda \
-  && mamba install -c fastai -c pytorch fastprogress fastai \
   && mamba install -c conda-forge mock \
   && mamba install -y mkl -c intel \
   && mamba clean --all -f -y"
